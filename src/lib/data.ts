@@ -1,0 +1,56 @@
+import { ProjectEntity } from '@/entities/project';
+import { PostEntity } from '@/entities/post';
+import { ProjectAdapter } from '@/adapters/project';
+import { PostAdapter } from '@/adapters/post';
+
+export async function getProjects(): Promise<ProjectEntity[]> {
+  try {
+    const projectAdapter = new ProjectAdapter();
+    const data = await projectAdapter.findMany({});
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    return [];
+  }
+}
+
+export async function getProject(id: string): Promise<ProjectEntity | null> {
+  try {
+    const projectAdapter = new ProjectAdapter();
+    const data = await projectAdapter.findOne({
+      where: { id: parseInt(id) },
+    });
+    return data;
+  } catch (error) {
+    console.error('Error fetching project:', error);
+    return null;
+  }
+}
+
+export async function getPosts(projectId?: string): Promise<PostEntity[]> {
+  try {
+    const postAdapter = new PostAdapter();
+    const where = projectId ? { project_id: parseInt(projectId) } : {};
+
+    const data = await postAdapter.findMany({
+      where,
+    });
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    return [];
+  }
+}
+
+export async function getPost(id: string): Promise<PostEntity | null> {
+  try {
+    const postAdapter = new PostAdapter();
+    const data = await postAdapter.findOne({
+      where: { id: parseInt(id) },
+    });
+    return data;
+  } catch (error) {
+    console.error('Error fetching post:', error);
+    return null;
+  }
+}
