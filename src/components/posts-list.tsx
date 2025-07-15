@@ -19,11 +19,10 @@ export default function PostsList({ posts, locale, projectId }: PostsListProps) 
       ) : (
         posts.map((post) => {
           // 获取本地化内容
-          const i18nContent = post.i18n && typeof post.i18n === 'object' ? 
-            (post.i18n as Record<string, { title?: string }>)[locale] : undefined;
-          
+          const i18nContent = post.i18n?.[locale];
+
           // 显示本地化标题或默认标题
-          const displayTitle = (i18nContent && i18nContent.title) || post.title;
+          const displayTitle = i18nContent?.title || post.title;
           
           return (
             <div

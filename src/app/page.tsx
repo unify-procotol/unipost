@@ -5,7 +5,7 @@ export default async function Home() {
   try {
     const projects = await getProjects();
     return <ProjectSelector projects={projects} />;
-  } catch (error) {
+  } catch {
     return (
       <div className="text-center py-12">
         <p className="text-destructive">Failed to load projects</p>

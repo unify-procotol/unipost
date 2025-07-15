@@ -25,7 +25,7 @@ export default async function PostsPage({
         <PostsList posts={posts} locale={locale} projectId={projectId} />
       </div>
     );
-  } catch (error) {
+  } catch {
     return (
       <div className="text-center py-12">
         <p className="text-destructive">Failed to load posts</p>

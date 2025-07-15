@@ -6,7 +6,7 @@ export default async function PostPage({
 }: {
   params: Promise<{ locale: string; projectid: string; postId: string }>;
 }) {
-  const { locale, projectid: projectId, postId } = await params;
+  const { locale, postId } = await params;
 
   try {
     const post = await getPost(postId);
@@ -20,15 +20,14 @@ export default async function PostPage({
         <div>
           <div className="text-2xl font-bold text-center bg-gray-50 p-4 rounded-md">
             <div className="text-lg font-bold">
-              {post?.i18n?.[locale as keyof typeof post.i18n]?.title ||
-                post?.title}
+              {post?.i18n?.[locale]?.title || post?.title}
             </div>
           </div>
           <div className="mt-4 text-sm leading-relaxed">
             <span
               dangerouslySetInnerHTML={{
                 __html:
-                  post?.i18n?.[locale as keyof typeof post.i18n]?.content ||
+                  post?.i18n?.[locale]?.content ||
                   post?.content ||
                   "",
               }}
@@ -37,7 +36,7 @@ export default async function PostPage({
         </div>
       </div>
     );
-  } catch (error) {
+  } catch {
     return (
       <div className="text-center py-12">
         <p className="text-destructive">Failed to load post</p>

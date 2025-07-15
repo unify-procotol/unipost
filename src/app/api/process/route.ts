@@ -1,8 +1,8 @@
 import { process } from "@/api";
 import { NextResponse } from "next/server";
 
-// no cache
-export const maxAge = 0;
+// Disable caching for this route
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function GET() {
