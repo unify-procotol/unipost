@@ -7,6 +7,6 @@ export default async function ProjectPage({
 }) {
   const { locale, projectid: projectId } = await params;
 
-  // 服务端重定向到 posts 页面
+  // Server-side redirect to posts page
   redirect(`/${locale}/project/${projectId}/posts`);
 }

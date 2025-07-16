@@ -265,6 +265,19 @@ export class PostgresAdapter<T extends Record<string, any>> extends BaseAdapter<
     }
   }
 
+  // extension methods
+  async batchIns(rows: T[], uKeys: (keyof T)[] ) {
+    if (rows.length === 0 || uKeys.length === 0) return;
+
+    const columns = Object.keys(rows[0]);
+            
+    const t = columns.map((col) => ` "${col}" = excluded."${col}"`).join(', ');
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    await this.sql`insert into ${this.sql(this.tableName)} ${this.sql(rows, ...columns)} on conflict (${this.sql.unsafe(uKeys.join(','))}) do update set ${this.sql.unsafe(t)}`;
+  }
+
   private mapRowToEntity(row: any): T {
     return row as T;
   }
