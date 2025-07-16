@@ -1,6 +1,17 @@
+interface ArticleData {
+  title: string;
+  description: string;
+  image?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+  author: string;
+  url: string;
+  language: string;
+}
+
 interface StructuredDataProps {
   type: 'website' | 'article' | 'organization';
-  data: any;
+  data: ArticleData | Record<string, unknown>;
 }
 
 export default function StructuredData({ type, data }: StructuredDataProps) {
@@ -36,17 +47,18 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
         };
 
       case 'article':
+        const articleData = data as ArticleData;
         return {
           ...baseData,
           "@type": "Article",
-          headline: data.title,
-          description: data.description,
-          image: data.image,
-          datePublished: data.publishedTime,
-          dateModified: data.modifiedTime,
+          headline: articleData.title,
+          description: articleData.description,
+          image: articleData.image,
+          datePublished: articleData.publishedTime,
+          dateModified: articleData.modifiedTime,
           author: {
             "@type": "Organization",
-            name: data.author
+            name: articleData.author
           },
           publisher: {
             "@type": "Organization",
@@ -58,9 +70,9 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
           },
           mainEntityOfPage: {
             "@type": "WebPage",
-            "@id": data.url
+            "@id": articleData.url
           },
-          inLanguage: data.language,
+          inLanguage: articleData.language,
           isPartOf: {
             "@type": "WebSite",
             name: "UniPost",

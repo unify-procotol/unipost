@@ -3,42 +3,49 @@ export interface I18nContent {
   content?: string;
 }
 
+interface GhostTag {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+}
+
 export interface GhostDataType {
   id: string;
   url: string;
   html: string;
   slug: string;
-  tags: any[];
+  tags: GhostTag[];
   uuid: string;
   title: string;
   access: boolean;
   excerpt: string;
   comments: boolean;
   featured: boolean;
-  og_image?: any;
-  og_title?: any;
+  og_image?: string | null;
+  og_title?: string | null;
   comment_id: string;
   created_at: string;
   meta_title: string;
   updated_at: string;
   visibility: string;
-  frontmatter?: any;
+  frontmatter?: string | null;
   primary_tag: Primarytag;
   published_at: string;
   reading_time: number;
-  canonical_url?: any;
-  email_subject?: any;
+  canonical_url?: string | null;
+  email_subject?: string | null;
   feature_image: string;
-  twitter_image?: any;
-  twitter_title?: any;
+  twitter_image?: string | null;
+  twitter_title?: string | null;
   custom_excerpt: string;
-  og_description?: any;
-  custom_template?: any;
+  og_description?: string | null;
+  custom_template?: string | null;
   meta_description: string;
-  feature_image_alt?: any;
-  codeinjection_foot?: any;
-  codeinjection_head?: any;
-  twitter_description?: any;
+  feature_image_alt?: string | null;
+  codeinjection_foot?: string | null;
+  codeinjection_head?: string | null;
+  twitter_description?: string | null;
   feature_image_caption: string;
 }
 
@@ -47,21 +54,21 @@ interface Primarytag {
   url: string;
   name: string;
   slug: string;
-  og_image?: any;
-  og_title?: any;
-  meta_title?: any;
+  og_image?: string | null;
+  og_title?: string | null;
+  meta_title?: string | null;
   visibility: string;
   description: string;
-  accent_color?: any;
-  canonical_url?: any;
-  feature_image?: any;
-  twitter_image?: any;
-  twitter_title?: any;
-  og_description?: any;
-  meta_description?: any;
-  codeinjection_foot?: any;
-  codeinjection_head?: any;
-  twitter_description?: any;
+  accent_color?: string | null;
+  canonical_url?: string | null;
+  feature_image?: string | null;
+  twitter_image?: string | null;
+  twitter_title?: string | null;
+  og_description?: string | null;
+  meta_description?: string | null;
+  codeinjection_foot?: string | null;
+  codeinjection_head?: string | null;
+  twitter_description?: string | null;
 }
 
 export class PostEntity {

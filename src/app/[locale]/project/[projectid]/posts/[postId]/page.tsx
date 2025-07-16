@@ -55,7 +55,6 @@ export async function generateMetadata({
         ...project.locales
       ],
       authors: [{ name: project.name }],
-      publishedTime: publishedAt,
       openGraph: {
         title: displayTitle,
         description: excerpt || `Read this article from ${project.name} in ${currentLanguage}.`,

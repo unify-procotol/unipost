@@ -24,7 +24,7 @@ export class ProjectAdapter extends PostgresAdapter<ProjectEntity> {
           content: ghostPost.html ?? "",
           project_id: result.id,
           status: "pending",
-          data: ghostPost,
+          data: ghostPost as unknown as Record<string, unknown>,
         },
       });
     }
