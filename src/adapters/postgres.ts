@@ -24,7 +24,7 @@ export interface PostgresAdapterConfig {
   connect_timeout?: number;
 }
 
-export class PostgresAdapter<T extends Record<string, any>> extends BaseAdapter<T> {
+export class PostgresAdapter<T extends Record<string, unknown>> extends BaseAdapter<T> {
   private sql: postgres.Sql;
   private tableName: string;
 
@@ -69,13 +69,13 @@ export class PostgresAdapter<T extends Record<string, any>> extends BaseAdapter<
     }
   }
 
-  private buildWhereClause(where: any): { whereClause: string; values: any[] } {
+  private buildWhereClause(where?: Record<string, unknown>): { whereClause: string; values: unknown[] } {
     if (!where || Object.keys(where).length === 0) {
       return { whereClause: "", values: [] };
     }
 
     const conditions: string[] = [];
-    const values: any[] = [];
+    const values: unknown[] = [];
     let paramIndex = 1;
 
     for (const [key, value] of Object.entries(where)) {
@@ -90,7 +90,7 @@ export class PostgresAdapter<T extends Record<string, any>> extends BaseAdapter<
     return { whereClause, values };
   }
 
-  private buildOrderByClause(orderBy: any): string {
+  private buildOrderByClause(orderBy?: Record<string, unknown>): string {
     if (!orderBy || Object.keys(orderBy).length === 0) {
       return "";
     }
@@ -116,7 +116,7 @@ export class PostgresAdapter<T extends Record<string, any>> extends BaseAdapter<
       
       query += " LIMIT 1";
 
-      const result = await this.sql.unsafe(query, values as any[]);
+      const result = await this.sql.unsafe(query, values as never[]);
       
       if (result.length === 0) {
         return null;
@@ -154,7 +154,7 @@ export class PostgresAdapter<T extends Record<string, any>> extends BaseAdapter<
         query += ` OFFSET ${args.offset}`;
       }
 
-      const result = await this.sql.unsafe(query, values as any[]);
+      const result = await this.sql.unsafe(query, values as never[]);
       return result.map(row => this.mapRowToEntity(row));
     } catch (error) {
       throw new URPCError(
@@ -179,7 +179,7 @@ export class PostgresAdapter<T extends Record<string, any>> extends BaseAdapter<
         RETURNING *
       `;
 
-      const result = await this.sql.unsafe(query, values as any[]);
+      const result = await this.sql.unsafe(query, values as never[]);
       
       if (result.length === 0) {
         throw new URPCError(ErrorCodes.INTERNAL_SERVER_ERROR, "Failed to create record");
@@ -224,7 +224,7 @@ export class PostgresAdapter<T extends Record<string, any>> extends BaseAdapter<
         RETURNING *
       `;
 
-      const result = await this.sql.unsafe(query, allValues as any[]);
+      const result = await this.sql.unsafe(query, allValues as never[]);
       
       if (result.length === 0) {
         throw new URPCError(ErrorCodes.NOT_FOUND, "Record not found or not updated");
@@ -251,7 +251,7 @@ export class PostgresAdapter<T extends Record<string, any>> extends BaseAdapter<
       }
 
       const query = `DELETE FROM ${this.tableName} ${whereClause}`;
-      const result = await this.sql.unsafe(query, values as any[]);
+      const result = await this.sql.unsafe(query, values as never[]);
 
       return result.count > 0;
     } catch (error) {
@@ -278,7 +278,7 @@ export class PostgresAdapter<T extends Record<string, any>> extends BaseAdapter<
     await this.sql`insert into ${this.sql(this.tableName)} ${this.sql(rows, ...columns)} on conflict (${this.sql.unsafe(uKeys.join(','))}) do update set ${this.sql.unsafe(t)}`;
   }
 
-  private mapRowToEntity(row: any): T {
+  private mapRowToEntity(row: Record<string, unknown>): T {
     return row as T;
   }
 

@@ -1,5 +1,6 @@
 import { CreationArgs } from "@unilab/urpc-core";
 import { ProjectEntity } from "../entities/project";
+import { PostEntity } from "../entities/post";
 import { PostgresAdapter, PostgresAdapterConfig } from "./postgres";
 import { PostAdapter } from "./post";
 import { getPosts } from "@/lib/ghost";
@@ -23,13 +24,18 @@ export class ProjectAdapter extends PostgresAdapter<ProjectEntity> {
     if (project) {
       const ghostPosts = await getPosts(project.ghost_api_key, project.ghost_domain);
       const post = new PostAdapter();
-      const rows = ghostPosts.map((ghostPost) => ({
-        title: ghostPost.title,
-        content: ghostPost.html ?? "",
-        project_id: project.id,
-        status: "pending",
-        data: ghostPost as unknown as Record<string, unknown>,
-      })).filter((row) => row.content.length < 10000);
+      const rows = ghostPosts.map((ghostPost) => {
+        const entity = new PostEntity();
+        entity.title = ghostPost.title || "";
+        entity.content = ghostPost.html ?? "";
+        entity.project_id = project.id;
+        entity.status = "pending";
+        entity.data = ghostPost as unknown as Record<string, unknown>;
+        entity.slug = ghostPost.slug || "";
+        entity.created_at = new Date().toISOString();
+        entity.updated_at = new Date().toISOString();
+        return entity;
+      }).filter((row) => row.content.length < 10000);
       await post.batchIns(rows, ['title']);
       return project;
     }
@@ -40,14 +46,18 @@ export class ProjectAdapter extends PostgresAdapter<ProjectEntity> {
     const post = new PostAdapter();
     for (const ghostPost of ghostPosts) {
       if (ghostPost.html?.length && ghostPost.html.length < 10000) {
+        const entity = new PostEntity();
+        entity.title = ghostPost.title || "";
+        entity.content = ghostPost.html ?? "";
+        entity.project_id = result.id;
+        entity.status = "pending";
+        entity.data = ghostPost as unknown as Record<string, unknown>;
+        entity.slug = ghostPost.slug || "";
+        entity.created_at = new Date().toISOString();
+        entity.updated_at = new Date().toISOString();
+
         await post.create({
-          data: {
-            title: ghostPost.title,
-            content: ghostPost.html ?? "",
-            project_id: result.id,
-            status: "pending",
-            data: ghostPost as unknown as Record<string, unknown>,
-          },
+          data: entity,
         });
       }
     }

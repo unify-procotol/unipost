@@ -1,5 +1,5 @@
 
-export class ProjectEntity {
+export class ProjectEntity implements Record<string, unknown> {
   id = 0;
   uid = 0;
   name = "";
@@ -9,4 +9,6 @@ export class ProjectEntity {
   updated_at = "";
   locales: string[] = [];
   rule = "";
+
+  [key: string]: unknown;
 }

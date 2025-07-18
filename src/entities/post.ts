@@ -71,7 +71,7 @@ interface Primarytag {
   twitter_description?: string | null;
 }
 
-export class PostEntity {
+export class PostEntity implements Record<string, unknown> {
   id = 0;
   project_id = 0;
   title = "";
@@ -84,4 +84,6 @@ export class PostEntity {
   };
   created_at = "";
   updated_at = "";
+
+  [key: string]: unknown;
 }
