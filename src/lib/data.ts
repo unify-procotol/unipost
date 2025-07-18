@@ -2,6 +2,7 @@ import { ProjectEntity } from '@/entities/project';
 import { PostEntity } from '@/entities/post';
 import { ProjectAdapter } from '@/adapters/project';
 import { PostAdapter } from '@/adapters/post';
+import { PaginatedResult, PaginationParams, PaginationParamsSchema } from '@/types/pagination';
 
 export async function getProjects(): Promise<ProjectEntity[]> {
   try {
@@ -52,5 +53,46 @@ export async function getPost(id: string): Promise<PostEntity | null> {
   } catch (error) {
     console.error('Error fetching post:', error);
     return null;
+  }
+}
+
+export async function getPaginatedPosts(
+  projectId?: string,
+  page: number = 1,
+  pageSize: number = 10
+): Promise<PaginatedResult<PostEntity>> {
+  try {
+    const postAdapter = new PostAdapter();
+    
+    // Validate and sanitize parameters
+    const validatedParams = PaginationParamsSchema.parse({
+      page,
+      pageSize,
+      projectId,
+    });
+
+    const paginationParams: PaginationParams = {
+      page: validatedParams.page,
+      pageSize: validatedParams.pageSize,
+      projectId: validatedParams.projectId,
+    };
+
+    const result = await postAdapter.findManyPaginated(paginationParams);
+    return result;
+  } catch (error) {
+    console.error('Error fetching paginated posts:', error);
+    
+    // Return empty result with default pagination on error
+    return {
+      data: [],
+      pagination: {
+        currentPage: page,
+        totalPages: 0,
+        totalItems: 0,
+        pageSize,
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+    };
   }
 }

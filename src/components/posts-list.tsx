@@ -3,14 +3,34 @@
 import { useRouter } from "next/navigation";
 import { PostEntity } from "@/entities/post";
 import SafeImage from "./ui/safe-image";
+import Pagination from "./ui/pagination";
+
+interface PaginationMeta {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  pageSize: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
 
 interface PostsListProps {
   posts: PostEntity[];
   locale: string;
   projectId: string;
+  pagination?: PaginationMeta;
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
 }
 
-export default function PostsList({ posts, locale, projectId }: PostsListProps) {
+export default function PostsList({ 
+  posts, 
+  locale, 
+  projectId, 
+  pagination,
+  onPageChange,
+  onPageSizeChange 
+}: PostsListProps) {
   const router = useRouter();
 
   const formatDate = (dateString: string) => {
@@ -53,9 +73,10 @@ export default function PostsList({ posts, locale, projectId }: PostsListProps) 
     );
   }
 
-  // Get featured post (first post) and regular posts
-  const featuredPost = posts[0];
-  const regularPosts = posts.slice(1);
+  // Show featured post only on first page
+  const isFirstPage = !pagination || pagination.currentPage === 1;
+  const featuredPost = isFirstPage ? posts[0] : null;
+  const regularPosts = isFirstPage ? posts.slice(1) : posts;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
@@ -186,6 +207,21 @@ export default function PostsList({ posts, locale, projectId }: PostsListProps) 
               );
             })}
           </div>
+        </div>
+      )}
+
+      {/* Pagination */}
+      {pagination && (
+        <div className="max-w-7xl mx-auto px-6 pb-16">
+          <Pagination
+            currentPage={pagination.currentPage}
+            totalPages={pagination.totalPages}
+            totalItems={pagination.totalItems}
+            pageSize={pagination.pageSize}
+            onPageChange={onPageChange || (() => {})}
+            onPageSizeChange={onPageSizeChange}
+            className="mt-8"
+          />
         </div>
       )}
     </div>

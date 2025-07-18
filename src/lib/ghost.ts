@@ -4,7 +4,7 @@ export async function getPosts(ghost_api_key: string, ghost_domain: string) {
   const api = new GhostContentAPI({
     url: ghost_domain,
     key: ghost_api_key,
-    version: "v5.0",
+    version: "v4.0",
   });
 
   return api.posts.browse({

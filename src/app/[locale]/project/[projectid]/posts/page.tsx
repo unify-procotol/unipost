@@ -1,9 +1,10 @@
-import { getPosts, getProject } from "@/lib/data";
-import PostsList from "@/components/posts-list";
+import { getPaginatedPosts, getProject } from "@/lib/data";
+import PostsPageWrapper from "@/components/posts-page-wrapper";
 import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
 import BackButton from "@/components/ui/back-button";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { PaginationQuerySchema } from "@/types/pagination";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -79,19 +80,37 @@ export async function generateMetadata({
 
 export default async function PostsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; projectid: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { locale, projectid: projectId } = await params;
+  const rawSearchParams = await searchParams;
 
   try {
-    const [posts, project] = await Promise.all([
-      getPosts(projectId),
+    // Parse and validate pagination parameters
+    const paginationParams = PaginationQuerySchema.parse({
+      page: typeof rawSearchParams.page === 'string' ? rawSearchParams.page : undefined,
+      pageSize: typeof rawSearchParams.pageSize === 'string' ? rawSearchParams.pageSize : undefined,
+    });
+
+    const [paginatedResult, project] = await Promise.all([
+      getPaginatedPosts(projectId, paginationParams.page, paginationParams.pageSize),
       getProject(projectId)
     ]);
 
     if (!project) {
       notFound();
+    }
+
+    // Handle invalid page numbers - redirect to last available page
+    if (paginatedResult.pagination.totalPages > 0 && 
+        paginationParams.page > paginatedResult.pagination.totalPages) {
+      const lastPageUrl = `/${locale}/project/${projectId}/posts?page=${paginatedResult.pagination.totalPages}${
+        paginationParams.pageSize !== 10 ? `&pageSize=${paginationParams.pageSize}` : ''
+      }`;
+      redirect(lastPageUrl);
     }
 
     return (
@@ -114,7 +133,12 @@ export default async function PostsPage({
         </div>
 
         {/* Posts List - Full Width */}
-        <PostsList posts={posts} locale={locale} projectId={projectId} />
+        <PostsPageWrapper 
+          posts={paginatedResult.data} 
+          locale={locale} 
+          projectId={projectId}
+          pagination={paginatedResult.pagination}
+        />
       </MainLayout>
     );
   } catch {
