@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         // Project posts list page
         sitemap.push({
           url: `${baseUrl}/${locale}/project/${project.id}/posts`,
-          lastModified: new Date(project.updated_at),
+          lastModified: new Date(project.updated_at || project.created_at || new Date().toISOString()),
           changeFrequency: 'daily',
           priority: 0.8,
         });
@@ -34,7 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           for (const post of posts) {
             sitemap.push({
               url: `${baseUrl}/${locale}/project/${project.id}/posts/${post.id}`,
-              lastModified: new Date(post.updated_at),
+              lastModified: new Date(post.updated_at || post.created_at || new Date().toISOString()),
               changeFrequency: 'weekly',
               priority: 0.6,
             });

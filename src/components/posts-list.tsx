@@ -93,7 +93,7 @@ export default function PostsList({
                 const i18nContent = featuredPost.i18n?.[locale];
                 const displayTitle = i18nContent?.title || featuredPost.title;
                 const description = i18nContent?.desc || "";
-                const publishedAt = featuredPost.data?.published_at || featuredPost.created_at;
+                const publishedAt = featuredPost.data?.published_at || featuredPost.created_at || new Date().toISOString();
 
                 return (
                   <>
@@ -150,7 +150,7 @@ export default function PostsList({
               const displayTitle = i18nContent?.title || post.title;
               const cover = post.data?.feature_image || "";
               const description = i18nContent?.desc || post.data?.excerpt || "";
-              const publishedAt = post.data?.published_at || post.created_at;
+              const publishedAt = post.data?.published_at || post.created_at || new Date().toISOString();
 
               return (
                 <article
