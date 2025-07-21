@@ -27,7 +27,7 @@ export async function generateMetadata({
     }
 
     const displayTitle = post?.i18n?.[locale]?.title || post?.title;
-    const excerpt = post.data?.excerpt || "";
+    const excerpt = post?.i18n?.[locale]?.desc || post.data?.excerpt || "";
     const cover = post.data?.feature_image || "";
     const publishedAt = post.data?.published_at || post.created_at;
 
@@ -118,7 +118,7 @@ export default async function PostPage({
     const displayContent = post?.i18n?.[locale]?.content || post?.content || "";
     const cover = post.data?.feature_image || "";
     const publishedAt = post.data?.published_at || post.created_at;
-    const excerpt = post.data?.excerpt || "";
+    const excerpt = post?.i18n?.[locale]?.desc || post.data?.excerpt || "";
 
     const formatDate = (dateString: string) => {
       if (!dateString) return "";

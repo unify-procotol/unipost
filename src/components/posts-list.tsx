@@ -92,7 +92,7 @@ export default function PostsList({
               {(() => {
                 const i18nContent = featuredPost.i18n?.[locale];
                 const displayTitle = i18nContent?.title || featuredPost.title;
-                const description = featuredPost.data?.excerpt || "";
+                const description = i18nContent?.desc || "";
                 const publishedAt = featuredPost.data?.published_at || featuredPost.created_at;
 
                 return (
@@ -149,7 +149,7 @@ export default function PostsList({
               const i18nContent = post.i18n?.[locale];
               const displayTitle = i18nContent?.title || post.title;
               const cover = post.data?.feature_image || "";
-              const description = post.data?.excerpt || "";
+              const description = i18nContent?.desc || post.data?.excerpt || "";
               const publishedAt = post.data?.published_at || post.created_at;
 
               return (

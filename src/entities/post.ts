@@ -1,6 +1,7 @@
 export interface I18nContent {
   title?: string;
   content?: string;
+  desc?: string;
 }
 
 interface GhostTag {
@@ -72,18 +73,15 @@ interface Primarytag {
 }
 
 export class PostEntity implements Record<string, unknown> {
-  id = 0;
+  id?: number;
   project_id = 0;
   title = "";
-  slug = "";
   content = ``;
-  i18n: Record<string, I18nContent> = {};
+  i18n?: Record<string, I18nContent>;
   status = "pending";
-  data: Partial<GhostDataType> = {
-    "feature_image": "",
-  };
-  created_at = "";
-  updated_at = "";
+  data?: Partial<GhostDataType>;
+  created_at?: string;
+  updated_at?: string;
 
   [key: string]: unknown;
 }

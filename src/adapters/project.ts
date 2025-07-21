@@ -22,6 +22,7 @@ export class ProjectAdapter extends PostgresAdapter<ProjectEntity> {
       },
     });
     if (project) {
+      console.log("Updating project", project.id);
       const ghostPosts = await getPosts(project.ghost_api_key, project.ghost_domain);
       const post = new PostAdapter();
       const rows = ghostPosts.map((ghostPost) => {
@@ -31,9 +32,9 @@ export class ProjectAdapter extends PostgresAdapter<ProjectEntity> {
         entity.project_id = project.id;
         entity.status = "pending";
         entity.data = ghostPost as unknown as Record<string, unknown>;
-        entity.slug = ghostPost.slug || "";
         entity.created_at = new Date().toISOString();
         entity.updated_at = new Date().toISOString();
+
         return entity;
       }).filter((row) => row.content.length < 10000);
       await post.batchIns(rows, ['title']);
@@ -52,7 +53,6 @@ export class ProjectAdapter extends PostgresAdapter<ProjectEntity> {
         entity.project_id = result.id;
         entity.status = "pending";
         entity.data = ghostPost as unknown as Record<string, unknown>;
-        entity.slug = ghostPost.slug || "";
         entity.created_at = new Date().toISOString();
         entity.updated_at = new Date().toISOString();
 
