@@ -7,9 +7,15 @@ export async function POST() {
     const projectAdapter = new ProjectAdapter();
 
     // Check if test project already exists
-    const existingProject = await projectAdapter.findOne({
-      where: { prefix: "testblog" }
-    });
+    let existingProject;
+    try {
+      existingProject = await projectAdapter.findOne({
+        where: { prefix: "testblog" }
+      });
+    } catch {
+      // Project doesn't exist, continue with creation
+      existingProject = null;
+    }
 
     if (existingProject) {
       return NextResponse.json({

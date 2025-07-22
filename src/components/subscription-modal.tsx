@@ -51,7 +51,19 @@ export default function SubscriptionModal({
   if (!isOpen) return null;
 
   // Translations for different locales
-  const translations: Record<string, any> = {
+  const translations: Record<string, {
+    title: string;
+    subtitle: string;
+    emailLabel: string;
+    emailPlaceholder: string;
+    nameLabel: string;
+    namePlaceholder: string;
+    subscribeButton: string;
+    subscribingButton: string;
+    closeButton: string;
+    successTitle: string;
+    successMessage: string;
+  }> = {
     en: {
       title: 'Subscribe to Newsletter',
       subtitle: `Get the latest updates from ${project.name}`,

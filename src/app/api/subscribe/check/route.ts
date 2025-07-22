@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       subscribed: result.subscribed,
-      member: result.member,
+      member: result.member || null,
     });
   } catch (error) {
     console.error('Check subscription API error:', error);

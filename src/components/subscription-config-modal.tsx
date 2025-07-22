@@ -18,7 +18,14 @@ export default function SubscriptionConfigModal({
   if (!isOpen) return null;
 
   // Translations for different locales
-  const translations: Record<string, any> = {
+  const translations: Record<string, {
+    title: string;
+    subtitle: string;
+    description: string;
+    steps: string[];
+    closeButton: string;
+    contactAdmin: string;
+  }> = {
     en: {
       title: 'Subscription Not Available',
       subtitle: 'This project needs to be configured for newsletter subscriptions',

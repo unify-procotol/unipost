@@ -52,7 +52,7 @@ export function useSubscription(): UseSubscriptionReturn {
         setError(result.message);
         return { success: false, message: result.message };
       }
-    } catch (err) {
+    } catch {
       const errorMessage = 'Network error. Please check your connection and try again.';
       setError(errorMessage);
       return { success: false, message: errorMessage };
@@ -79,7 +79,7 @@ export function useSubscription(): UseSubscriptionReturn {
         setError(result.message);
         return { success: false, message: result.message };
       }
-    } catch (err) {
+    } catch {
       const errorMessage = 'Network error. Please check your connection and try again.';
       setError(errorMessage);
       return { success: false, message: errorMessage };

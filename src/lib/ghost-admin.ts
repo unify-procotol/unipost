@@ -23,7 +23,7 @@ export class GhostSubscriptionService {
     });
   }
 
-  async subscribe(data: SubscriptionData): Promise<{ success: boolean; message: string; member?: any }> {
+  async subscribe(data: SubscriptionData): Promise<{ success: boolean; message: string; member?: unknown }> {
     try {
       // Create a new member (subscriber) in Ghost
       const member = await this.api.members.add({
@@ -38,18 +38,21 @@ export class GhostSubscriptionService {
         message: 'Successfully subscribed to newsletter!',
         member,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Ghost subscription error:', error);
       
       // Handle specific Ghost API errors
-      if (error.response?.data?.errors) {
-        const ghostError = error.response.data.errors[0];
-        
-        if (ghostError.type === 'ValidationError' && ghostError.context?.includes('email')) {
-          return {
-            success: false,
-            message: 'This email is already subscribed or invalid.',
-          };
+      if (error && typeof error === 'object' && 'response' in error) {
+        const errorResponse = error.response as { data?: { errors?: Array<{ type?: string; context?: string }> } };
+        if (errorResponse.data?.errors) {
+          const ghostError = errorResponse.data.errors[0];
+
+          if (ghostError.type === 'ValidationError' && ghostError.context?.includes('email')) {
+            return {
+              success: false,
+              message: 'This email is already subscribed or invalid.',
+            };
+          }
         }
       }
 
@@ -94,7 +97,7 @@ export class GhostSubscriptionService {
     }
   }
 
-  async checkSubscription(email: string): Promise<{ subscribed: boolean; member?: any }> {
+  async checkSubscription(email: string): Promise<{ subscribed: boolean; member?: unknown }> {
     try {
       const members = await this.api.members.browse({
         filter: `email:${email}`,
