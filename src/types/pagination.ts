@@ -4,7 +4,7 @@ import { z } from 'zod';
 export interface PaginationParams {
   page: number;
   pageSize: number;
-  projectId?: string;
+  prefix?: string;
 }
 
 // Paginated result interface
@@ -24,7 +24,7 @@ export interface PaginatedResult<T> {
 export const PaginationParamsSchema = z.object({
   page: z.number().int().min(1).default(1),
   pageSize: z.number().int().min(1).max(100).default(10),
-  projectId: z.string().optional(),
+  prefix: z.string().optional(),
 });
 
 export const PaginationQuerySchema = z.object({

@@ -9,16 +9,16 @@ export default function HeaderLanguageSwitcher() {
   const pathname = usePathname();
   const { project, loading, fetchProject } = useProject();
 
-  // Extract locale and projectId from pathname
+  // Extract locale and prefix from pathname
   const pathSegments = pathname.split('/').filter(Boolean);
   const currentLocale = pathSegments[0];
-  const projectId = pathSegments[2]; // /[locale]/project/[projectid]/...
+  const prefix = pathSegments[2]; // /[locale]/project/[prefix]/...
 
   useEffect(() => {
-    if (projectId && projectId !== 'undefined') {
-      fetchProject(projectId);
+    if (prefix && prefix !== 'undefined') {
+      fetchProject(prefix);
     }
-  }, [projectId, fetchProject]);
+  }, [prefix, fetchProject]);
 
   const handleLanguageChange = (locale: string) => {
     if (locale !== currentLocale && project) {
@@ -31,7 +31,7 @@ export default function HeaderLanguageSwitcher() {
   };
 
   // Don't show if not in a project context
-  if (!projectId) {
+  if (!prefix) {
     return null;
   }
 

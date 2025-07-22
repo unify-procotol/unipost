@@ -3,20 +3,21 @@ import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
 import BackButton from "@/components/ui/back-button";
 import SafeImage from "@/components/ui/safe-image";
+import SubscribeButton from "@/components/subscribe-button";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string; projectid: string; postId: string }>;
+  params: Promise<{ locale: string; prefix: string; postId: string }>;
 }): Promise<Metadata> {
-  const { locale, projectid: projectId, postId } = await params;
+  const { locale, prefix, postId } = await params;
 
   try {
     const [post, project] = await Promise.all([
       getPost(postId),
-      getProject(projectId)
+      getProject(prefix)
     ]);
 
     if (!post || !project) {
@@ -84,7 +85,7 @@ export async function generateMetadata({
         languages: Object.fromEntries(
           project.locales.map(loc => [
             loc,
-            `/${loc}/project/${projectId}/posts/${postId}`
+            `/${loc}/project/${prefix}/posts/${postId}`
           ])
         ),
       },
@@ -100,14 +101,14 @@ export async function generateMetadata({
 export default async function PostPage({
   params,
 }: {
-  params: Promise<{ locale: string; projectid: string; postId: string }>;
+  params: Promise<{ locale: string; prefix: string; postId: string }>;
 }) {
-  const { locale, projectid: projectId, postId } = await params;
+  const { locale, prefix, postId } = await params;
 
   try {
     const [post, project] = await Promise.all([
       getPost(postId),
-      getProject(projectId)
+      getProject(prefix)
     ]);
 
     if (!post || !project) {
@@ -192,11 +193,33 @@ export default async function PostPage({
 
                 {/* Article Content */}
                 <div
-                  className="article-content max-w-none text-lg text-gray-300 leading-relaxed"
+                  className="article-content max-w-none text-lg text-gray-300 leading-relaxed mb-12"
                   dangerouslySetInnerHTML={{
                     __html: displayContent
                   }}
                 />
+
+                {/* Newsletter Subscription */}
+                <div className="border-t border-gray-700/50 pt-8">
+                  <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-6 border border-blue-500/20">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      <div>
+                        <h3 className="text-lg font-semibold text-white mb-2">
+                          Stay Updated
+                        </h3>
+                        <p className="text-gray-400 text-sm">
+                          Subscribe to get the latest posts from {project.name} delivered to your inbox.
+                        </p>
+                      </div>
+                      <SubscribeButton
+                        project={project}
+                        locale={locale}
+                        variant="primary"
+                        size="md"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </article>
           </Container>

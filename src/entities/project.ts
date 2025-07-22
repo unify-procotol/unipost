@@ -2,8 +2,10 @@
 export class ProjectEntity implements Record<string, unknown> {
   id = 0;
   uid = 0;
+  prefix='';
   name = "";
   ghost_api_key = "";
+  ghost_admin_key = "";
   ghost_domain = "";
   created_at = "";
   updated_at = "";

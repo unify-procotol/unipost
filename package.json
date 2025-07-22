@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.3.23",
+    "@tryghost/admin-api": "^1.13.17",
     "@tryghost/content-api": "^1.11.28",
     "@unilab/urpc": "^0.0.5",
     "@unilab/urpc-core": "^0.0.3",

@@ -15,11 +15,11 @@ export async function getProjects(): Promise<ProjectEntity[]> {
   }
 }
 
-export async function getProject(id: string): Promise<ProjectEntity | null> {
+export async function getProject(prefix: string): Promise<ProjectEntity | null> {
   try {
     const projectAdapter = new ProjectAdapter();
     const data = await projectAdapter.findOne({
-      where: { id: parseInt(id) },
+      where: { prefix: prefix},
     });
     return data;
   } catch (error) {
@@ -57,7 +57,7 @@ export async function getPost(id: string): Promise<PostEntity | null> {
 }
 
 export async function getPaginatedPosts(
-  projectId?: string,
+  prefix?: string,
   page: number = 1,
   pageSize: number = 10
 ): Promise<PaginatedResult<PostEntity>> {
@@ -68,13 +68,13 @@ export async function getPaginatedPosts(
     const validatedParams = PaginationParamsSchema.parse({
       page,
       pageSize,
-      projectId,
+      prefix,
     });
 
     const paginationParams: PaginationParams = {
       page: validatedParams.page,
       pageSize: validatedParams.pageSize,
-      projectId: validatedParams.projectId,
+      prefix: validatedParams.prefix,
     };
 
     const result = await postAdapter.findManyPaginated(paginationParams);

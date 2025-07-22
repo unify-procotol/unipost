@@ -18,7 +18,7 @@ export class PostAdapter extends PostgresAdapter<PostEntity> {
    */
   async findManyPaginated(params: PaginationParams): Promise<PaginatedResult<PostEntity>> {
     try {
-      const { page, pageSize, projectId } = params;
+      const { page, pageSize, prefix } = params;
       const offset = (page - 1) * pageSize;
 
       // Build WHERE clause for project filtering
@@ -26,20 +26,25 @@ export class PostAdapter extends PostgresAdapter<PostEntity> {
       const values: unknown[] = [];
       let paramIndex = 1;
 
-      if (projectId) {
-        whereClause = `WHERE project_id = $${paramIndex}`;
-        values.push(parseInt(projectId));
+      if (prefix) {
+        // Join with projects table to filter by prefix
+        whereClause = `
+          WHERE posts.project_id = projects.id
+          AND projects.prefix = $${paramIndex}
+        `;
+        values.push(prefix);
         paramIndex++;
       }
 
       // Get total count
-      const totalItems = await this.getPostsCount(projectId);
+      const totalItems = await this.getPostsCount(prefix);
 
       // Get paginated posts
       const query = `
-        SELECT * FROM ${this.tableName}
+        SELECT posts.* FROM ${this.tableName} posts
+        ${prefix ? 'JOIN projects ON posts.project_id = projects.id' : ''}
         ${whereClause}
-        ORDER BY created_at DESC
+        ORDER BY posts.data ->> 'published_at' desc
         LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
       `;
 
@@ -64,19 +69,27 @@ export class PostAdapter extends PostgresAdapter<PostEntity> {
   }
 
   /**
-   * Get total count of posts, optionally filtered by project
+   * Get total count of posts, optionally filtered by project prefix
    */
-  async getPostsCount(projectId?: string): Promise<number> {
+  async getPostsCount(prefix?: string): Promise<number> {
     try {
       let whereClause = "";
       const values: unknown[] = [];
 
-      if (projectId) {
-        whereClause = "WHERE project_id = $1";
-        values.push(parseInt(projectId));
+      if (prefix) {
+        whereClause = `
+          WHERE posts.project_id = projects.id
+          AND projects.prefix = $1
+        `;
+        values.push(prefix);
       }
 
-      const query = `SELECT COUNT(*) as count FROM ${this.tableName} ${whereClause}`;
+      const query = `
+        SELECT COUNT(*) as count
+        FROM ${this.tableName} posts
+        ${prefix ? 'JOIN projects ON posts.project_id = projects.id' : ''}
+        ${whereClause}
+      `;
       const result = await this.sql.unsafe(query, values);
 
       return parseInt(result[0]?.count || '0');

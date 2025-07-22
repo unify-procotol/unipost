@@ -9,7 +9,7 @@ interface UseProjectReturn {
   project: ProjectEntity | null;
   loading: boolean;
   error: string | null;
-  fetchProject: (id: string) => Promise<void>;
+  fetchProject: (prefix: string) => Promise<void>;
 }
 
 export function useProject(): UseProjectReturn {
@@ -17,7 +17,7 @@ export function useProject(): UseProjectReturn {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchProject = useCallback(async (id: string) => {
+  const fetchProject = useCallback(async (prefix: string) => {
     setLoading(true);
     setError(null);
 
@@ -26,7 +26,7 @@ export function useProject(): UseProjectReturn {
         entity: "ProjectEntity",
         source: "postgres",
       }).findOne({
-        where: { id: parseInt(id) },
+        where: { prefix: prefix },
       });
       setProject(data);
     } catch (err) {

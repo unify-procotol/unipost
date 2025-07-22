@@ -17,14 +17,14 @@ interface PaginationMeta {
 interface PostsPageWrapperProps {
   posts: PostEntity[];
   locale: string;
-  projectId: string;
+  prefix: string;
   pagination: PaginationMeta;
 }
 
 export default function PostsPageWrapper({
   posts,
   locale,
-  projectId,
+  prefix,
   pagination,
 }: PostsPageWrapperProps) {
   const router = useRouter();
@@ -42,9 +42,9 @@ export default function PostsPageWrapper({
   const handlePageChange = useCallback(
     (page: number) => {
       const queryString = createQueryString('page', page.toString());
-      router.push(`/${locale}/project/${projectId}/posts?${queryString}`);
+      router.push(`/${locale}/project/${prefix}/posts?${queryString}`);
     },
-    [router, locale, projectId, createQueryString]
+    [router, locale, prefix, createQueryString]
   );
 
   const handlePageSizeChange = useCallback(
@@ -54,16 +54,16 @@ export default function PostsPageWrapper({
       // Reset to page 1 when changing page size
       params.set('page', '1');
       const queryString = params.toString();
-      router.push(`/${locale}/project/${projectId}/posts?${queryString}`);
+      router.push(`/${locale}/project/${prefix}/posts?${queryString}`);
     },
-    [router, locale, projectId, searchParams]
+    [router, locale, prefix, searchParams]
   );
 
   return (
     <PostsList
       posts={posts}
       locale={locale}
-      projectId={projectId}
+      prefix={prefix}
       pagination={pagination}
       onPageChange={handlePageChange}
       onPageSizeChange={handlePageSizeChange}

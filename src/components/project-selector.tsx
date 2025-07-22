@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { ProjectEntity } from "@/entities/project";
 import Container from "./ui/container";
+import SubscribeButton from "./subscribe-button";
 
 interface ProjectSelectorProps {
   projects: ProjectEntity[];
@@ -15,7 +16,7 @@ export default function ProjectSelector({ projects }: ProjectSelectorProps) {
     // Get the first language as default locale
     const defaultLocale = project.locales[0];
     if (defaultLocale) {
-      router.push(`/${defaultLocale}/project/${project.id}/posts`);
+      router.push(`/${defaultLocale}/project/${project.prefix}/posts`);
     }
   };
 
@@ -106,13 +107,23 @@ export default function ProjectSelector({ projects }: ProjectSelectorProps) {
                 )}
               </div>
 
-              {/* Action Indicator */}
+              {/* Actions */}
               <div className="mt-4 pt-4 border-t border-gray-700/50">
-                <div className="flex items-center text-sm text-gray-400 group-hover:text-blue-300 transition-colors">
-                  <span>View posts</span>
-                  <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center text-sm text-gray-400 group-hover:text-blue-300 transition-colors">
+                    <span>View posts</span>
+                    <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <SubscribeButton
+                      project={project}
+                      locale={project.locales[0] || 'en'}
+                      variant="outline"
+                      size="sm"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

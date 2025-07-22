@@ -3,6 +3,7 @@ import PostsPageWrapper from "@/components/posts-page-wrapper";
 import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
 import BackButton from "@/components/ui/back-button";
+import SubscribeButton from "@/components/subscribe-button";
 import { notFound, redirect } from "next/navigation";
 import { PaginationQuerySchema } from "@/types/pagination";
 import type { Metadata } from "next";
@@ -10,12 +11,12 @@ import type { Metadata } from "next";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string; projectid: string }>;
+  params: Promise<{ locale: string; prefix: string }>;
 }): Promise<Metadata> {
-  const { locale, projectid: projectId } = await params;
+  const { locale, prefix } = await params;
 
   try {
-    const project = await getProject(projectId);
+    const project = await getProject(prefix);
 
     if (!project) {
       return {
@@ -65,7 +66,7 @@ export async function generateMetadata({
         languages: Object.fromEntries(
           project.locales.map(loc => [
             loc,
-            `/${loc}/project/${projectId}/posts`
+            `/${loc}/project/${prefix}/posts`
           ])
         ),
       },
@@ -82,10 +83,10 @@ export default async function PostsPage({
   params,
   searchParams,
 }: {
-  params: Promise<{ locale: string; projectid: string }>;
+  params: Promise<{ locale: string; prefix: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { locale, projectid: projectId } = await params;
+  const { locale, prefix } = await params;
   const rawSearchParams = await searchParams;
 
   try {
@@ -96,8 +97,8 @@ export default async function PostsPage({
     });
 
     const [paginatedResult, project] = await Promise.all([
-      getPaginatedPosts(projectId, paginationParams.page, paginationParams.pageSize),
-      getProject(projectId)
+      getPaginatedPosts(prefix, paginationParams.page, paginationParams.pageSize),
+      getProject(prefix)
     ]);
 
     if (!project) {
@@ -107,7 +108,7 @@ export default async function PostsPage({
     // Handle invalid page numbers - redirect to last available page
     if (paginatedResult.pagination.totalPages > 0 && 
         paginationParams.page > paginatedResult.pagination.totalPages) {
-      const lastPageUrl = `/${locale}/project/${projectId}/posts?page=${paginatedResult.pagination.totalPages}${
+      const lastPageUrl = `/${locale}/project/${prefix}/posts?page=${paginatedResult.pagination.totalPages}${
         paginationParams.pageSize !== 10 ? `&pageSize=${paginationParams.pageSize}` : ''
       }`;
       redirect(lastPageUrl);
@@ -128,15 +129,21 @@ export default async function PostsPage({
                 <h1 className="text-2xl font-bold text-white">{project.name}</h1>
                 <p className="text-gray-400 text-sm">Manage your multilingual posts</p>
               </div>
+              <SubscribeButton
+                project={project}
+                locale={locale}
+                variant="outline"
+                size="md"
+              />
             </div>
           </Container>
         </div>
 
         {/* Posts List - Full Width */}
-        <PostsPageWrapper 
-          posts={paginatedResult.data} 
-          locale={locale} 
-          projectId={projectId}
+        <PostsPageWrapper
+          posts={paginatedResult.data}
+          locale={locale}
+          prefix={prefix}
           pagination={paginatedResult.pagination}
         />
       </MainLayout>
