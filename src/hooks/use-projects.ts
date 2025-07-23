@@ -1,12 +1,17 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { repo } from '@unilab/urpc';
 import { ProjectEntity } from '@/entities/project';
-import '@/lib/urpc-client'; // Initialize URPC client
+import { PublicProjectEntity } from '@/entities/public-project';
+import {
+  getProjectsAction,
+  createProjectAction,
+  updateProjectAction,
+  deleteProjectAction
+} from '@/actions/project-actions';
 
 interface UseProjectsReturn {
-  projects: ProjectEntity[];
+  projects: PublicProjectEntity[];
   loading: boolean;
   error: string | null;
   fetchProjects: () => Promise<void>;
@@ -16,7 +21,7 @@ interface UseProjectsReturn {
 }
 
 export function useProjects(): UseProjectsReturn {
-  const [projects, setProjects] = useState<ProjectEntity[]>([]);
+  const [projects, setProjects] = useState<PublicProjectEntity[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,11 +30,9 @@ export function useProjects(): UseProjectsReturn {
     setError(null);
 
     try {
-      const data = await repo<ProjectEntity>({
-        entity: "ProjectEntity",
-        source: "postgres",
-      }).findMany({});
-      setProjects(data || []);
+      // Use server action - no sensitive data transmitted to client
+      const data = await getProjectsAction();
+      setProjects(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -42,12 +45,12 @@ export function useProjects(): UseProjectsReturn {
     setError(null);
 
     try {
-      await repo<ProjectEntity>({
-        entity: "ProjectEntity",
-        source: "postgres",
-      }).create({
-        data,
-      });
+      // Use server action - secure server-side processing
+      const result = await createProjectAction(data);
+
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to create project');
+      }
 
       // Refresh projects list
       await fetchProjects();
@@ -64,13 +67,12 @@ export function useProjects(): UseProjectsReturn {
     setError(null);
 
     try {
-      await repo<ProjectEntity>({
-        entity: "ProjectEntity",
-        source: "postgres",
-      }).update({
-        where: { id: parseInt(id) },
-        data,
-      });
+      // Use server action - secure server-side processing
+      const result = await updateProjectAction(parseInt(id), data);
+
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to update project');
+      }
 
       // Refresh projects list
       await fetchProjects();
@@ -87,12 +89,12 @@ export function useProjects(): UseProjectsReturn {
     setError(null);
 
     try {
-      await repo<ProjectEntity>({
-        entity: "ProjectEntity",
-        source: "postgres",
-      }).delete({
-        where: { id: parseInt(id) },
-      });
+      // Use server action - secure server-side processing
+      const result = await deleteProjectAction(parseInt(id));
+
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to delete project');
+      }
 
       // Refresh projects list
       await fetchProjects();

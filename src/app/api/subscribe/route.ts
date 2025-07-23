@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getProject } from '@/lib/data';
+import { getProjectWithSecrets } from '@/lib/data';
 import { createGhostSubscriptionService } from '@/lib/ghost-admin';
 
 // Validation schema for subscription request
@@ -18,8 +18,8 @@ export async function POST(request: NextRequest) {
     // Validate request data
     const validatedData = SubscribeSchema.parse(body);
     
-    // Get project information
-    const project = await getProject(validatedData.prefix);
+    // Get project information with secrets (server-side only)
+    const project = await getProjectWithSecrets(validatedData.prefix);
     
     if (!project) {
       return NextResponse.json(
@@ -95,8 +95,8 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Get project information
-    const project = await getProject(prefix);
+    // Get project information with secrets (server-side only)
+    const project = await getProjectWithSecrets(prefix);
     
     if (!project || !project.ghost_admin_key) {
       return NextResponse.json(

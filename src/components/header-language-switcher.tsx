@@ -9,10 +9,10 @@ export default function HeaderLanguageSwitcher() {
   const pathname = usePathname();
   const { project, loading, fetchProject } = useProject();
 
-  // Extract locale and prefix from pathname
+  // Extract prefix and locale from pathname
   const pathSegments = pathname.split('/').filter(Boolean);
-  const currentLocale = pathSegments[0];
-  const prefix = pathSegments[2]; // /[locale]/project/[prefix]/...
+  const prefix = pathSegments[1]; // /project/[prefix]/[locale]/...
+  const currentLocale = pathSegments[2];
 
   useEffect(() => {
     if (prefix && prefix !== 'undefined') {
@@ -24,7 +24,7 @@ export default function HeaderLanguageSwitcher() {
     if (locale !== currentLocale && project) {
       // Reconstruct the current path with new locale
       const newPathSegments = [...pathSegments];
-      newPathSegments[0] = locale; // Replace locale
+      newPathSegments[2] = locale; // Replace locale (now at index 2)
       const newPath = '/' + newPathSegments.join('/');
       router.push(newPath);
     }

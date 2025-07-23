@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { ProjectAdapter } from "@/adapters/project";
+import { createProjectAction } from "@/actions/project-actions";
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  const projectAdapter = new ProjectAdapter();
-  const project = await projectAdapter.create({
-    data: {
+  try {
+    const body = await request.json();
+
+    const result = await createProjectAction({
       uid: body.uid,
       name: body.name,
       prefix: body.prefix,
@@ -14,9 +14,22 @@ export async function POST(request: Request) {
       ghost_domain: body.ghost_domain,
       locales: body.locales,
       rule: body.rule,
-    },
-  });
-  return NextResponse.json({
-    project,
-  });
+    });
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json({
+      project: result.project,
+    });
+  } catch {
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
 }

@@ -16,7 +16,7 @@ const UnipostPlugin: Plugin = {
       adapter: new ProjectAdapter(),
     },
     {
-      source: "postgres", 
+      source: "postgres",
       entity: "PostEntity",
       adapter: new PostAdapter(),
     },

@@ -1,19 +1,18 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { repo } from '@unilab/urpc';
-import { ProjectEntity } from '@/entities/project';
-import '@/lib/urpc-client'; // Initialize URPC client
+import { PublicProjectEntity } from '@/entities/public-project';
+import { getProjectAction } from '@/actions/project-actions';
 
 interface UseProjectReturn {
-  project: ProjectEntity | null;
+  project: PublicProjectEntity | null;
   loading: boolean;
   error: string | null;
   fetchProject: (prefix: string) => Promise<void>;
 }
 
 export function useProject(): UseProjectReturn {
-  const [project, setProject] = useState<ProjectEntity | null>(null);
+  const [project, setProject] = useState<PublicProjectEntity | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,12 +21,8 @@ export function useProject(): UseProjectReturn {
     setError(null);
 
     try {
-      const data = await repo<ProjectEntity>({
-        entity: "ProjectEntity",
-        source: "postgres",
-      }).findOne({
-        where: { prefix: prefix },
-      });
+      // Use server action - no sensitive data transmitted to client
+      const data = await getProjectAction(prefix);
       setProject(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');

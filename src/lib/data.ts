@@ -1,27 +1,29 @@
 import { ProjectEntity } from '@/entities/project';
+import { PublicProjectEntity } from '@/entities/public-project';
 import { PostEntity } from '@/entities/post';
 import { ProjectAdapter } from '@/adapters/project';
 import { PostAdapter } from '@/adapters/post';
 import { PaginatedResult, PaginationParams, PaginationParamsSchema } from '@/types/pagination';
+import { sanitizeProjects, sanitizeProject } from '@/lib/data-sanitizer';
 
-export async function getProjects(): Promise<ProjectEntity[]> {
+export async function getProjects(): Promise<PublicProjectEntity[]> {
   try {
     const projectAdapter = new ProjectAdapter();
     const data = await projectAdapter.findMany({});
-    return data || [];
+    return sanitizeProjects(data || []);
   } catch (error) {
     console.error('Error fetching projects:', error);
     return [];
   }
 }
 
-export async function getProject(prefix: string): Promise<ProjectEntity | null> {
+export async function getProject(prefix: string): Promise<PublicProjectEntity | null> {
   try {
     const projectAdapter = new ProjectAdapter();
     const data = await projectAdapter.findOne({
       where: { prefix: prefix},
     });
-    return data;
+    return data ? sanitizeProject(data) : null;
   } catch (error) {
     console.error('Error fetching project:', error);
     return null;
@@ -94,5 +96,44 @@ export async function getPaginatedPosts(
         hasPreviousPage: false,
       },
     };
+  }
+}
+
+/**
+ * Server-side only functions that return full project data with secrets
+ * These should NEVER be used in client-side code or exposed to the frontend
+ */
+
+export async function getProjectWithSecrets(prefix: string): Promise<ProjectEntity | null> {
+  // Ensure this is only called server-side
+  if (typeof window !== 'undefined') {
+    throw new Error('getProjectWithSecrets should only be called server-side');
+  }
+
+  try {
+    const projectAdapter = new ProjectAdapter();
+    const data = await projectAdapter.findOne({
+      where: { prefix: prefix},
+    });
+    return data;
+  } catch (error) {
+    console.error('Error fetching project with secrets:', error);
+    return null;
+  }
+}
+
+export async function getProjectsWithSecrets(): Promise<ProjectEntity[]> {
+  // Ensure this is only called server-side
+  if (typeof window !== 'undefined') {
+    throw new Error('getProjectsWithSecrets should only be called server-side');
+  }
+
+  try {
+    const projectAdapter = new ProjectAdapter();
+    const data = await projectAdapter.findMany({});
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching projects with secrets:', error);
+    return [];
   }
 }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getProject } from '@/lib/data';
+import { getProjectWithSecrets } from '@/lib/data';
 import { createGhostSubscriptionService } from '@/lib/ghost-admin';
 
 export async function GET(request: NextRequest) {
@@ -15,8 +15,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get project information
-    const project = await getProject(prefix);
+    // Get project information with secrets (server-side only)
+    const project = await getProjectWithSecrets(prefix);
     
     if (!project || !project.ghost_admin_key) {
       return NextResponse.json(

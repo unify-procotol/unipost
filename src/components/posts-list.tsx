@@ -106,7 +106,7 @@ export default function PostsList({
 
                     <h1
                       className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight cursor-pointer hover:text-blue-300 transition-colors"
-                      onClick={() => router.push(`/${locale}/project/${prefix}/posts/${featuredPost.id}`)}
+                      onClick={() => router.push(`/project/${prefix}/${locale}/posts/${featuredPost.id}`)}
                     >
                       {displayTitle}
                     </h1>
@@ -156,7 +156,7 @@ export default function PostsList({
                 <article
                   key={post.id}
                   className="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 cursor-pointer hover:transform hover:scale-105"
-                  onClick={() => router.push(`/${locale}/project/${prefix}/posts/${post.id}`)}
+                  onClick={() => router.push(`/project/${prefix}/${locale}/posts/${post.id}`)}
                 >
                   {cover && (
                     <div className="aspect-video overflow-hidden">

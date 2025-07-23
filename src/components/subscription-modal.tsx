@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { ProjectEntity } from '@/entities/project';
+import { PublicProjectEntity } from '@/entities/public-project';
 import { useSubscription } from '@/hooks/use-subscription';
 
 interface SubscriptionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  project: ProjectEntity;
+  project: PublicProjectEntity;
   locale: string;
 }
 

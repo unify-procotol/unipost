@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { ProjectAdapter } from "@/adapters/project";
+import { sanitizeProject, sanitizeProjects } from "@/lib/data-sanitizer";
 
 // This is a development-only endpoint to create a test project with subscription enabled
 export async function POST() {
@@ -21,8 +22,8 @@ export async function POST() {
       return NextResponse.json({
         success: true,
         message: "Test project already exists",
-        project: existingProject,
-        note: "Visit: http://localhost:3000/en/project/testblog/posts"
+        project: sanitizeProject(existingProject),
+        note: "Visit: http://localhost:3000/project/testblog/en/posts"
       });
     }
 
@@ -45,8 +46,8 @@ export async function POST() {
     return NextResponse.json({
       success: true,
       message: "Test project created successfully",
-      project: testProject,
-      note: "Visit: http://localhost:3000/en/project/testblog/posts to see the subscription button"
+      project: sanitizeProject(testProject),
+      note: "Visit: http://localhost:3000/project/testblog/en/posts to see the subscription button"
     });
   } catch (error) {
     console.error('Error creating test project:', error);
@@ -69,7 +70,7 @@ export async function GET() {
     
     return NextResponse.json({
       success: true,
-      projects: projects,
+      projects: sanitizeProjects(projects),
       count: projects.length,
     });
   } catch (error) {

@@ -1,11 +1,11 @@
 'use client';
 
-import { ProjectEntity } from '@/entities/project';
+import { PublicProjectEntity } from '@/entities/public-project';
 
 interface SubscriptionConfigModalProps {
   isOpen: boolean;
   onClose: () => void;
-  project: ProjectEntity;
+  project: PublicProjectEntity;
   locale: string;
 }
 

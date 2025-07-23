@@ -1,22 +1,22 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ProjectEntity } from "@/entities/project";
+import { PublicProjectEntity } from "@/entities/public-project";
 import Container from "./ui/container";
 import SubscribeButton from "./subscribe-button";
 
 interface ProjectSelectorProps {
-  projects: ProjectEntity[];
+  projects: PublicProjectEntity[];
 }
 
 export default function ProjectSelector({ projects }: ProjectSelectorProps) {
   const router = useRouter();
 
-  const handleProjectClick = (project: ProjectEntity) => {
+  const handleProjectClick = (project: PublicProjectEntity) => {
     // Get the first language as default locale
     const defaultLocale = project.locales[0];
     if (defaultLocale) {
-      router.push(`/${defaultLocale}/project/${project.prefix}/posts`);
+      router.push(`/project/${project.prefix}/${defaultLocale}/posts`);
     }
   };
 

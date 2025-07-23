@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { ProjectEntity } from '@/entities/project';
+import { PublicProjectEntity } from '@/entities/public-project';
 import SubscriptionModal from './subscription-modal';
 
 interface SubscribeButtonProps {
-  project: ProjectEntity;
+  project: PublicProjectEntity;
   locale: string;
   variant?: 'primary' | 'secondary' | 'outline';
   size?: 'sm' | 'md' | 'lg';
@@ -21,8 +21,8 @@ export default function SubscribeButton({
 }: SubscribeButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Don't render if project doesn't have Ghost Admin API key
-  if (!project.ghost_admin_key || project.ghost_admin_key.trim() === '') {
+  // Don't render if project doesn't have subscription capability
+  if (!project.has_subscription) {
     return null;
   }
 
