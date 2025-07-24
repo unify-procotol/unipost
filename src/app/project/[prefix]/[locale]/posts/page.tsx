@@ -2,7 +2,8 @@ import { getPaginatedPosts, getProject } from "@/lib/data";
 import PostsPageWrapper from "@/components/posts-page-wrapper";
 import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
-import SubscribeButton from "@/components/subscribe-button";
+import Breadcrumb from "@/components/seo/breadcrumb";
+import { generateProjectPostsBreadcrumbs } from "@/lib/breadcrumb-utils";
 import { notFound, redirect } from "next/navigation";
 import { PaginationQuerySchema } from "@/types/pagination";
 import type { Metadata } from "next";
@@ -112,33 +113,26 @@ export default async function PostsPage({
     );
 
     return (
-      <MainLayout project={project}>
-        {/* Fixed Header */}
-        <div className="bg-gray-900 border-b border-gray-700">
-          <Container className="py-8 px-4">
-            <div className="text-center">
-              <h1 className="text-3xl font-bold text-white mb-2">{project.name}</h1>
-              <p className="text-gray-400 text-lg mb-6">Manage your multilingual posts</p>
-              {project.has_subscription && (
-                <SubscribeButton 
-                  project={project} 
-                  locale={locale} 
-                  variant="primary"
-                  size="lg"
-                  className="shadow-lg"
-                />
-              )}
+      <MainLayout project={project} locale={locale}>
+        <div className="min-h-screen">
+          <Container className="py-8 px-6" size="xl">
+            {/* Breadcrumb Navigation */}
+            <div className="mb-8">
+              <Breadcrumb 
+                items={generateProjectPostsBreadcrumbs(project.name, prefix, locale)}
+                className="text-gray-600 hover:text-gray-900 transition-colors"
+              />
             </div>
+
+            {/* Posts List */}
+            <PostsPageWrapper 
+              posts={paginatedResult.data} 
+              locale={locale} 
+              prefix={prefix}
+              pagination={paginatedResult.pagination}
+            />
           </Container>
         </div>
-
-        {/* Posts List - Full Width */}
-        <PostsPageWrapper 
-          posts={paginatedResult.data} 
-          locale={locale} 
-          prefix={prefix}
-          pagination={paginatedResult.pagination}
-        />
       </MainLayout>
     );
   } catch (error) {

@@ -88,12 +88,12 @@ export default function Pagination({
   return (
     <div className={`flex flex-col sm:flex-row items-center justify-between gap-4 ${className}`}>
       {/* Results summary */}
-      <div className="text-sm text-gray-400">
+      <div className="text-sm text-gray-600">
         {totalItems > 0 ? (
           <>
-            Showing <span className="font-medium text-white">{startItem}</span> to{' '}
-            <span className="font-medium text-white">{endItem}</span> of{' '}
-            <span className="font-medium text-white">{totalItems}</span> posts
+            Showing <span className="font-medium text-gray-900">{startItem}</span> to{' '}
+            <span className="font-medium text-gray-900">{endItem}</span> of{' '}
+            <span className="font-medium text-gray-900">{totalItems}</span> posts
           </>
         ) : (
           'No posts found'
@@ -104,7 +104,7 @@ export default function Pagination({
         {/* Page size selector */}
         {showPageSizeSelector && onPageSizeChange && (
           <div className="flex items-center gap-2">
-            <label htmlFor="pageSize" className="text-sm text-gray-400">
+            <label htmlFor="pageSize" className="text-sm text-gray-600">
               Show:
             </label>
             <select
@@ -112,7 +112,7 @@ export default function Pagination({
               value={pageSize}
               onChange={(e) => handlePageSizeChange(parseInt(e.target.value))}
               disabled={isChangingPageSize}
-              className="bg-gray-800 border border-gray-600 text-white text-sm rounded-lg px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
+              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
               aria-label="Posts per page"
             >
               {PAGE_SIZE_OPTIONS.map((size) => (
@@ -131,7 +131,7 @@ export default function Pagination({
             <button
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage <= 1}
-              className="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-800 border border-gray-600 rounded-lg hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-800 disabled:hover:text-gray-400 transition-colors"
+              className="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-600 transition-colors"
               aria-label="Go to previous page"
             >
               Previous
@@ -142,14 +142,14 @@ export default function Pagination({
               {getVisiblePages().map((page, index) => (
                 <span key={index}>
                   {page === '...' ? (
-                    <span className="px-3 py-2 text-sm text-gray-400">...</span>
+                    <span className="px-3 py-2 text-sm text-gray-600">...</span>
                   ) : (
                     <button
                       onClick={() => onPageChange(page as number)}
                       className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                         currentPage === page
                           ? 'bg-blue-600 text-white border border-blue-600'
-                          : 'text-gray-400 bg-gray-800 border border-gray-600 hover:bg-gray-700 hover:text-white'
+                          : 'text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900'
                       }`}
                       aria-label={`Go to page ${page}`}
                       aria-current={currentPage === page ? 'page' : undefined}
@@ -162,7 +162,7 @@ export default function Pagination({
             </div>
 
             {/* Mobile page indicator */}
-            <div className="sm:hidden px-3 py-2 text-sm text-gray-400 bg-gray-800 border border-gray-600 rounded-lg">
+            <div className="sm:hidden px-3 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-lg">
               {currentPage} / {totalPages}
             </div>
 
@@ -170,7 +170,7 @@ export default function Pagination({
             <button
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage >= totalPages}
-              className="px-3 py-2 text-sm font-medium text-gray-400 bg-gray-800 border border-gray-600 rounded-lg hover:bg-gray-700 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-800 disabled:hover:text-gray-400 transition-colors"
+              className="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-gray-600 transition-colors"
               aria-label="Go to next page"
             >
               Next

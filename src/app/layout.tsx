@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import PerformanceMonitor from "@/components/seo/performance-monitor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -84,8 +85,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="UniPost" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gray-50`}
       >
+        <PerformanceMonitor />
         {children}
       </body>
     </html>

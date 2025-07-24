@@ -29,12 +29,12 @@ export default function SubscribeButton({
   // Translations for different locales
   const translations: Record<string, string> = {
     en: 'Subscribe',
-    zh: '订阅',
-    es: 'Suscribirse',
-    fr: "S'abonner",
-    de: 'Abonnieren',
-    ja: '購読',
-    ko: '구독',
+    zh: 'Subscribe',
+    es: 'Subscribe',
+    fr: 'Subscribe',
+    de: 'Subscribe',
+    ja: 'Subscribe',
+    ko: 'Subscribe',
   };
 
   const buttonText = translations[locale] || translations.en;
@@ -43,7 +43,7 @@ export default function SubscribeButton({
   const variants = {
     primary: 'bg-blue-600 hover:bg-blue-700 text-white border-transparent',
     secondary: 'bg-gray-600 hover:bg-gray-700 text-white border-transparent',
-    outline: 'bg-transparent hover:bg-blue-600/10 text-blue-400 border-blue-500/50 hover:border-blue-400',
+    outline: 'bg-transparent hover:bg-blue-600/10 text-blue-600 border-blue-500/50 hover:border-blue-500',
   };
 
   // Size variants
@@ -53,7 +53,7 @@ export default function SubscribeButton({
     lg: 'px-6 py-3 text-base',
   };
 
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900';
+  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white';
   
   const buttonClasses = `${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`;
 

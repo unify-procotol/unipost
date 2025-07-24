@@ -6,12 +6,13 @@ interface MainLayoutProps {
   children: React.ReactNode;
   className?: string;
   project?: PublicProjectEntity | null;
+  locale?: string;
 }
 
-export default function MainLayout({ children, className = "", project }: MainLayoutProps) {
+export default function MainLayout({ children, className = "", project, locale }: MainLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <Header project={project} />
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      <Header project={project} locale={locale} />
       <main className={`flex-1 ${className}`}>
         {children}
       </main>

@@ -78,30 +78,30 @@ export default function SubscriptionModal({
       successMessage: 'Thank you for subscribing. You will receive updates in your inbox.',
     },
     zh: {
-      title: '订阅新闻通讯',
-      subtitle: `获取来自 ${project.name} 的最新更新`,
-      emailLabel: '邮箱地址',
-      emailPlaceholder: '请输入您的邮箱',
-      nameLabel: '姓名（可选）',
-      namePlaceholder: '请输入您的姓名',
-      subscribeButton: '订阅',
-      subscribingButton: '订阅中...',
-      closeButton: '关闭',
-      successTitle: '订阅成功！',
-      successMessage: '感谢您的订阅。您将在收件箱中收到更新。',
+      title: 'Subscribe to Newsletter',
+      subtitle: `Get the latest updates from ${project.name}`,
+      emailLabel: 'Email Address',
+      emailPlaceholder: 'Enter your email',
+      nameLabel: 'Name (Optional)',
+      namePlaceholder: 'Enter your name',
+      subscribeButton: 'Subscribe',
+      subscribingButton: 'Subscribing...',
+      closeButton: 'Close',
+      successTitle: 'Successfully Subscribed!',
+      successMessage: 'Thank you for subscribing. You will receive updates in your inbox.',
     },
     es: {
-      title: 'Suscribirse al Boletín',
-      subtitle: `Recibe las últimas actualizaciones de ${project.name}`,
-      emailLabel: 'Dirección de Correo',
-      emailPlaceholder: 'Ingresa tu correo',
-      nameLabel: 'Nombre (Opcional)',
-      namePlaceholder: 'Ingresa tu nombre',
-      subscribeButton: 'Suscribirse',
-      subscribingButton: 'Suscribiendo...',
-      closeButton: 'Cerrar',
-      successTitle: '¡Suscripción Exitosa!',
-      successMessage: 'Gracias por suscribirte. Recibirás actualizaciones en tu bandeja de entrada.',
+      title: 'Subscribe to Newsletter',
+      subtitle: `Get the latest updates from ${project.name}`,
+      emailLabel: 'Email Address',
+      emailPlaceholder: 'Enter your email',
+      nameLabel: 'Name (Optional)',
+      namePlaceholder: 'Enter your name',
+      subscribeButton: 'Subscribe',
+      subscribingButton: 'Subscribing...',
+      closeButton: 'Close',
+      successTitle: 'Successfully Subscribed!',
+      successMessage: 'Thank you for subscribing. You will receive updates in your inbox.',
     },
   };
 
@@ -109,17 +109,17 @@ export default function SubscriptionModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-2xl border border-gray-700 max-w-md w-full mx-4 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-200 max-w-md w-full mx-4 overflow-hidden shadow-xl">
         {/* Header */}
-        <div className="p-6 border-b border-gray-700">
+        <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold text-white">{t.title}</h2>
-              <p className="text-gray-400 text-sm mt-1">{t.subtitle}</p>
+              <h2 className="text-xl font-bold text-gray-900">{t.title}</h2>
+              <p className="text-gray-600 text-sm mt-1">{t.subtitle}</p>
             </div>
             <button
               onClick={handleClose}
-              className="text-gray-400 hover:text-gray-300 transition-colors"
+              className="text-gray-600 hover:text-gray-800 transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -137,8 +137,8 @@ export default function SubscriptionModal({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-white mb-2">{t.successTitle}</h3>
-              <p className="text-gray-400 mb-6">{t.successMessage}</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.successTitle}</h3>
+              <p className="text-gray-600 mb-6">{t.successMessage}</p>
               <button
                 onClick={handleClose}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
@@ -150,7 +150,7 @@ export default function SubscriptionModal({
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email Input */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                   {t.emailLabel}
                 </label>
                 <input
@@ -159,14 +159,14 @@ export default function SubscriptionModal({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t.emailPlaceholder}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
               </div>
 
               {/* Name Input */}
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                   {t.nameLabel}
                 </label>
                 <input
@@ -175,7 +175,7 @@ export default function SubscriptionModal({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder={t.namePlaceholder}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -190,7 +190,7 @@ export default function SubscriptionModal({
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center"
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center"
               >
                 {loading ? (
                   <>

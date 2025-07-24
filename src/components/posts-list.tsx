@@ -44,16 +44,16 @@ export default function PostsList({
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      pending: { color: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30", text: "Pending" },
-      translated: { color: "bg-green-500/20 text-green-300 border-green-500/30", text: "Translated" },
-      translating: { color: "bg-blue-500/20 text-blue-300 border-blue-500/30", text: "Translating" },
+      pending: { color: "bg-yellow-100 text-yellow-800 border-yellow-300 shadow-yellow-200/50", text: "Pending" },
+      translated: { color: "bg-green-100 text-green-800 border-green-300 shadow-green-200/50", text: "Translated" },
+      translating: { color: "bg-blue-100 text-blue-800 border-blue-300 shadow-blue-200/50", text: "Translating" },
     };
 
     const config = statusConfig[status as keyof typeof statusConfig] ||
-                  { color: "bg-gray-500/20 text-gray-300 border-gray-500/30", text: status };
+                  { color: "bg-gray-100 text-gray-800 border-gray-300 shadow-gray-200/50", text: status };
 
     return (
-      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${config.color}`}>
+      <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold border backdrop-blur-sm shadow-lg ${config.color}`}>
         {config.text}
       </span>
     );
@@ -62,13 +62,13 @@ export default function PostsList({
   if (posts.length === 0) {
     return (
       <div className="text-center py-20">
-        <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg className="w-10 h-10 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
         </div>
-        <h3 className="text-2xl font-bold text-white mb-3">No posts available</h3>
-        <p className="text-gray-400 text-lg">Posts will appear here once they are imported from Ghost CMS.</p>
+        <h3 className="text-2xl font-bold text-gray-900 mb-3">No posts available</h3>
+        <p className="text-gray-600 text-lg">Posts will appear here once they are imported from Ghost CMS.</p>
       </div>
     );
   }
@@ -79,15 +79,15 @@ export default function PostsList({
   const regularPosts = isFirstPage ? posts.slice(1) : posts;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="w-full">
       {/* Hero Section with Featured Post */}
       {featuredPost && (
-        <div className="relative overflow-hidden">
+        <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-purple-50 to-yellow-50 rounded-2xl mb-12 border border-gray-200">
           {/* Background gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-yellow-500/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-100/30 via-purple-100/30 to-yellow-100/30 rounded-2xl"></div>
 
           {/* Featured post content */}
-          <div className="relative max-w-7xl mx-auto px-6 py-20">
+          <div className="relative px-8 py-16">
             <div className="max-w-4xl">
               {(() => {
                 const i18nContent = featuredPost.i18n?.[locale];
@@ -99,38 +99,30 @@ export default function PostsList({
                   <>
                     <div className="flex items-center gap-3 mb-6">
                       {getStatusBadge(featuredPost.status)}
-                      <span className="text-gray-400 text-sm">
+                      <span className="text-gray-600 text-sm">
                         {formatDate(publishedAt)}
                       </span>
                     </div>
 
                     <h1
-                      className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight cursor-pointer hover:text-blue-300 transition-colors"
+                      className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight cursor-pointer hover:text-blue-700 transition-colors"
                       onClick={() => router.push(`/project/${prefix}/${locale}/posts/${featuredPost.id}`)}
                     >
                       {displayTitle}
                     </h1>
 
                     {description && (
-                      <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-3xl">
+                      <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed max-w-3xl">
                         {description}
                       </p>
                     )}
 
-                    <div className="flex items-center gap-6 text-gray-400">
-                      <div className="flex items-center gap-2">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <div className="flex flex-wrap items-center gap-6 text-gray-600">
+                      <div className="flex items-center gap-2 bg-blue-100 px-4 py-2 rounded-full border border-blue-300">
+                        <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                         </svg>
-                        <span>Featured Article</span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z" />
-                        </svg>
-                        <span>ID: {featuredPost.id}</span>
+                        <span className="font-medium text-blue-700">Featured Article</span>
                       </div>
                     </div>
                   </>
@@ -143,8 +135,8 @@ export default function PostsList({
 
       {/* Posts Grid */}
       {regularPosts.length > 0 && (
-        <div className="max-w-7xl mx-auto px-6 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {regularPosts.map((post) => {
               const i18nContent = post.i18n?.[locale];
               const displayTitle = i18nContent?.title || post.title;
@@ -155,7 +147,7 @@ export default function PostsList({
               return (
                 <article
                   key={post.id}
-                  className="group bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 cursor-pointer hover:transform hover:scale-105"
+                  className="group bg-white/80 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-300/50 hover:border-blue-400/60 hover:bg-white/90 transition-all duration-300 cursor-pointer hover:transform hover:scale-[1.02] hover:shadow-xl hover:shadow-blue-200/30"
                   onClick={() => router.push(`/project/${prefix}/${locale}/posts/${post.id}`)}
                 >
                   {cover && (
@@ -171,37 +163,20 @@ export default function PostsList({
                   <div className="p-6">
                     <div className="flex items-center gap-3 mb-4">
                       {getStatusBadge(post.status)}
-                      <span className="text-gray-500 text-sm">
+                      <span className="text-gray-600 text-sm font-medium">
                         {formatDate(publishedAt)}
                       </span>
                     </div>
 
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-blue-300 transition-colors line-clamp-2">
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-700 transition-colors line-clamp-2 leading-tight">
                       {displayTitle}
                     </h3>
 
                     {description && (
-                      <p className="text-gray-400 mb-4 line-clamp-3 leading-relaxed">
+                      <p className="text-gray-600 mb-4 line-clamp-3 leading-relaxed text-sm">
                         {description}
                       </p>
                     )}
-
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                        <span>Read</span>
-                      </div>
-
-                      <div className="flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.99 1.99 0 013 12V7a4 4 0 014-4z" />
-                        </svg>
-                        <span>{post.id}</span>
-                      </div>
-                    </div>
                   </div>
                 </article>
               );
@@ -212,7 +187,7 @@ export default function PostsList({
 
       {/* Pagination */}
       {pagination && (
-        <div className="max-w-7xl mx-auto px-6 pb-16">
+        <div className="w-full mt-12">
           <Pagination
             currentPage={pagination.currentPage}
             totalPages={pagination.totalPages}
@@ -220,7 +195,7 @@ export default function PostsList({
             pageSize={pagination.pageSize}
             onPageChange={onPageChange || (() => {})}
             onPageSizeChange={onPageSizeChange}
-            className="mt-8"
+            className="flex justify-center"
           />
         </div>
       )}

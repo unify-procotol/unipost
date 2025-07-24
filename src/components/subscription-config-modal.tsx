@@ -41,32 +41,32 @@ export default function SubscriptionConfigModal({
       contactAdmin: 'Contact Administrator',
     },
     zh: {
-      title: '订阅功能不可用',
-      subtitle: '此项目需要配置新闻通讯订阅功能',
-      description: '要为此项目启用新闻通讯订阅，管理员需要配置 Ghost Admin API 密钥。',
+      title: 'Subscription Not Available',
+      subtitle: 'This project needs to be configured for newsletter subscriptions',
+      description: 'To enable newsletter subscriptions for this project, the administrator needs to configure the Ghost Admin API key.',
       steps: [
-        '前往您的 Ghost 管理面板',
-        '导航到设置 → 集成',
-        '创建新的自定义集成或使用现有集成',
-        '复制 Admin API 密钥（不是 Content API 密钥）',
-        '将此密钥添加到项目配置中'
+        'Go to your Ghost Admin panel',
+        'Navigate to Settings → Integrations',
+        'Create a new custom integration or use an existing one',
+        'Copy the Admin API Key (not the Content API Key)',
+        'Add this key to the project configuration'
       ],
-      closeButton: '知道了',
-      contactAdmin: '联系管理员',
+      closeButton: 'Got it',
+      contactAdmin: 'Contact Administrator',
     },
     es: {
-      title: 'Suscripción No Disponible',
-      subtitle: 'Este proyecto necesita ser configurado para suscripciones de boletín',
-      description: 'Para habilitar las suscripciones de boletín para este proyecto, el administrador necesita configurar la clave de Ghost Admin API.',
+      title: 'Subscription Not Available',
+      subtitle: 'This project needs to be configured for newsletter subscriptions',
+      description: 'To enable newsletter subscriptions for this project, the administrator needs to configure the Ghost Admin API key.',
       steps: [
-        'Ve a tu panel de administración de Ghost',
-        'Navega a Configuración → Integraciones',
-        'Crea una nueva integración personalizada o usa una existente',
-        'Copia la Clave de Admin API (no la Clave de Content API)',
-        'Agrega esta clave a la configuración del proyecto'
+        'Go to your Ghost Admin panel',
+        'Navigate to Settings → Integrations',
+        'Create a new custom integration or use an existing one',
+        'Copy the Admin API Key (not the Content API Key)',
+        'Add this key to the project configuration'
       ],
-      closeButton: 'Entendido',
-      contactAdmin: 'Contactar Administrador',
+      closeButton: 'Got it',
+      contactAdmin: 'Contact Administrator',
     },
   };
 
@@ -74,9 +74,9 @@ export default function SubscriptionConfigModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-2xl border border-gray-700 max-w-lg w-full mx-4 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-200 max-w-lg w-full mx-4 overflow-hidden shadow-xl">
         {/* Header */}
-        <div className="p-6 border-b border-gray-700">
+        <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-yellow-500/20 rounded-lg flex items-center justify-center">
@@ -85,13 +85,13 @@ export default function SubscriptionConfigModal({
                 </svg>
               </div>
               <div>
-                <h2 className="text-lg font-bold text-white">{t.title}</h2>
-                <p className="text-gray-400 text-sm">{t.subtitle}</p>
+                <h2 className="text-lg font-bold text-gray-900">{t.title}</h2>
+                <p className="text-gray-600 text-sm">{t.subtitle}</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-300 transition-colors"
+              className="text-gray-600 hover:text-gray-800 transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -102,14 +102,14 @@ export default function SubscriptionConfigModal({
 
         {/* Content */}
         <div className="p-6">
-          <p className="text-gray-300 mb-6">{t.description}</p>
+          <p className="text-gray-700 mb-6">{t.description}</p>
 
           {/* Setup Steps */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-white mb-3">Setup Steps:</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Setup Steps:</h3>
             <ol className="space-y-2">
               {t.steps.map((step: string, index: number) => (
-                <li key={index} className="flex items-start gap-3 text-sm text-gray-300">
+                <li key={index} className="flex items-start gap-3 text-sm text-gray-700">
                   <span className="flex-shrink-0 w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-medium">
                     {index + 1}
                   </span>
@@ -120,12 +120,12 @@ export default function SubscriptionConfigModal({
           </div>
 
           {/* Project Info */}
-          <div className="bg-gray-700/50 rounded-lg p-4 mb-6">
-            <h4 className="text-sm font-medium text-white mb-2">Project Information:</h4>
-            <div className="space-y-1 text-sm text-gray-300">
-              <div><span className="text-gray-400">Name:</span> {project.name}</div>
-              <div><span className="text-gray-400">Domain:</span> {project.ghost_domain}</div>
-              <div><span className="text-gray-400">Prefix:</span> {project.prefix}</div>
+          <div className="bg-gray-100/80 rounded-lg p-4 mb-6">
+            <h4 className="text-sm font-medium text-gray-900 mb-2">Project Information:</h4>
+            <div className="space-y-1 text-sm text-gray-700">
+              <div><span className="text-gray-600">Name:</span> {project.name}</div>
+              <div><span className="text-gray-600">Domain:</span> {project.ghost_domain}</div>
+              <div><span className="text-gray-600">Prefix:</span> {project.prefix}</div>
             </div>
           </div>
 
@@ -133,7 +133,7 @@ export default function SubscriptionConfigModal({
           <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+              className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-900 font-medium py-2 px-4 rounded-lg transition-colors"
             >
               {t.closeButton}
             </button>
