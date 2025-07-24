@@ -25,6 +25,37 @@ export class GhostSubscriptionService {
 
   async subscribe(data: SubscriptionData): Promise<{ success: boolean; message: string; member?: unknown }> {
     try {
+      // First check if member already exists
+      const existingMembers = await this.api.members.browse({
+        filter: `email:${data.email}`,
+        limit: 1,
+      });
+
+      if (existingMembers.length > 0) {
+        const existingMember = existingMembers[0];
+        
+        // If already subscribed, return friendly message
+        if (existingMember.subscribed) {
+          return {
+            success: false,
+            message: 'You are already subscribed to this newsletter!',
+          };
+        }
+        
+        // If exists but not subscribed, reactivate subscription
+        const updatedMember = await this.api.members.edit({
+          id: existingMember.id,
+          subscribed: true,
+          labels: data.labels || [],
+        });
+        
+        return {
+          success: true,
+          message: 'Welcome back! Your subscription has been reactivated.',
+          member: updatedMember,
+        };
+      }
+
       // Create a new member (subscriber) in Ghost
       const member = await this.api.members.add({
         email: data.email,
@@ -43,14 +74,24 @@ export class GhostSubscriptionService {
       
       // Handle specific Ghost API errors
       if (error && typeof error === 'object' && 'response' in error) {
-        const errorResponse = error.response as { data?: { errors?: Array<{ type?: string; context?: string }> } };
+        const errorResponse = error.response as { data?: { errors?: Array<{ type?: string; context?: string; message?: string }> } };
         if (errorResponse.data?.errors) {
           const ghostError = errorResponse.data.errors[0];
 
+          // Handle duplicate email error
+          if (ghostError.type === 'ValidationError' && 
+              (ghostError.context?.includes('email') || ghostError.message?.includes('already exists'))) {
+            return {
+              success: false,
+              message: 'This email is already subscribed to our newsletter.',
+            };
+          }
+          
+          // Handle invalid email format
           if (ghostError.type === 'ValidationError' && ghostError.context?.includes('email')) {
             return {
               success: false,
-              message: 'This email is already subscribed or invalid.',
+              message: 'Please enter a valid email address.',
             };
           }
         }

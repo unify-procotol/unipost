@@ -2,7 +2,6 @@ import { getPaginatedPosts, getProject } from "@/lib/data";
 import PostsPageWrapper from "@/components/posts-page-wrapper";
 import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
-import BackButton from "@/components/ui/back-button";
 import SubscribeButton from "@/components/subscribe-button";
 import { notFound, redirect } from "next/navigation";
 import { PaginationQuerySchema } from "@/types/pagination";
@@ -113,26 +112,22 @@ export default async function PostsPage({
     );
 
     return (
-      <MainLayout>
+      <MainLayout project={project}>
         {/* Fixed Header */}
         <div className="bg-gray-900 border-b border-gray-700">
-          <Container className="py-6 px-4">
-            <div className="flex items-center gap-4">
-              <BackButton className="p-2 text-gray-400 hover:text-gray-300 transition-colors rounded-lg hover:bg-gray-800/50">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </BackButton>
-              <div className="flex-1">
-                <h1 className="text-2xl font-bold text-white">{project.name}</h1>
-                <p className="text-gray-400 text-sm">Manage your multilingual posts</p>
-              </div>
-              <SubscribeButton 
-                project={project} 
-                locale={locale} 
-                variant="outline"
-                size="md"
-              />
+          <Container className="py-8 px-4">
+            <div className="text-center">
+              <h1 className="text-3xl font-bold text-white mb-2">{project.name}</h1>
+              <p className="text-gray-400 text-lg mb-6">Manage your multilingual posts</p>
+              {project.has_subscription && (
+                <SubscribeButton 
+                  project={project} 
+                  locale={locale} 
+                  variant="primary"
+                  size="lg"
+                  className="shadow-lg"
+                />
+              )}
             </div>
           </Container>
         </div>

@@ -11,6 +11,14 @@ export class ProjectEntity implements Record<string, unknown> {
   updated_at = "";
   locales: string[] = [];
   rule = "";
+  config = {
+    nav: [
+      {
+        name: "",
+        link: ""
+      }
+    ]
+  };
 
   [key: string]: unknown;
 }

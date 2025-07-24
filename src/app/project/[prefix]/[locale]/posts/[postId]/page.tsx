@@ -135,7 +135,7 @@ export default async function PostPage({
       .replace(/javascript:/gi, '');
 
     return (
-      <MainLayout>
+      <MainLayout project={project}>
         <Container className="py-8 px-4">
           <div className="max-w-4xl mx-auto">
             {/* Back Button */}

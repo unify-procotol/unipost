@@ -1,11 +1,12 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import HeaderLanguageSwitcher from "../header-language-switcher";
+import { PublicProjectEntity } from "@/entities/public-project";
 
-export default function Header() {
-  const pathname = usePathname();
+interface HeaderProps {
+  project?: PublicProjectEntity | null;
+}
+
+export default function Header({ project }: HeaderProps) {
 
   return (
     <header className="bg-gray-900/95 backdrop-blur-sm border-b border-gray-700/50 sticky top-0 z-50">
@@ -18,21 +19,41 @@ export default function Header() {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">UP</span>
               </div>
-              <span className="text-xl font-bold text-white">UniPost</span>
+              <span className="text-xl font-bold text-white">
+                {project ? project.name : "UniPost"}
+              </span>
             </Link>
 
             {/* Navigation */}
-            <nav className="hidden md:flex">
-              <Link
-                href="/"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  pathname === "/"
-                    ? "bg-blue-600/20 text-blue-300 border border-blue-500/30"
-                    : "text-gray-300 hover:text-white hover:bg-gray-800/50"
-                }`}
-              >
-                Projects
-              </Link>
+            <nav className="hidden md:flex items-center space-x-4">
+              {/* Only show Projects link when not in a project */}
+              {!project && (
+                <Link
+                  href="/"
+                  className="px-3 py-2 rounded-md text-sm font-medium transition-colors text-gray-300 hover:text-white hover:bg-gray-800/50"
+                >
+                  Projects
+                </Link>
+              )}
+              
+              {/* Custom Project Navigation */}
+              {project?.config?.nav && project.config.nav.length > 0 && (
+                <>
+                  {project.config.nav.map((navItem, index) => (
+                    navItem.name && navItem.link ? (
+                      <a
+                        key={index}
+                        href={navItem.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-2 rounded-md text-sm font-medium transition-colors text-blue-400 hover:text-blue-300 hover:bg-gray-800/50"
+                      >
+                        {navItem.name}
+                      </a>
+                    ) : null
+                  ))}
+                </>
+              )}
             </nav>
           </div>
 

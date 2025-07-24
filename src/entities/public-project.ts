@@ -14,6 +14,12 @@ export interface PublicProjectEntity {
   updated_at: string;
   locales: string[];
   rule: string;
+  config: {
+    nav: Array<{
+      name: string;
+      link: string;
+    }>;
+  };
 
   // Computed fields
   has_subscription: boolean; // Indicates if ghost_admin_key is configured
@@ -38,6 +44,7 @@ export const PublicProjectUtils = {
       updated_at: project.updated_at || '',
       locales: project.locales || [],
       rule: project.rule || '',
+      config: project.config || { nav: [] },
 
       // Set subscription availability without exposing the key
       has_subscription: !!(project.ghost_admin_key && project.ghost_admin_key.trim() !== ''),
