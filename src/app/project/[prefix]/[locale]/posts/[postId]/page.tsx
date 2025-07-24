@@ -7,7 +7,7 @@ import StructuredData from "@/components/seo/structured-data";
 import JsonLd, { generateArticleJsonLd } from "@/components/seo/json-ld";
 import Breadcrumb from "@/components/seo/breadcrumb";
 import { generatePostDetailBreadcrumbs } from "@/lib/breadcrumb-utils";
-import OptimizedImage, { generateAltText } from "@/components/seo/optimized-image";
+import OptimizedImage from "@/components/seo/optimized-image";
 import { generateMetaDescription, generateSEOTitle, extractKeywords, generateOGImageURL } from "@/lib/seo-utils";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -79,7 +79,7 @@ export async function generateMetadata({
             url: featureImage || generateOGImageURL(title, project.name),
             width: 1200,
             height: 630,
-            alt: generateAltText.article(title, project.name),
+            alt: `Featured image for article "${title}" from ${project.name}`,
           }
         ],
         publishedTime: post.data?.published_at,
@@ -231,7 +231,7 @@ export default async function PostPage({
                   <div className="mb-8 rounded-2xl overflow-hidden">
                     <OptimizedImage
                       src={featureImage}
-                      alt={generateAltText.article(title, project.name)}
+                      alt={`Featured image for article "${title}" from ${project.name}`}
                       width={1200}
                       height={630}
                       className="w-full h-96 object-cover"

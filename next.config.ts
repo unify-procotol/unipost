@@ -8,6 +8,16 @@ const nextConfig: NextConfig = {
     "@unilab/urpc-next",
     "@unilab/builtin-plugin",
   ],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'mimo.exchange',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
