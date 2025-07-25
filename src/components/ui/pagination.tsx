@@ -13,7 +13,7 @@ interface PaginationProps {
   className?: string;
 }
 
-const PAGE_SIZE_OPTIONS = [10, 20, 50];
+const PAGE_SIZE_OPTIONS = [10, 15, 20, 50];
 
 export default function Pagination({
   currentPage,

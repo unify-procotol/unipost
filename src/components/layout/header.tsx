@@ -2,6 +2,7 @@ import Link from "next/link";
 import HeaderLanguageSwitcher from "../header-language-switcher";
 import SubscribeButton from "../subscribe-button";
 import { PublicProjectEntity } from "@/entities/public-project";
+import MimoHeader from "./custom-header/mimo-header";
 
 interface HeaderProps {
   project?: PublicProjectEntity | null;
@@ -9,7 +10,12 @@ interface HeaderProps {
 }
 
 export default function Header({ project, locale = 'en' }: HeaderProps) {
-
+  // Switch to different header styles based on project prefix
+  if (project?.prefix === 'mimo') {
+    return <MimoHeader project={project} locale={locale} />;
+  }
+  
+  // Default header style
   return (
     <header className="bg-white/95 backdrop-blur-sm border-b border-gray-200/50 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

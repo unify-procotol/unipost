@@ -94,10 +94,13 @@ export default async function PostsPage({
       }
     }
 
-    // Parse and validate pagination parameters
+    // Set default pageSize based on project prefix
+    const defaultPageSize = prefix === "mimo" ? 15 : 10;
+    
+    // Parse and validate pagination parameters with project-specific defaults
     const paginationResult = PaginationQuerySchema.safeParse({
       page: resolvedSearchParams.page as string,
-      pageSize: resolvedSearchParams.pageSize as string,
+      pageSize: resolvedSearchParams.pageSize as string || defaultPageSize.toString(),
     });
 
     if (!paginationResult.success) {
@@ -105,11 +108,14 @@ export default async function PostsPage({
       redirect(`/project/${prefix}/${locale}/posts`);
     }
 
+    // Use project-specific default if no pageSize provided
+    const finalPageSize = resolvedSearchParams.pageSize ? paginationResult.data.pageSize : defaultPageSize;
+
     // Get paginated posts
     const paginatedResult = await getPaginatedPosts(
       prefix,
       paginationResult.data.page,
-      paginationResult.data.pageSize
+      finalPageSize
     );
 
     return (

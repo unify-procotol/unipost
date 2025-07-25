@@ -59,7 +59,7 @@ export default function ProjectSelector({ projects }: ProjectSelectorProps) {
             <div
               key={project.id}
               onClick={() => handleProjectClick(project)}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-300/50 p-6 cursor-pointer hover:border-gray-400/50 hover:transform hover:scale-105 transition-all duration-300 group shadow-sm"
+              className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-300/50 p-6 cursor-pointer hover:border-gray-400/50 transition-all duration-300 group shadow-sm hover:shadow-md"
             >
               {/* Project Header */}
               <div className="flex items-start justify-between mb-4">
