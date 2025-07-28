@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { PublicProjectEntity } from '@/entities/public-project';
-import SubscriptionModal from './subscription-modal';
+import { useModal } from '@/contexts/modal-context';
 
 interface SubscribeButtonProps {
   project: PublicProjectEntity;
@@ -12,14 +11,14 @@ interface SubscribeButtonProps {
   className?: string;
 }
 
-export default function SubscribeButton({ 
-  project, 
-  locale, 
+export default function SubscribeButton({
+  project,
+  locale,
   variant = 'primary',
   size = 'md',
-  className = '' 
+  className = ''
 }: SubscribeButtonProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { openSubscriptionModal } = useModal();
 
   // Don't render if project doesn't have subscription capability
   if (!project.has_subscription) {
@@ -58,7 +57,7 @@ export default function SubscribeButton({
   const buttonClasses = `${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`;
 
   const handleClick = () => {
-    setIsModalOpen(true);
+    openSubscriptionModal(project, locale);
   };
 
   return (
@@ -73,13 +72,6 @@ export default function SubscribeButton({
         </svg>
         {buttonText}
       </button>
-
-      <SubscriptionModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        project={project}
-        locale={locale}
-      />
     </>
   );
 }

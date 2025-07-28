@@ -276,21 +276,23 @@ export default async function PostPage({
                 {/* Newsletter Subscription */}
                 <div className="border-t border-gray-300/50 pt-8">
                   <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-6 border border-blue-300/30">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="text-center space-y-4">
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-2">
                           Stay Updated
                         </h3>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-gray-600 text-sm max-w-md mx-auto">
                           Subscribe to get the latest posts from {project.name} delivered to your inbox.
                         </p>
                       </div>
-                      <SubscribeButton 
-                        project={project} 
-                        locale={locale} 
-                        variant="primary"
-                        size="md"
-                      />
+                      <div className="flex justify-center">
+                        <SubscribeButton 
+                          project={project} 
+                          locale={locale} 
+                          variant="primary"
+                          size="lg"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import PerformanceMonitor from "@/components/seo/performance-monitor";
+import { ModalProvider } from "@/contexts/modal-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -87,8 +88,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gray-50`}
       >
-        <PerformanceMonitor />
-        {children}
+        <ModalProvider>
+          <PerformanceMonitor />
+          {children}
+        </ModalProvider>
       </body>
     </html>
   );
