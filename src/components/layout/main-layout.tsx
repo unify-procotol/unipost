@@ -7,12 +7,13 @@ interface MainLayoutProps {
   className?: string;
   project?: PublicProjectEntity | null;
   locale?: string;
+  isPostDetail?: boolean;
 }
 
-export default function MainLayout({ children, className = "", project, locale }: MainLayoutProps) {
+export default function MainLayout({ children, className = "", project, locale, isPostDetail = false }: MainLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-gray-100">
-      <Header project={project} locale={locale} />
+      <Header project={project} locale={locale} isPostDetail={isPostDetail} />
       <main className={`flex-1 ${className}`}>
         {children}
       </main>

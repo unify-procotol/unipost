@@ -52,9 +52,12 @@ export default function HeaderLanguageSwitcher() {
     return null;
   }
 
+  // Check if this is mimo project for different styling
+  const isMimo = project.prefix === 'mimo';
+
   return (
     <div className="flex items-center gap-2">
-      <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className={`w-4 h-4 ${isMimo ? 'text-white/80' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
       </svg>
       <div className="flex gap-1">
@@ -65,9 +68,18 @@ export default function HeaderLanguageSwitcher() {
             title={`Switch to ${locale.toUpperCase()}`}
             className={`px-2 py-1 text-xs font-medium rounded transition-all duration-200 ${
               locale === currentLocale
-                ? "bg-blue-600 text-white shadow-sm"
-                : "bg-gray-200/80 text-gray-700 hover:bg-gray-300/80 hover:text-gray-900 border border-gray-300/50"
+                ? isMimo
+                  ? "bg-white shadow-sm font-semibold"
+                  : "bg-blue-600 text-white shadow-sm"
+                : isMimo
+                  ? "bg-white/20 text-white hover:bg-white/30 border border-white/30"
+                  : "bg-gray-200/80 text-gray-700 hover:bg-gray-300/80 hover:text-gray-900 border border-gray-300/50"
             }`}
+            style={
+              locale === currentLocale && isMimo
+                ? { color: '#00E100' }
+                : undefined
+            }
           >
             {locale.toUpperCase()}
           </button>

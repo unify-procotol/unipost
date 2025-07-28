@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { PublicProjectEntity } from "@/entities/public-project";
 import Container from "./ui/container";
 import SubscribeButton from "./subscribe-button";
+import Image from "next/image";
 
 interface ProjectSelectorProps {
   projects: PublicProjectEntity[];
@@ -22,6 +23,51 @@ export default function ProjectSelector({ projects }: ProjectSelectorProps) {
 
   const getProjectIcon = (name: string) => {
     return name.charAt(0).toUpperCase();
+  };
+
+  // Method to get project logo based on prefix
+  const getProjectLogo = (project: PublicProjectEntity) => {
+    const logoConfig = {
+      mimo: {
+        src: "/images/mimo_single_logo.svg",
+        width: 40,
+        height: 40,
+        className: "w-10 h-10 object-contain"
+      },
+      iotex: {
+        src: "/images/iotex_logo.svg",
+        width: 48,
+        height: 48,
+        className: "w-12 h-12 object-contain"
+      },
+      depinscan: {
+        src: "/images/depinscan_logo.svg",
+        width: 40,
+        height: 40,
+        className: "w-10 h-10 object-contain"
+      }
+    };
+
+    const logoConfig_item = logoConfig[project.prefix as keyof typeof logoConfig];
+    
+    if (logoConfig_item) {
+      return (
+        <Image
+          src={logoConfig_item.src}
+          alt={`${project.name} Logo`}
+          width={logoConfig_item.width}
+          height={logoConfig_item.height}
+          className={logoConfig_item.className}
+        />
+      );
+    }
+
+    // Fallback to default icon with first letter
+    return (
+      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+        {getProjectIcon(project.name)}
+      </div>
+    );
   };
 
   const getStatusColor = (locales: string[]) => {
@@ -64,9 +110,7 @@ export default function ProjectSelector({ projects }: ProjectSelectorProps) {
               {/* Project Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
-                    {getProjectIcon(project.name)}
-                  </div>
+                  {getProjectLogo(project)}
                   <div>
                     <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
                       {project.name}

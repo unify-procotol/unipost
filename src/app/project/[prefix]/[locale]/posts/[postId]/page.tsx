@@ -185,7 +185,7 @@ export default async function PostPage({
     };
 
     return (
-      <MainLayout project={project} locale={locale}>
+      <MainLayout project={project} locale={locale} isPostDetail={true}>
         <StructuredData type="article" data={articleStructuredData} />
         
         <JsonLd

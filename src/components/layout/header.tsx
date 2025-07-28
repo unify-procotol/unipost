@@ -3,16 +3,19 @@ import HeaderLanguageSwitcher from "../header-language-switcher";
 import SubscribeButton from "../subscribe-button";
 import { PublicProjectEntity } from "@/entities/public-project";
 import MimoHeader from "./custom-header/mimo-header";
+import Image from "next/image";
 
 interface HeaderProps {
   project?: PublicProjectEntity | null;
   locale?: string;
+  isPostDetail?: boolean;
 }
 
-export default function Header({ project, locale = 'en' }: HeaderProps) {
+export default function Header({ project, locale = 'en', isPostDetail = false }: HeaderProps) {
   // Switch to different header styles based on project prefix
   if (project?.prefix === 'mimo') {
-    return <MimoHeader project={project} locale={locale} />;
+    console.log('project', project)
+    return <MimoHeader project={project} locale={locale} isPostDetail={isPostDetail} />;
   }
   
   // Default header style
@@ -24,9 +27,27 @@ export default function Header({ project, locale = 'en' }: HeaderProps) {
           <div className="flex items-center space-x-8">
             {/* Logo and Brand */}
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">UP</span>
-              </div>
+              {project?.prefix === 'depinscan' ? (
+                <Image 
+                  src="/images/depinscan_logo.svg" 
+                  alt="DePINScan Logo" 
+                  width={32}
+                  height={32}
+                  className="w-8 h-8"
+                />
+              ) : project?.prefix === 'iotex' ? (
+                <Image 
+                  src="/images/iotex_logo.svg" 
+                  alt="IoTeX Logo" 
+                  width={40}
+                  height={40}
+                  className="w-10 h-10"
+                />
+              ) : (
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">UP</span>
+                </div>
+              )}
               <span className="text-xl font-bold text-gray-900">
                 {project ? project.name : "UniPost"}
               </span>
