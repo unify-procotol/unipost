@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { PublicProjectEntity } from '@/entities/public-project';
 
 interface SubscriptionConfigModalProps {
@@ -15,6 +17,20 @@ export default function SubscriptionConfigModal({
   project, 
   locale 
 }: SubscriptionConfigModalProps) {
+  // Manage body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   // Translations for different locales
@@ -72,9 +88,13 @@ export default function SubscriptionConfigModal({
 
   const t = translations[locale] || translations.en;
 
-  return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl border border-gray-200 max-w-lg w-full mx-4 overflow-hidden shadow-xl">
+  if (!isOpen) return null;
+
+  const modalContent = (
+    <div className="modal-container">
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="flex items-center justify-center min-h-screen p-4">
+        <div className="relative bg-white rounded-2xl border border-gray-200 max-w-lg w-full mx-4 overflow-hidden shadow-xl z-10">
         {/* Header */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
@@ -150,5 +170,9 @@ export default function SubscriptionConfigModal({
         </div>
       </div>
     </div>
+    </div>
   );
+
+  // Use portal to render modal at document body level
+  return typeof window !== 'undefined' ? createPortal(modalContent, document.body) : null;
 }

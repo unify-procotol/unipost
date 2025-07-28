@@ -55,7 +55,12 @@ body {
 }
 
 .article-content a {
-  @apply text-blue-600 hover:text-blue-800 underline decoration-blue-600/50 hover:decoration-blue-800;
+  @apply text-blue-600 hover:text-blue-800 underline;
+  text-decoration-color: rgb(37 99 235 / 0.5);
+}
+
+.article-content a:hover {
+  text-decoration-color: rgb(30 64 175);
 }
 
 .article-content ul,
@@ -114,4 +119,29 @@ body {
 
 .article-content td {
   @apply text-gray-700;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  overflow: auto;
+}
+
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  overflow: auto;
+}
+
+body.modal-open {
+  overflow: hidden;
 }

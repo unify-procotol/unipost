@@ -36,7 +36,7 @@ export class ProjectAdapter extends PostgresAdapter<ProjectEntity> {
         entity.updated_at = new Date().toISOString();
 
         return entity;
-      }).filter((row) => row.content.length < 10000);
+      })
       await post.batchIns(rows, ['title']);
       return project;
     }
@@ -46,7 +46,7 @@ export class ProjectAdapter extends PostgresAdapter<ProjectEntity> {
     const ghostPosts = await getPosts(result.ghost_api_key, result.ghost_domain);
     const post = new PostAdapter();
     for (const ghostPost of ghostPosts) {
-      if (ghostPost.html?.length && ghostPost.html.length < 10000) {
+      if (ghostPost.html?.length) {
         const entity = new PostEntity();
         entity.title = ghostPost.title || "";
         entity.content = ghostPost.html ?? "";
