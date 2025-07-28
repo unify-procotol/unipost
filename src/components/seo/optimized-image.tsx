@@ -77,6 +77,7 @@ export default function OptimizedImage({
         <Image
           {...imageProps}
           fill
+          alt={alt}
           style={{ objectFit: 'cover' }}
         />
         {isLoading && (
@@ -94,6 +95,7 @@ export default function OptimizedImage({
         {...imageProps}
         width={width || 800}
         height={height || 600}
+        alt={alt}
       />
       {isLoading && (
         <div className="absolute inset-0 bg-gray-800 animate-pulse flex items-center justify-center">

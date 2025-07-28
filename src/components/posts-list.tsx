@@ -45,22 +45,7 @@ export default function PostsList({
     });
   };
 
-  const getStatusBadge = (status: string) => {
-    const statusConfig = {
-      pending: { color: "bg-yellow-100 text-yellow-800 border-yellow-300 shadow-yellow-200/50", text: "Pending" },
-      translated: { color: "bg-green-100 text-green-800 border-green-300 shadow-green-200/50", text: "Translated" },
-      translating: { color: "bg-blue-100 text-blue-800 border-blue-300 shadow-blue-200/50", text: "Translating" },
-    };
 
-    const config = statusConfig[status as keyof typeof statusConfig] ||
-                  { color: "bg-gray-100 text-gray-800 border-gray-300 shadow-gray-200/50", text: status };
-
-    return (
-      <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold border backdrop-blur-sm shadow-lg ${config.color}`}>
-        {config.text}
-      </span>
-    );
-  };
 
   if (posts.length === 0) {
     return (

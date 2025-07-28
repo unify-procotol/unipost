@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { PublicProjectEntity } from "@/entities/public-project";
 import HeaderLanguageSwitcher from "../../header-language-switcher";
 import SubscribeButton from "../../subscribe-button";
@@ -94,10 +95,13 @@ export default function MimoHeader({ project, locale = 'en' }: MimoHeaderProps) 
           <div className="max-w-4xl mx-auto">
             {/* Main Logo */}
             <div className="flex items-center justify-center mb-6">
-              <img 
+              <Image 
                 src="/images/mimo_logo.png" 
                 alt="Mimo Logo" 
+                width={400}
+                height={120}
                 className="max-h-[120px] w-auto"
+                priority
               />
             </div>
             
