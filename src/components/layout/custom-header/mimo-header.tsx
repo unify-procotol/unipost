@@ -9,15 +9,7 @@ interface MimoHeaderProps {
   locale?: string;
   isPostDetail?: boolean;
 }
-const test = {
-  nav: [
-    { link: "https://mimo.exchange/", name: "Home" },
-    { link: "https://mimo.finance/", name: "About" },
-    { link: "https://mimo.finance/#faq", name: "FAQ" },
-    { link: "https://docs.mimo.finance/", name: "Docs" },
-    { link: "https://mimo.exchange/swap", name: "Enter App" },
-  ],
-};
+
 export default function MimoHeader({
   project,
   locale = "en",
