@@ -1,7 +1,6 @@
 import { getPost, getProject } from "@/lib/data";
 import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
-import BackButton from "@/components/ui/back-button";
 import SubscribeButton from "@/components/subscribe-button";
 import StructuredData from "@/components/seo/structured-data";
 import JsonLd, { generateArticleJsonLd } from "@/components/seo/json-ld";
