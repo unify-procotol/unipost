@@ -35,7 +35,7 @@ export default function FeaturedPostIotex({
   return (
     <div 
       className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 rounded-3xl mb-10 border border-gray-200/60 shadow-xl cursor-pointer group hover:shadow-2xl transition-all duration-300"
-      onClick={() => router.push(`/project/${prefix}/${locale}/posts/${post.id}`)}
+      onClick={() => router.push(`/project/${prefix}/${locale}/${post.id}`)}
     >
       {/* Background gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-100/20 via-gray-100/20 to-zinc-100/20 rounded-3xl"></div>

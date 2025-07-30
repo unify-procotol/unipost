@@ -17,7 +17,7 @@ export default function MainLayout({ children, className = "", project, locale, 
       <main className={`flex-1 ${className}`}>
         {children}
       </main>
-      <Footer />
+      {!project && <Footer />}
     </div>
   );
 }

@@ -85,7 +85,7 @@ export default function MimoPostsList({
       <article
         key={post.id}
         className={cardClasses}
-        onClick={() => router.push(`/project/${prefix}/${locale}/posts/${post.id}`)}
+        onClick={() => router.push(`/project/${prefix}/${locale}/${post.id}`)}
       >
         {cover && (
           <div className={`${imageAspect} overflow-hidden`}>

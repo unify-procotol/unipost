@@ -18,7 +18,7 @@ export default async function ProjectPage({
     // Redirect to English if available, otherwise first available locale
     const defaultLocale = project.locales.includes('en') ? 'en' : project.locales[0];
     if (defaultLocale) {
-      const redirectUrl = `/project/${prefix}/${defaultLocale}/posts`;
+      const redirectUrl = `/project/${prefix}/${defaultLocale}`;
       return (
         <html>
           <head>

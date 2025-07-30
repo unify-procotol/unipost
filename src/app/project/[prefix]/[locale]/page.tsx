@@ -51,7 +51,7 @@ export async function generateMetadata({
         languages: Object.fromEntries(
           project.locales.map(loc => [
             loc,
-            `/project/${prefix}/${loc}/posts`
+            `/project/${prefix}/${loc}`
           ])
         ),
       },
@@ -88,7 +88,7 @@ export default async function PostsPage({
       // Redirect to the first available locale for this project
       const defaultLocale = project.locales[0];
       if (defaultLocale) {
-        redirect(`/project/${prefix}/${defaultLocale}/posts`);
+        redirect(`/project/${prefix}/${defaultLocale}`);
       } else {
         notFound();
       }
@@ -105,7 +105,7 @@ export default async function PostsPage({
 
     if (!paginationResult.success) {
       console.error("Invalid pagination parameters:", paginationResult.error);
-      redirect(`/project/${prefix}/${locale}/posts`);
+      redirect(`/project/${prefix}/${locale}`);
     }
 
     // Use project-specific default if no pageSize provided

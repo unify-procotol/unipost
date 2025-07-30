@@ -86,7 +86,7 @@ export async function generateMetadata({
         modifiedTime: post.data?.updated_at,
         tags: post.data?.tags?.map((tag: { name: string }) => tag.name) || [],
         siteName: "UniPost",
-        url: `https://unipost.app/project/${prefix}/${locale}/posts/${postId}`,
+        url: `https://unipost.app/project/${prefix}/${locale}/${postId}`,
       },
       twitter: {
         card: "summary_large_image",
@@ -96,11 +96,11 @@ export async function generateMetadata({
         creator: "@unipost",
       },
       alternates: {
-        canonical: `https://unipost.app/project/${prefix}/${locale}/posts/${postId}`,
+        canonical: `https://unipost.app/project/${prefix}/${locale}/${postId}`,
         languages: Object.fromEntries(
           project.locales.map(loc => [
             loc,
-            `/project/${prefix}/${loc}/posts/${postId}`
+            `/project/${prefix}/${loc}/${postId}`
           ])
         ),
       },
@@ -180,7 +180,7 @@ export default async function PostPage({
       publishedTime: publishedAt,
       modifiedTime: originalData?.updated_at,
       author: project.name,
-      url: `https://unipost.app/project/${prefix}/${locale}/posts/${postId}`,
+      url: `https://unipost.app/project/${prefix}/${locale}/${postId}`,
       language: locale,
     };
 
@@ -195,7 +195,7 @@ export default async function PostPage({
             author: project.name,
             publishedDate: publishedAt,
             modifiedDate: originalData?.updated_at,
-            url: `https://unipost.app/project/${prefix}/${locale}/posts/${postId}`,
+            url: `https://unipost.app/project/${prefix}/${locale}/${postId}`,
             imageUrl: featureImage,
             siteName: "UniPost",
             tags: post.data?.tags?.map((tag: { name: string }) => tag.name) || [],
@@ -212,9 +212,9 @@ export default async function PostPage({
             </div>
 
             {/* Back Button */}
-            <div className="mb-8">
+            {/* <div className="mb-8">
               <BackButton 
-                href={`/project/${prefix}/${locale}/posts`}
+                href={`/project/${prefix}/${locale}`}
                 className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -222,7 +222,7 @@ export default async function PostPage({
                 </svg>
                 Back to Posts
               </BackButton>
-            </div>
+            </div> */}
 
             <article className="prose prose-lg max-w-none">
               {/* Article Header */}

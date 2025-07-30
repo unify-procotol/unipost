@@ -23,7 +23,7 @@ export async function POST() {
         success: true,
         message: "Test project already exists",
         project: sanitizeProject(existingProject),
-        note: "Visit: http://localhost:3000/project/testblog/en/posts"
+        note: "Visit: http://localhost:3000/project/testblog/en"
       });
     }
 
@@ -47,7 +47,7 @@ export async function POST() {
       success: true,
       message: "Test project created successfully",
       project: sanitizeProject(testProject),
-      note: "Visit: http://localhost:3000/project/testblog/en/posts to see the subscription button"
+      note: "Visit: http://localhost:3000/project/testblog/en to see the subscription button"
     });
   } catch (error) {
     console.error('Error creating test project:', error);
