@@ -19,7 +19,7 @@ export default function LanguageSwitcher({
 
   const handleLanguageChange = (locale: string) => {
     if (locale !== currentLocale) {
-      router.push(`/${locale}/project/${projectId}/${basePath}`);
+      router.push(`/${locale}/${projectId}/${basePath}`);
     }
   };
 

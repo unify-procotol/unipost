@@ -14,7 +14,6 @@ interface HeaderProps {
 export default function Header({ project, locale = 'en', isPostDetail = false }: HeaderProps) {
   // Switch to different header styles based on project prefix
   if (project?.prefix === 'mimo') {
-    console.log('project', project)
     return <MimoHeader project={project} locale={locale} isPostDetail={isPostDetail} />;
   }
   

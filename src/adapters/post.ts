@@ -9,7 +9,7 @@ export class PostAdapter extends PostgresAdapter<PostEntity> {
   constructor(config: Omit<PostgresAdapterConfig, 'tableName'> = {}) {
     super({
       ...config,
-      tableName: 'posts'
+      tableName: 'posts_view'
     });
   }
 
@@ -97,6 +97,31 @@ export class PostAdapter extends PostgresAdapter<PostEntity> {
       throw new URPCError(
         ErrorCodes.INTERNAL_SERVER_ERROR,
         `Failed to count posts: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
+  }
+
+  /**
+   * Find post by slug
+   */
+  async findBySlug(slug: string): Promise<PostEntity | null> {
+    try {
+      const query = `
+        SELECT * FROM ${this.tableName}
+        WHERE slug = $1
+        LIMIT 1
+      `;
+      const result = await this.sql.unsafe(query, [slug]);
+      
+      if (result.length === 0) {
+        return null;
+      }
+      
+      return this.mapRowToEntity(result[0]);
+    } catch (error) {
+      throw new URPCError(
+        ErrorCodes.INTERNAL_SERVER_ERROR,
+        `Failed to find post by slug: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }

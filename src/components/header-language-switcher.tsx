@@ -11,7 +11,7 @@ export default function HeaderLanguageSwitcher() {
 
   // Extract prefix and locale from pathname
   const pathSegments = pathname.split('/').filter(Boolean);
-  const prefix = pathSegments[1]; // /project/[prefix]/[locale]/...
+  const prefix = pathSegments[1]; // /[prefix]/[locale]/...
   const currentLocale = pathSegments[2];
 
   useEffect(() => {

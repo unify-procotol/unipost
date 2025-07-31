@@ -87,7 +87,6 @@ export default function PostsList({
       />
     );
   }
-
   // Default layout for other projects
   const isFirstPage = !pagination || pagination.currentPage === 1;
   const featuredPost = isFirstPage ? posts[0] : null;
@@ -129,7 +128,7 @@ export default function PostsList({
 
                         <h1
                           className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight cursor-pointer hover:text-blue-700 transition-colors"
-                          onClick={() => router.push(`/project/${prefix}/${locale}/${featuredPost.id}`)}
+                          onClick={() => router.push(`/${prefix}/${locale}/${featuredPost.slug}`)}
                         >
                           {displayTitle}
                         </h1>
@@ -173,7 +172,7 @@ export default function PostsList({
                 <article
                   key={post.id}
                   className="group bg-white/80 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-300/50 hover:border-blue-400/60 hover:bg-white/90 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-blue-200/30"
-                  onClick={() => router.push(`/project/${prefix}/${locale}/${post.id}`)}
+                  onClick={() => router.push(`/${prefix}/${locale}/${post.slug}`)}
                 >
                   {cover && (
                     <div className="aspect-video overflow-hidden">

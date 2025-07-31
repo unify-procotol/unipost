@@ -10,6 +10,7 @@ interface UsePostReturn {
   loading: boolean;
   error: string | null;
   fetchPost: (id: string) => Promise<void>;
+  fetchPostBySlug: (slug: string) => Promise<void>;
 }
 
 export function usePost(): UsePostReturn {
@@ -36,10 +37,31 @@ export function usePost(): UsePostReturn {
     }
   }, []);
 
+  const fetchPostBySlug = useCallback(async (slug: string) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Query by slug field directly
+      const data = await repo<PostEntity>({
+        entity: "PostEntity",
+        source: "postgres",
+      }).findOne({
+        where: { slug: slug },
+      });
+      setPost(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     post,
     loading,
     error,
     fetchPost,
+    fetchPostBySlug,
   };
 }

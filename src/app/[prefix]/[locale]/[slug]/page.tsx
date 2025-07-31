@@ -1,4 +1,4 @@
-import { getPost, getProject } from "@/lib/data";
+import { getPostBySlug, getProject } from "@/lib/data";
 import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
 import SubscribeButton from "@/components/subscribe-button";
@@ -14,13 +14,13 @@ import type { Metadata } from "next";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ prefix: string; locale: string; postId: string }>;
+  params: Promise<{ prefix: string; locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { prefix, locale, postId } = await params;
+  const { prefix, locale, slug } = await params;
 
   try {
     const [post, project] = await Promise.all([
-      getPost(postId),
+      getPostBySlug(slug),
       getProject(prefix)
     ]);
 
@@ -85,7 +85,7 @@ export async function generateMetadata({
         modifiedTime: post.data?.updated_at,
         tags: post.data?.tags?.map((tag: { name: string }) => tag.name) || [],
         siteName: "UniPost",
-        url: `https://unipost.app/project/${prefix}/${locale}/${postId}`,
+        url: `https://unipost.app/${prefix}/${locale}/${slug}`,
       },
       twitter: {
         card: "summary_large_image",
@@ -95,11 +95,11 @@ export async function generateMetadata({
         creator: "@unipost",
       },
       alternates: {
-        canonical: `https://unipost.app/project/${prefix}/${locale}/${postId}`,
+        canonical: `https://unipost.app/${prefix}/${locale}/${slug}`,
         languages: Object.fromEntries(
           project.locales.map(loc => [
             loc,
-            `/project/${prefix}/${loc}/${postId}`
+            `/${prefix}/${loc}/${slug}`
           ])
         ),
       },
@@ -127,13 +127,13 @@ export async function generateMetadata({
 export default async function PostPage({
   params,
 }: {
-  params: Promise<{ prefix: string; locale: string; postId: string }>;
+  params: Promise<{ prefix: string; locale: string; slug: string }>;
 }) {
-  const { prefix, locale, postId } = await params;
+  const { prefix, locale, slug } = await params;
 
   try {
     const [post, project] = await Promise.all([
-      getPost(postId),
+      getPostBySlug(slug),
       getProject(prefix)
     ]);
 
@@ -179,7 +179,7 @@ export default async function PostPage({
       publishedTime: publishedAt,
       modifiedTime: originalData?.updated_at,
       author: project.name,
-      url: `https://unipost.app/project/${prefix}/${locale}/${postId}`,
+      url: `https://unipost.app/${prefix}/${locale}/${slug}`,
       language: locale,
     };
 
@@ -194,7 +194,7 @@ export default async function PostPage({
             author: project.name,
             publishedDate: publishedAt,
             modifiedDate: originalData?.updated_at,
-            url: `https://unipost.app/project/${prefix}/${locale}/${postId}`,
+            url: `https://unipost.app/${prefix}/${locale}/${slug}`,
             imageUrl: featureImage,
             siteName: "UniPost",
             tags: post.data?.tags?.map((tag: { name: string }) => tag.name) || [],
@@ -213,7 +213,7 @@ export default async function PostPage({
             {/* Back Button */}
             {/* <div className="mb-8">
               <BackButton 
-                href={`/project/${prefix}/${locale}`}
+                href={`/${prefix}/${locale}`}
                 className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

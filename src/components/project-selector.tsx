@@ -17,7 +17,7 @@ export default function ProjectSelector({ projects }: ProjectSelectorProps) {
     // Get the first language as default locale
     const defaultLocale = project.locales[0];
     if (defaultLocale) {
-      router.push(`/project/${project.prefix}/${defaultLocale}`);
+      router.push(`/${project.prefix}/${defaultLocale}`);
     }
   };
 

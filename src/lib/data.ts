@@ -58,6 +58,17 @@ export async function getPost(id: string): Promise<PostEntity | null> {
   }
 }
 
+export async function getPostBySlug(slug: string): Promise<PostEntity | null> {
+  try {
+    const postAdapter = new PostAdapter();
+    const data = await postAdapter.findBySlug(slug);
+    return data;
+  } catch (error) {
+    console.error('Error fetching post by slug:', error);
+    return null;
+  }
+}
+
 export async function getPaginatedPosts(
   prefix?: string,
   page: number = 1,
