@@ -6,7 +6,7 @@ interface BreadcrumbItem {
   current?: boolean;
 }
 
-export function generateProjectPostsBreadcrumbs(projectName: string, prefix: string, locale: string): BreadcrumbItem[] {
+export function generateProjectPostsBreadcrumbs(projectName: string): BreadcrumbItem[] {
   return [
     { label: 'Home', href: '/' },
     { label: projectName,  current: true },

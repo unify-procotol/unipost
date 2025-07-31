@@ -125,7 +125,7 @@ export default async function PostsPage({
             {/* Breadcrumb Navigation */}
             <div className="mb-8">
               <Breadcrumb 
-                items={generateProjectPostsBreadcrumbs(project.name, prefix, locale)}
+                items={generateProjectPostsBreadcrumbs(project.name)}
                 className="text-gray-600 hover:text-gray-900 transition-colors"
               />
             </div>
