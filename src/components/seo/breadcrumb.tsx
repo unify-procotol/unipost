@@ -50,25 +50,36 @@ export default function Breadcrumb({ items, className = '' }: BreadcrumbProps) {
               )}
               
               {item.current ? (
-                <span className="text-gray-600 text-sm font-medium" aria-current="page">
+                <span 
+                  className={`text-gray-600 text-sm font-medium inline-flex items-center ${
+                    index >= 2 ? 'max-w-[120px] md:max-w-none' : ''
+                  }`} 
+                  aria-current="page"
+                >
                   {index === 0 && (
-                    <svg className="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
                   )}
-                  {item.label}
+                  <span className={index >= 2 ? 'truncate md:whitespace-normal' : ''}>
+                    {item.label}
+                  </span>
                 </span>
               ) : (
                 <Link
                   href={item.href || '#'}
-                  className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                  className={`inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors ${
+                    index >= 2 ? 'max-w-[120px] md:max-w-none' : ''
+                  }`}
                 >
                   {index === 0 && (
-                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
                   )}
-                  {item.label}
+                  <span className={index >= 2 ? 'truncate md:whitespace-normal' : ''}>
+                    {item.label}
+                  </span>
                 </Link>
               )}
             </li>

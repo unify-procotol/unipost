@@ -11,8 +11,8 @@ export default function HeaderLanguageSwitcher() {
 
   // Extract prefix and locale from pathname
   const pathSegments = pathname.split('/').filter(Boolean);
-  const prefix = pathSegments[1]; // /[prefix]/[locale]/...
-  const currentLocale = pathSegments[2];
+  const prefix = pathSegments[0]; // /[prefix]/[locale]/...
+  const currentLocale = pathSegments[1];
 
   useEffect(() => {
     if (prefix && prefix !== 'undefined') {
@@ -24,7 +24,7 @@ export default function HeaderLanguageSwitcher() {
     if (locale !== currentLocale && project) {
       // Reconstruct the current path with new locale
       const newPathSegments = [...pathSegments];
-      newPathSegments[2] = locale; // Replace locale (now at index 2)
+      newPathSegments[1] = locale; // Replace locale (now at index 2)
       const newPath = '/' + newPathSegments.join('/');
       router.push(newPath);
     }

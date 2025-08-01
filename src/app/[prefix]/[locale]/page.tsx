@@ -121,7 +121,7 @@ export default async function PostsPage({
     return (
       <MainLayout project={project} locale={locale}>
         <div className="min-h-screen">
-          <Container className="py-8 px-6" size="xl">
+          <Container className="py-8 px-4">
             {/* Breadcrumb Navigation */}
             <div className="mb-8">
               <Breadcrumb 

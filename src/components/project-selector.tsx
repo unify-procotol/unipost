@@ -83,39 +83,39 @@ export default function ProjectSelector({ projects }: ProjectSelectorProps) {
   };
 
   return (
-    <Container className="py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Projects</h1>
-        <p className="text-gray-600">Manage your multilingual content projects</p>
+    <Container className="py-4 md:py-8">
+      <div className="mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Projects</h1>
+        <p className="text-sm md:text-base text-gray-600">Manage your multilingual content projects</p>
       </div>
 
       {projects.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="text-center py-8 md:py-12 px-4">
+          <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-6 h-6 md:w-8 md:h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No projects yet</h3>
-          <p className="text-gray-600">Create your first project to get started with multilingual content management.</p>
+          <h3 className="text-base md:text-lg font-medium text-gray-900 mb-2">No projects yet</h3>
+          <p className="text-sm md:text-base text-gray-600 max-w-md mx-auto">Create your first project to get started with multilingual content management.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {projects.map((project) => (
             <div
               key={project.id}
               onClick={() => handleProjectClick(project)}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-300/50 p-6 cursor-pointer hover:border-gray-400/50 transition-all duration-300 group shadow-sm hover:shadow-md"
+              className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl border border-gray-300/50 p-4 md:p-6 cursor-pointer hover:border-gray-400/50 transition-all duration-300 group shadow-sm hover:shadow-md active:scale-[0.98] md:active:scale-100"
             >
               {/* Project Header */}
-              <div className="flex items-start justify-between mb-4">
+              <div className="flex items-start justify-between mb-3 md:mb-4">
                 <div className="flex items-center space-x-3">
                   {getProjectLogo(project)}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-base md:text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
                       {project.name}
                     </h3>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(project.locales)}`}>
+                    <span className={`inline-flex items-center px-2 md:px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(project.locales)} mt-1`}>
                       {getStatusText(project.locales)}
                     </span>
                   </div>
@@ -123,17 +123,17 @@ export default function ProjectSelector({ projects }: ProjectSelectorProps) {
               </div>
 
               {/* Project Details */}
-              <div className="space-y-3">
+              <div className="space-y-2 md:space-y-3">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Ghost Domain</p>
-                  <p className="text-sm text-gray-700 truncate">{project.ghost_domain}</p>
+                  <p className="text-xs md:text-sm text-gray-600 mb-1">Ghost Domain</p>
+                  <p className="text-sm md:text-sm text-gray-700 truncate break-all">{project.ghost_domain}</p>
                 </div>
 
                 {project.locales.length > 0 && (
                   <div>
-                    <p className="text-sm text-gray-600 mb-2">Supported Languages</p>
-                    <div className="flex flex-wrap gap-1">
-                      {project.locales.slice(0, 4).map((locale, index) => (
+                    <p className="text-xs md:text-sm text-gray-600 mb-2">Supported Languages</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.locales.slice(0, 3).map((locale, index) => (
                         <span
                           key={index}
                           className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100/80 text-gray-700 border border-gray-300/50"
@@ -141,9 +141,9 @@ export default function ProjectSelector({ projects }: ProjectSelectorProps) {
                           {locale.toUpperCase()}
                         </span>
                       ))}
-                      {project.locales.length > 4 && (
+                      {project.locales.length > 3 && (
                         <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100/80 text-gray-700 border border-gray-300/50">
-                          +{project.locales.length - 4}
+                          +{project.locales.length - 3}
                         </span>
                       )}
                     </div>
@@ -152,20 +152,24 @@ export default function ProjectSelector({ projects }: ProjectSelectorProps) {
               </div>
 
               {/* Actions */}
-              <div className="mt-4 pt-4 border-t border-gray-300/50">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center text-sm text-gray-600 group-hover:text-blue-600 transition-colors">
+              <div className="mt-3 md:mt-4 pt-3 md:pt-4 border-t border-gray-300/50">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div className="flex items-center text-sm md:text-sm text-gray-600 group-hover:text-blue-600 transition-colors">
                     <span>View posts</span>
                     <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
-                  <div onClick={(e) => e.stopPropagation()}>
+                  <div 
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex-shrink-0"
+                  >
                     <SubscribeButton
                       project={project}
                       locale={project.locales[0] || 'en'}
                       variant="outline"
                       size="sm"
+                      className="w-full sm:w-auto min-h-[36px]"
                     />
                   </div>
                 </div>
