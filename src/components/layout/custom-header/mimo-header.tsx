@@ -61,10 +61,7 @@ export default function MimoHeader({
   );
 
   return (
-    <div
-      className="relative overflow-hidden"
-      style={{ backgroundColor: "#00E100" }}
-    >
+    <div className="relative" style={{ backgroundColor: "#00E100" }}>
       {/* Background Image - Only show if not in post detail */}
       {!isPostDetail && (
         <div
@@ -117,7 +114,7 @@ export default function MimoHeader({
                     />
                   )}
                 </div>
-                
+
                 {/* Desktop Language Switcher */}
                 <div className="hidden md:block">
                   <HeaderLanguageSwitcher />
@@ -154,8 +151,6 @@ export default function MimoHeader({
                 </button>
               </div>
             </div>
-
-
           </div>
         </header>
 
@@ -191,15 +186,17 @@ export default function MimoHeader({
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="py-3 space-y-1">
                 {navigationItems}
-                
+
                 {/* Mobile Language Switcher */}
                 <div className="px-3 py-3 border-t border-white/10 mt-3">
-                  <div className="text-white text-sm font-medium mb-2">Language</div>
+                  <div className="text-white text-sm font-medium mb-2">
+                    Language
+                  </div>
                   <div className="[&>*]:text-white [&_button]:text-white [&_select]:text-white">
                     <HeaderLanguageSwitcher />
                   </div>
                 </div>
-                
+
                 {/* Mobile Subscribe Button */}
                 {project?.has_subscription && (
                   <div className="px-3 py-3 border-t border-white/10">
