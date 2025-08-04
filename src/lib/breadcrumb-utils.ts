@@ -14,9 +14,12 @@ export function generateProjectPostsBreadcrumbs(projectName: string): Breadcrumb
 }
 
 export function generatePostDetailBreadcrumbs(projectName: string, prefix: string, locale: string, postTitle: string): BreadcrumbItem[] {
+  // If locale is 'en', don't include it in the path
+  const projectHref = locale === 'en' ? `/${prefix}` : `/${prefix}/${locale}`;
+  
   return [
     { label: 'Home', href: '/' },
-    { label: projectName, href: `/${prefix}/${locale}` },
+    { label: projectName, href: projectHref },
     { label: postTitle, current: true },
   ];
 }
