@@ -119,7 +119,7 @@ export default function MimoHeader({
                 </div>
                 
                 {/* Desktop Language Switcher */}
-                <div className="hidden md:block [&>*]:text-white [&_button]:text-white [&_select]:text-white">
+                <div className="hidden md:block">
                   <HeaderLanguageSwitcher />
                 </div>
 
