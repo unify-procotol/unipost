@@ -7,6 +7,7 @@ import { generateProjectPostsBreadcrumbs } from "@/lib/breadcrumb-utils";
 import { notFound, redirect } from "next/navigation";
 import { PaginationQuerySchema } from "@/types/pagination";
 import type { Metadata } from "next";
+import { generateFaviconIcons } from "@/lib/favicon-utils";
 
 export async function generateMetadata({
   params,
@@ -23,12 +24,14 @@ export async function generateMetadata({
       return {
         title: "Project Not Found",
         description: "The requested project could not be found.",
+        icons: generateFaviconIcons(prefix),
       };
     }
 
     return {
       title: `${project.name} - Posts`,
       description: `Browse posts from ${project.name}. Multilingual content management and translation.`,
+      icons: generateFaviconIcons(prefix),
       openGraph: {
         title: `${project.name} - Posts`,
         description: `Browse posts from ${project.name}`,
@@ -51,6 +54,7 @@ export async function generateMetadata({
     return {
       title: "Error",
       description: "An error occurred while loading the project.",
+      icons: generateFaviconIcons(prefix),
     };
   }
 }
