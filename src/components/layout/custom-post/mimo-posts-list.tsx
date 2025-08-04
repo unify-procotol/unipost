@@ -5,6 +5,7 @@ import { PostEntity } from "@/entities/post";
 import SafeImage from "../../ui/safe-image";
 import Pagination from "../../ui/pagination";
 import FeaturedPostMimo from "./featured-post-mimo";
+import { generateArticleUrl } from "@/lib/url-utils";
 
 interface PaginationMeta {
   currentPage: number;
@@ -85,7 +86,7 @@ export default function MimoPostsList({
       <article
         key={post.id}
         className={cardClasses}
-        onClick={() => router.push(`/${prefix}/${locale}/${post.slug}`)}
+        onClick={() => router.push(generateArticleUrl(prefix, locale, post.slug))}
       >
         {cover && (
           <div className={`${imageAspect} overflow-hidden`}>

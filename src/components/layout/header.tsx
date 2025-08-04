@@ -7,6 +7,7 @@ import SubscribeButton from "../subscribe-button";
 import { PublicProjectEntity } from "@/entities/public-project";
 import MimoHeader from "./custom-header/mimo-header";
 import Image from "next/image";
+import { generateProjectUrl } from "@/lib/url-utils";
 
 interface HeaderProps {
   project?: PublicProjectEntity | null;
@@ -71,7 +72,10 @@ export default function Header({ project, locale = 'en', isPostDetail = false }:
             {/* Left: Logo and Navigation */}
             <div className="flex items-center space-x-4 md:space-x-8">
               {/* Logo and Brand */}
-              <Link href="/" className="flex items-center space-x-2">
+              <Link 
+                href={project ? generateProjectUrl(project.prefix, locale) : "/"} 
+                className="flex items-center space-x-2"
+              >
                 {project?.prefix === 'depinscan' ? (
                   <Image 
                     src="/images/depinscan_logo.svg" 

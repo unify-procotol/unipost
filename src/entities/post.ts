@@ -82,7 +82,7 @@ export class PostEntity implements Record<string, unknown> {
   data?: Partial<GhostDataType>;
   created_at?: string;
   updated_at?: string;
-  slug?: string;
+  slug = "";
 
   [key: string]: unknown;
 }

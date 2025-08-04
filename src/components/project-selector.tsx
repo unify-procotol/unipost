@@ -14,11 +14,8 @@ export default function ProjectSelector({ projects }: ProjectSelectorProps) {
   const router = useRouter();
 
   const handleProjectClick = (project: PublicProjectEntity) => {
-    // Get the first language as default locale
-    const defaultLocale = project.locales[0];
-    if (defaultLocale) {
-      router.push(`/${project.prefix}/${defaultLocale}`);
-    }
+    // Jump to project page directly, let the server handle locale redirection
+    router.push(`/${project.prefix}`);
   };
 
   const getProjectIcon = (name: string) => {

@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 import PostsList from './posts-list';
 import { PostEntity } from '@/entities/post';
+import { generateProjectUrl } from '@/lib/url-utils';
 
 interface PaginationMeta {
   currentPage: number;
@@ -42,7 +43,7 @@ export default function PostsPageWrapper({
   const handlePageChange = useCallback(
     (page: number) => {
       const queryString = createQueryString('page', page.toString());
-      router.push(`/${prefix}/${locale}?${queryString}`);
+      router.push(`${generateProjectUrl(prefix, locale)}?${queryString}`);
     },
     [router, locale, prefix, createQueryString]
   );
@@ -54,7 +55,7 @@ export default function PostsPageWrapper({
       // Reset to page 1 when changing page size
       params.set('page', '1');
       const queryString = params.toString();
-      router.push(`/${prefix}/${locale}?${queryString}`);
+      router.push(`${generateProjectUrl(prefix, locale)}?${queryString}`);
     },
     [router, locale, prefix, searchParams]
   );

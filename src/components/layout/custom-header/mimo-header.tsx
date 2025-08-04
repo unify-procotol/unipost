@@ -86,7 +86,7 @@ export default function MimoHeader({
               <div className="flex items-center space-x-4 md:space-x-8">
                 {/* Logo and Brand - Only show in post detail with mimo logo */}
                 {isPostDetail && (
-                  <Link href="/" className="flex items-center space-x-2">
+                  <Link href="/mimo" className="flex items-center space-x-2">
                     <Image
                       src="/images/mimo_logo.png"
                       alt="Mimo Logo"

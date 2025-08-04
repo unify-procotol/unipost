@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useProject } from "@/hooks/use-project";
 
 export default function HeaderLanguageSwitcher() {
@@ -11,8 +11,12 @@ export default function HeaderLanguageSwitcher() {
 
   // Extract prefix and locale from pathname
   const pathSegments = pathname.split('/').filter(Boolean);
-  const prefix = pathSegments[0]; // /[prefix]/[locale]/...
-  const currentLocale = pathSegments[1];
+  const prefix = pathSegments[0]; // /[prefix]/...
+
+  // State for current locale and page type
+  const [currentLocale, setCurrentLocale] = useState<string>("en");
+  const [pageType, setPageType] = useState<"project" | "article">("project");
+  const [slug, setSlug] = useState<string | null>(null);
 
   useEffect(() => {
     if (prefix && prefix !== 'undefined') {
@@ -20,12 +24,54 @@ export default function HeaderLanguageSwitcher() {
     }
   }, [prefix, fetchProject]);
 
+  // Determine locale and page type based on pathname and project data
+  useEffect(() => {
+    if (pathSegments.length === 1) {
+      // /[prefix] - English project page
+      setCurrentLocale("en");
+      setPageType("project");
+      setSlug(null);
+    } else if (pathSegments.length === 2) {
+      const secondSegment = pathSegments[1];
+      if (project && project.locales.includes(secondSegment)) {
+        // It's a locale - /[prefix]/[locale]
+        setCurrentLocale(secondSegment);
+        setPageType("project");
+        setSlug(null);
+      } else if (project) {
+        // It's a slug - /[prefix]/[slug] (only if project is loaded)
+        setCurrentLocale("en");
+        setPageType("article");
+        setSlug(secondSegment);
+      }
+    } else if (pathSegments.length === 3) {
+      // /[prefix]/[locale]/[slug] - Non-English article page
+      setCurrentLocale(pathSegments[1]);
+      setPageType("article");
+      setSlug(pathSegments[2]);
+    }
+  }, [pathSegments, project]);
+
   const handleLanguageChange = (locale: string) => {
     if (locale !== currentLocale && project) {
-      // Reconstruct the current path with new locale
-      const newPathSegments = [...pathSegments];
-      newPathSegments[1] = locale; // Replace locale (now at index 2)
-      const newPath = '/' + newPathSegments.join('/');
+      let newPath: string;
+      
+      if (pageType === "project") {
+        // Project page
+        if (locale === "en") {
+          newPath = `/${prefix}`;
+        } else {
+          newPath = `/${prefix}/${locale}`;
+        }
+      } else {
+        // Article page
+        if (locale === "en") {
+          newPath = `/${prefix}/${slug}`;
+        } else {
+          newPath = `/${prefix}/${locale}/${slug}`;
+        }
+      }
+      
       router.push(newPath);
     }
   };

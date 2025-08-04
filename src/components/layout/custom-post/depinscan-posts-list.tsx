@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { PostEntity } from "@/entities/post";
 import SafeImage from "../../ui/safe-image";
 import Pagination from "../../ui/pagination";
+import { generateArticleUrl } from "@/lib/url-utils";
 
 interface PaginationMeta {
   currentPage: number;
@@ -71,7 +72,7 @@ export default function DepinscanPostsList({
             <article
               key={post.id}
               className="group flex gap-6 p-6 bg-white rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 cursor-pointer"
-              onClick={() => router.push(`/${prefix}/${locale}/${post.slug}`)}
+              onClick={() => router.push(generateArticleUrl(prefix, locale, post.slug))}
             >
               {/* Left side - Image */}
               <div className="flex-shrink-0">

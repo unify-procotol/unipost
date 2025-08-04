@@ -1,69 +1,128 @@
-import { getProject } from "@/lib/data";
-import { notFound } from "next/navigation";
+import { getPaginatedPosts, getProject } from "@/lib/data";
+import PostsPageWrapper from "@/components/posts-page-wrapper";
+import MainLayout from "@/components/layout/main-layout";
+import Container from "@/components/ui/container";
+import Breadcrumb from "@/components/seo/breadcrumb";
+import { generateProjectPostsBreadcrumbs } from "@/lib/breadcrumb-utils";
+import { notFound, redirect } from "next/navigation";
+import { PaginationQuerySchema } from "@/types/pagination";
+import type { Metadata } from "next";
 
-export default async function ProjectPage({
+export async function generateMetadata({
   params,
 }: {
   params: Promise<{ prefix: string }>;
-}) {
+}): Promise<Metadata> {
   const { prefix } = await params;
+  const locale = "en"; // Default locale
 
   try {
+    const project = await getProject(prefix);
+
+    if (!project) {
+      return {
+        title: "Project Not Found",
+        description: "The requested project could not be found.",
+      };
+    }
+
+    return {
+      title: `${project.name} - Posts`,
+      description: `Browse posts from ${project.name}. Multilingual content management and translation.`,
+      openGraph: {
+        title: `${project.name} - Posts`,
+        description: `Browse posts from ${project.name}`,
+        type: "website",
+        locale: locale,
+        alternateLocale: project.locales.filter(loc => loc !== locale),
+      },
+      alternates: {
+        canonical: `https://unipost.app/${prefix}`,
+        languages: Object.fromEntries(
+          project.locales.map(loc => [
+            loc,
+            loc === "en" ? `/${prefix}` : `/${prefix}/${loc}`
+          ])
+        ),
+      },
+    };
+  } catch (error) {
+    console.error("Error generating metadata:", error);
+    return {
+      title: "Error",
+      description: "An error occurred while loading the project.",
+    };
+  }
+}
+
+export default async function ProjectPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ prefix: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { prefix } = await params;
+  const locale = "en"; // Default locale
+  const resolvedSearchParams = await searchParams;
+
+  try {
+    // Get project information
     const project = await getProject(prefix);
 
     if (!project) {
       notFound();
     }
 
-    // Redirect to English if available, otherwise first available locale
-    const defaultLocale = project.locales.includes('en') ? 'en' : project.locales[0];
-    if (defaultLocale) {
-      const redirectUrl = `/${prefix}/${defaultLocale}`;
-      return (
-        <html>
-          <head>
-            <meta httpEquiv="refresh" content={`0; url=${redirectUrl}`} />
-            <script dangerouslySetInnerHTML={{
-              __html: `window.location.href = '${redirectUrl}';`
-            }} />
-          </head>
-          <body>
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              minHeight: '100vh',
-              fontFamily: 'system-ui, sans-serif'
-            }}>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{
-                  width: '32px',
-                  height: '32px',
-                  border: '3px solid #f3f3f3',
-                  borderTop: '3px solid #3498db',
-                  borderRadius: '50%',
-                  animation: 'spin 1s linear infinite',
-                  margin: '0 auto 16px'
-                }} />
-                <p style={{ color: '#666', margin: 0 }}>Redirecting...</p>
-                <style dangerouslySetInnerHTML={{
-                  __html: `
-                    @keyframes spin {
-                      0% { transform: rotate(0deg); }
-                      100% { transform: rotate(360deg); }
-                    }
-                  `
-                }} />
-              </div>
-            </div>
-          </body>
-        </html>
-      );
-    } else {
-      notFound();
+    // Set default pageSize based on project prefix
+    const defaultPageSize = prefix === "mimo" ? 15 : 10;
+    
+    // Parse and validate pagination parameters with project-specific defaults
+    const paginationResult = PaginationQuerySchema.safeParse({
+      page: resolvedSearchParams.page as string,
+      pageSize: resolvedSearchParams.pageSize as string || defaultPageSize.toString(),
+    });
+
+    if (!paginationResult.success) {
+      console.error("Invalid pagination parameters:", paginationResult.error);
+      redirect(`/${prefix}`);
     }
+
+    // Use project-specific default if no pageSize provided
+    const finalPageSize = resolvedSearchParams.pageSize ? paginationResult.data.pageSize : defaultPageSize;
+
+    // Get paginated posts
+    const paginatedResult = await getPaginatedPosts(
+      prefix,
+      paginationResult.data.page,
+      finalPageSize
+    );
+
+    return (
+      <MainLayout project={project} locale={locale}>
+        <div className="min-h-screen">
+          <Container className="py-8 px-4">
+            {/* Breadcrumb Navigation */}
+            <div className="mb-8">
+              <Breadcrumb 
+                items={generateProjectPostsBreadcrumbs(project.name)}
+                className="text-gray-600 hover:text-gray-900 transition-colors"
+              />
+            </div>
+
+            {/* Posts List */}
+            <PostsPageWrapper 
+              posts={paginatedResult.data} 
+              locale={locale} 
+              prefix={prefix}
+              pagination={paginatedResult.pagination}
+            />
+          </Container>
+        </div>
+      </MainLayout>
+    );
   } catch (error) {
-    console.error("Error loading project:", error);
+    console.error("Error loading posts page:", error);
     notFound();
   }
 }
