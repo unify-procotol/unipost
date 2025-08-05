@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: {
     default: "UniPost - Multilingual Content Management Platform",
-    template: "%s | UniPost"
+    template: "%s"
   },
   description: "UniPost is a powerful multilingual content management platform that integrates with Ghost CMS and provides AI-powered translation services for seamless global content distribution.",
   keywords: ["multilingual", "content management", "Ghost CMS", "AI translation", "blog", "internationalization", "i18n"],
