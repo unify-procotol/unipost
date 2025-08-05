@@ -3,7 +3,6 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   devIndicators: false,
   /* config options here */
-  basePath: process.env.NODE_ENV === 'production' ? '/blog1' : '',
   transpilePackages: [
     "@unilab/urpc",
     "@unilab/urpc-core",
