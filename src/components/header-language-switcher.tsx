@@ -132,7 +132,7 @@ export default function HeaderLanguageSwitcher() {
   }
 
   // Check if this is mimo project for different styling
-  const isMimo = project.prefix === 'mimo';
+  const isMimo = project.prefix === 'mimo' || window.location.hostname === 'mimo.exchange';
 
   return (
     <div className="flex items-center gap-2">
