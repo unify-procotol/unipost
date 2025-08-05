@@ -45,8 +45,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // Apply CORS headers to all API routes
-        source: '/api/:path*',
+        // Apply CORS headers to all routes
+        source: '/(.*)',
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
@@ -64,12 +64,6 @@ const nextConfig: NextConfig = {
             key: 'Access-Control-Allow-Credentials',
             value: 'true',
           },
-        ],
-      },
-      {
-        // Apply CORS headers to all routes if needed
-        source: '/(.*)',
-        headers: [
           {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
