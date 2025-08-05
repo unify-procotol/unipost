@@ -16,15 +16,15 @@ export interface FaviconConfig {
 export function getProjectFavicon(prefix: string): FaviconConfig {
   const faviconMap: Record<string, FaviconConfig> = {
     mimo: {
-      href: '/mimo_icon.svg',
+      href: '/images/mimo_icon.svg',
       type: 'image/svg+xml',
     },
     iotex: {
-      href: '/iotex_icon.svg',
+      href: '/images/iotex_icon.svg',
       type: 'image/svg+xml',
     },
     depinscan: {
-      href: '/depinscan_icon.svg',
+      href: '/images/depinscan_icon.svg',
       type: 'image/svg+xml'
     }
   };
