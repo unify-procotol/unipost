@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
@@ -64,10 +62,16 @@ export default function MimoHeader({
     <div className="relative" style={{ backgroundColor: "#00E100" }}>
       {/* Background Image - Only show if not in post detail */}
       {!isPostDetail && (
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url(/images/mimo_header.png)" }}
-        ></div>
+        <div className="absolute inset-0">
+          <Image
+            src="/images/mimo_header.png"
+            alt="Mimo Header Background"
+            fill
+            className="object-cover"
+            priority
+            quality={95}
+          />
+        </div>
       )}
 
       <div
@@ -117,7 +121,7 @@ export default function MimoHeader({
 
                 {/* Desktop Language Switcher */}
                 <div className="hidden md:block">
-                  <HeaderLanguageSwitcher />
+                  <HeaderLanguageSwitcher project={project} />
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -193,7 +197,7 @@ export default function MimoHeader({
                     Language
                   </div>
                   <div className="[&>*]:text-white [&_button]:text-white [&_select]:text-white">
-                    <HeaderLanguageSwitcher />
+                    <HeaderLanguageSwitcher project={project} />
                   </div>
                 </div>
 

@@ -124,7 +124,7 @@ export default function Header({ project, locale = 'en', isPostDetail = false }:
               
               {/* Desktop Language Switcher */}
               <div className="hidden md:block">
-                <HeaderLanguageSwitcher />
+                <HeaderLanguageSwitcher project={project} />
               </div>
 
               {/* Mobile Menu Button */}
@@ -172,7 +172,7 @@ export default function Header({ project, locale = 'en', isPostDetail = false }:
                 {/* Mobile Language Switcher */}
                 <div className="px-3 py-3 border-t border-gray-200/50 mt-3">
                   <div className="text-gray-600 text-sm font-medium mb-2">Language</div>
-                  <HeaderLanguageSwitcher />
+                  <HeaderLanguageSwitcher project={project} />
                 </div>
                 
                 {/* Mobile Subscribe Button */}

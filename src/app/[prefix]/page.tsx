@@ -73,6 +73,8 @@ export default async function ProjectPage({
   try {
     // Get project information
     const project = await getProject(prefix);
+    // const project = null
+    // console.log('project----', project);
 
     if (!project) {
       notFound();

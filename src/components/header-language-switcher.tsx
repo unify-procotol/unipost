@@ -1,13 +1,16 @@
-"use client";
-
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
-import { useProject } from "@/hooks/use-project";
+import { ProjectEntity } from "@/entities/project";
+import { PublicProjectEntity } from "@/entities/public-project";
 
-export default function HeaderLanguageSwitcher() {
+interface HeaderLanguageSwitcherProps {
+  project?: ProjectEntity | PublicProjectEntity | null;
+  loading?: boolean;
+}
+
+export default function HeaderLanguageSwitcher({ project, loading = false }: HeaderLanguageSwitcherProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { project, loading, fetchProject } = useProject();
 
   // Extract prefix and locale from pathname
   const pathSegments = pathname.split('/').filter(Boolean);
@@ -22,11 +25,7 @@ export default function HeaderLanguageSwitcher() {
   // Ref for dropdown container to handle outside clicks
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (prefix && prefix !== 'undefined') {
-      fetchProject(prefix);
-    }
-  }, [prefix, fetchProject]);
+
 
   // Determine locale and page type based on pathname and project data
   useEffect(() => {
@@ -132,7 +131,7 @@ export default function HeaderLanguageSwitcher() {
   }
 
   // Check if this is mimo project for different styling
-  const isMimo = project.prefix === 'mimo' || window.location.hostname === 'mimo.exchange';
+  const isMimo = project?.prefix === 'mimo';
 
   return (
     <div className="flex items-center gap-2">
