@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
     "@unilab/builtin-plugin",
   ],
   images: {
+    loader: process.env.NODE_ENV === 'production' ? 'custom' : 'default',
+    loaderFile: process.env.NODE_ENV === 'production' ? './src/lib/image-loader.js' : undefined,
     remotePatterns: [
       {
         protocol: 'https',
@@ -26,6 +28,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'blog.depinscan.io',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'unipost.uni-labs.org',
         port: '',
         pathname: '/**',
       },
