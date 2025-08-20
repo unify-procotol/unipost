@@ -52,7 +52,7 @@ export default function SubscribeButton({
     lg: 'px-6 py-3 text-base',
   };
 
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white';
+  const baseClasses = 'inline-flex cursor-pointer items-center justify-center font-medium rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white';
   
   const buttonClasses = `${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`;
 

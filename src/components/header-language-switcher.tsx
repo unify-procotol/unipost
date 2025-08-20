@@ -104,6 +104,8 @@ export default function HeaderLanguageSwitcher({ project, loading = false }: Hea
       de: "Deutsch",
       ja: "日本語",
       ko: "한국어",
+      vi: "Tiếng Việt",
+      pt: "Português",
     };
     return languageNames[locale] || locale.toUpperCase();
   };
@@ -143,7 +145,7 @@ export default function HeaderLanguageSwitcher({ project, loading = false }: Hea
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded transition-all duration-200 min-w-[80px] ${
+          className={`cursor-pointer flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded transition-all duration-200 min-w-[80px] ${
             isMimo
               ? "bg-white/20 text-white hover:bg-white/30 border border-white/30"
               : "bg-gray-200/80 text-gray-700 hover:bg-gray-300/80 hover:text-gray-900 border border-gray-300/50"
@@ -177,7 +179,7 @@ export default function HeaderLanguageSwitcher({ project, loading = false }: Hea
                 <button
                   key={locale}
                   onClick={() => handleLanguageChange(locale)}
-                  className={`w-full text-left px-3 py-2 text-xs font-medium transition-colors duration-150 ${
+                  className={`cursor-pointer w-full text-left px-3 py-2 text-xs font-medium transition-colors duration-150 ${
                     locale === currentLocale
                       ? isMimo
                         ? "bg-green-50 text-green-600 font-semibold"
