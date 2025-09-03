@@ -18,6 +18,7 @@ export interface PublicProjectEntity {
     nav: Array<{
       name: string;
       link: string;
+      [key: string]: string;
     }>;
   };
 

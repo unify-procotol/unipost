@@ -49,7 +49,7 @@ export default function MimoHeader({
                 className="block px-3 py-3 text-base font-medium transition-colors text-white hover:bg-white/10 md:inline-block md:px-3 md:py-2 md:rounded-md"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                {navItem.name}
+                {navItem[locale] || navItem.name}
               </a>
             ) : null
           )}
