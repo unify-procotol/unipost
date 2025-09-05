@@ -1,6 +1,5 @@
 "use client";
 
-import { ProjectEntity } from "@/entities/project";
 import { generatePostDetailBreadcrumbs } from "@/lib/breadcrumb-utils";
 import Link from "next/link";
 
