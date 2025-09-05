@@ -7,9 +7,9 @@
  */
 export function generateArticleUrl(prefix: string, locale: string, slug: string): string {
   if (locale === "en") {
-    return `${window.location.href}/${slug}`;
+    return `${window.location.href}/${slug}/`;
   }
-  return `${window.location.href}/${slug}`;
+  return `${window.location.href}/${slug}/`;
 }
 
 /**

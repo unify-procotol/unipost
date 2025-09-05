@@ -23,6 +23,7 @@ import {
   generateOGImageURL,
 } from "@/lib/seo-utils";
 import { generateFaviconIcons } from "@/lib/favicon-utils";
+import { headers } from 'next/headers';
 
 export async function generateMetadata({
   params,
@@ -300,6 +301,8 @@ export default async function DynamicPage({
 }) {
   const { prefix, params: routeParams } = await params;
   const resolvedSearchParams = await searchParams;
+  const headersList = await headers();
+  const referer = headersList.get('referer')!;
 
   try {
     const project = await getProject(prefix);
@@ -445,9 +448,9 @@ export default async function DynamicPage({
                   <Breadcrumb
                     items={generatePostDetailBreadcrumbs(
                       project.name,
-                      prefix,
-                      locale,
-                      title
+                      title,
+                      slug,
+                      referer
                     )}
                     className="mb-4"
                   />
@@ -616,9 +619,9 @@ export default async function DynamicPage({
                 <Breadcrumb
                   items={generatePostDetailBreadcrumbs(
                     project.name,
-                    prefix,
-                    locale,
-                    title
+                    title,
+                    slug,
+                    referer
                   )}
                   className="mb-4"
                 />

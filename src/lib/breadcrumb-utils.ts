@@ -13,10 +13,10 @@ export function generateProjectPostsBreadcrumbs(projectName: string): Breadcrumb
   ];
 }
 
-export function generatePostDetailBreadcrumbs(projectName: string, prefix: string, locale: string, postTitle: string): BreadcrumbItem[] {
+export function generatePostDetailBreadcrumbs(projectName: string, postTitle: string, slug: string, referer: string): BreadcrumbItem[] {
   // If locale is 'en', don't include it in the path
-  const projectHref = locale === 'en' ? `/${prefix}` : `/${prefix}/${locale}`;
-  
+  // const projectHref = locale === 'en' ? `/${prefix}` : `/${prefix}/${locale}`;
+  const projectHref = referer.replace(`/${slug}`, '');
   return [
     { label: 'Home', href: '/' },
     { label: projectName, href: projectHref },
