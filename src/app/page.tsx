@@ -1,8 +1,19 @@
 import { getProjects } from "@/lib/data";
-import ProjectSelector from "@/components/project-selector";
+import dynamic from "next/dynamic";
 import MainLayout from "@/components/layout/main-layout";
 import StructuredData from "@/components/seo/structured-data";
 import type { Metadata } from "next";
+
+const ProjectSelector = dynamic(() => import("@/components/project-selector"), {
+  loading: () => (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-gray-600">Loading projects...</p>
+      </div>
+    </div>
+  )
+});
 
 export const metadata: Metadata = {
   title: "Projects Dashboard",

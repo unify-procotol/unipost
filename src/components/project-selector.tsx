@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { PublicProjectEntity } from "@/entities/public-project";
 import Container from "./ui/container";
 import SubscribeButton from "./subscribe-button";
@@ -11,13 +11,6 @@ interface ProjectSelectorProps {
 }
 
 export default function ProjectSelector({ projects }: ProjectSelectorProps) {
-  const router = useRouter();
-
-  const handleProjectClick = (project: PublicProjectEntity) => {
-    // Jump to project page directly, let the server handle locale redirection
-    router.push(`/${project.prefix}`);
-  };
-
   const getProjectIcon = (name: string) => {
     return name.charAt(0).toUpperCase();
   };
@@ -99,10 +92,11 @@ export default function ProjectSelector({ projects }: ProjectSelectorProps) {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {projects.map((project) => (
-            <div
+            <Link
               key={project.id}
-              onClick={() => handleProjectClick(project)}
-              className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl border border-gray-300/50 p-4 md:p-6 cursor-pointer hover:border-gray-400/50 transition-all duration-300 group shadow-sm hover:shadow-md active:scale-[0.98] md:active:scale-100"
+              href={`/${project.prefix}`}
+              prefetch={true}
+              className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl border border-gray-300/50 p-4 md:p-6 cursor-pointer hover:border-gray-400/50 transition-all duration-300 group shadow-sm hover:shadow-md active:scale-[0.98] md:active:scale-100 block"
             >
               {/* Project Header */}
               <div className="flex items-start justify-between mb-3 md:mb-4">
@@ -171,7 +165,7 @@ export default function ProjectSelector({ projects }: ProjectSelectorProps) {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

@@ -1,13 +1,23 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import dynamic from "next/dynamic";
 import { PostEntity } from "@/entities/post";
 import SafeImage from "./ui/safe-image";
 import Pagination from "./ui/pagination";
-import MimoPostsList from "./layout/custom-post/mimo-posts-list";
-import FeaturedPostIotex from "./layout/custom-post/featured-post-iotex";
-import DepinscanPostsList from "./layout/custom-post/depinscan-posts-list";
 import { generateArticleUrl } from "@/lib/url-utils";
+
+const MimoPostsList = dynamic(() => import("./layout/custom-post/mimo-posts-list"), {
+  loading: () => <div className="animate-pulse">Loading posts...</div>,
+});
+
+const FeaturedPostIotex = dynamic(() => import("./layout/custom-post/featured-post-iotex"), {
+  loading: () => <div className="h-96 animate-pulse bg-gray-100 rounded-lg"></div>,
+});
+
+const DepinscanPostsList = dynamic(() => import("./layout/custom-post/depinscan-posts-list"), {
+  loading: () => <div className="animate-pulse">Loading posts...</div>,
+});
 
 interface PaginationMeta {
   currentPage: number;
@@ -35,8 +45,6 @@ export default function PostsList({
   onPageChange,
   onPageSizeChange
 }: PostsListProps) {
-  const router = useRouter();
-
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -127,12 +135,15 @@ export default function PostsList({
                           </span>
                         </div>
 
-                        <h1
-                          className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight cursor-pointer hover:text-blue-700 transition-colors"
-                          onClick={() => router.push(generateArticleUrl(prefix, locale, featuredPost.slug))}
+                        <Link 
+                          href={generateArticleUrl(prefix, locale, featuredPost.slug)}
+                          prefetch={true}
+                          className="block"
                         >
-                          {displayTitle}
-                        </h1>
+                          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight cursor-pointer hover:text-blue-700 transition-colors">
+                            {displayTitle}
+                          </h1>
+                        </Link>
 
                         {description && (
                           <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed max-w-3xl">
@@ -170,11 +181,13 @@ export default function PostsList({
               const publishedAt = post.data?.published_at || post.created_at || new Date().toISOString();
 
               return (
-                <article
+                <Link
                   key={post.id}
-                  className="group bg-white/80 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-300/50 hover:border-blue-400/60 hover:bg-white/90 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-blue-200/30"
-                  onClick={() => router.push(generateArticleUrl(prefix, locale, post.slug))}
+                  href={generateArticleUrl(prefix, locale, post.slug)}
+                  prefetch={true}
+                  className="block"
                 >
+                  <article className="group bg-white/80 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-300/50 hover:border-blue-400/60 hover:bg-white/90 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-blue-200/30">
                   {cover && (
                     <div className="aspect-video overflow-hidden">
                       <SafeImage
@@ -203,7 +216,8 @@ export default function PostsList({
                       </p>
                     )}
                   </div>
-                </article>
+                  </article>
+                </Link>
               );
             })}
           </div>
