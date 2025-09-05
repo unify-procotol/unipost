@@ -1,4 +1,4 @@
-import { getPaginatedPosts, getProject, getPostBySlug, getProjects } from "@/lib/data";
+import { getPaginatedPosts, getProject, getPostBySlug } from "@/lib/data";
 import PostsPageWrapper from "@/components/posts-page-wrapper";
 import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";

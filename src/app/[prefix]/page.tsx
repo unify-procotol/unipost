@@ -1,4 +1,4 @@
-import { getPaginatedPosts, getProject, getProjects } from "@/lib/data";
+import { getPaginatedPosts, getProject } from "@/lib/data";
 import dynamic from "next/dynamic";
 import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
