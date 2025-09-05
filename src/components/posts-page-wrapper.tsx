@@ -1,10 +1,8 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback } from 'react';
 import PostsList from './posts-list';
 import { PostEntity } from '@/entities/post';
-import { generateProjectUrl } from '@/lib/url-utils';
 
 interface PaginationMeta {
   currentPage: number;
@@ -31,34 +29,23 @@ export default function PostsPageWrapper({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-      return params.toString();
-    },
-    [searchParams]
-  );
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', page.toString());
+    const queryString = params.toString();
+    const basePath = locale === "en" ? `/${prefix}` : `/${prefix}/${locale}`;
+    router.push(`${basePath}?${queryString}`);
+  };
 
-  const handlePageChange = useCallback(
-    (page: number) => {
-      const queryString = createQueryString('page', page.toString());
-      router.push(`${generateProjectUrl(prefix, locale)}?${queryString}`);
-    },
-    [router, locale, prefix, createQueryString]
-  );
-
-  const handlePageSizeChange = useCallback(
-    (pageSize: number) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set('pageSize', pageSize.toString());
-      // Reset to page 1 when changing page size
-      params.set('page', '1');
-      const queryString = params.toString();
-      router.push(`${generateProjectUrl(prefix, locale)}?${queryString}`);
-    },
-    [router, locale, prefix, searchParams]
-  );
+  const handlePageSizeChange = (pageSize: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('pageSize', pageSize.toString());
+    // Reset to page 1 when changing page size
+    params.set('page', '1');
+    const queryString = params.toString();
+    const basePath = locale === "en" ? `/${prefix}` : `/${prefix}/${locale}`;
+    router.push(`${basePath}?${queryString}`);
+  };
 
   return (
     <PostsList

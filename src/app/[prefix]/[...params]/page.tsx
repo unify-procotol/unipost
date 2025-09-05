@@ -382,8 +382,11 @@ export default async function DynamicPage({
         const slug = param;
         const locale = "en";
 
+        console.log('DynamicPage - looking for post with slug:', slug);
         const post = await getPostBySlug(slug);
+        console.log('DynamicPage - found post:', post);
         if (!post) {
+          console.log('DynamicPage - post not found, calling notFound()');
           notFound();
         }
 
