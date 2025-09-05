@@ -25,27 +25,6 @@ import {
 import { generateFaviconIcons } from "@/lib/favicon-utils";
 import { headers } from 'next/headers';
 
-// Generate static params for dynamic routes
-export async function generateStaticParams() {
-  // Get all projects to generate static paths
-  const projects = await getProjects();
-  const params: Array<{ prefix: string; params: string[] }> = [];
-  
-  for (const project of projects) {
-    // Add project root path
-    params.push({ prefix: project.prefix, params: [] });
-    
-    // Add locale paths
-    for (const locale of project.locales) {
-      if (locale !== 'en') {
-        params.push({ prefix: project.prefix, params: [locale] });
-      }
-    }
-  }
-  
-  return params;
-}
-
 export async function generateMetadata({
   params,
 }: {
@@ -326,8 +305,11 @@ export default async function DynamicPage({
   const referer = headersList.get('referer')!;
 
   try {
+    console.log('DynamicPage - prefix:', prefix, 'routeParams:', routeParams);
     const project = await getProject(prefix);
+    console.log('DynamicPage - project:', project);
     if (!project) {
+      console.log('DynamicPage - project not found, calling notFound()');
       notFound();
     }
 

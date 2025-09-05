@@ -23,19 +23,6 @@ import { PaginationQuerySchema } from "@/types/pagination";
 import type { Metadata } from "next";
 import { generateFaviconIcons } from "@/lib/favicon-utils";
 
-// Generate static params for dynamic routes
-export async function generateStaticParams() {
-  // Get all projects to generate static paths
-  const projects = await getProjects();
-  const params: Array<{ prefix: string }> = [];
-  
-  for (const project of projects) {
-    params.push({ prefix: project.prefix });
-  }
-  
-  return params;
-}
-
 export async function generateMetadata({
   params,
 }: {
@@ -99,11 +86,12 @@ export default async function ProjectPage({
 
   try {
     // Get project information
+    console.log('ProjectPage - prefix:', prefix);
     const project = await getProject(prefix);
-    // const project = null
-    // console.log('project----', project);
+    console.log('ProjectPage - project:', project);
 
     if (!project) {
+      console.log('ProjectPage - project not found, calling notFound()');
       notFound();
     }
 

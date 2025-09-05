@@ -78,7 +78,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://unipost.uni-labs.org' : '',
   
   // CORS configuration
   async headers() {
