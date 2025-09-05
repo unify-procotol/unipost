@@ -86,12 +86,9 @@ export default async function ProjectPage({
 
   try {
     // Get project information
-    console.log('ProjectPage - prefix:', prefix);
     const project = await getProject(prefix);
-    console.log('ProjectPage - project:', project);
 
     if (!project) {
-      console.log('ProjectPage - project not found, calling notFound()');
       notFound();
     }
 

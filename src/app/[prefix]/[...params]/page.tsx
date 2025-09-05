@@ -2,7 +2,7 @@ import { getPaginatedPosts, getProject, getPostBySlug } from "@/lib/data";
 import PostsPageWrapper from "@/components/posts-page-wrapper";
 import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
-import Breadcrumb from "@/components/seo/breadcrumb";
+import Breadcrumb, { ClientBreadcrumb } from "@/components/seo/breadcrumb";
 import {
   generateProjectPostsBreadcrumbs,
   generatePostDetailBreadcrumbs,
@@ -303,14 +303,10 @@ export default async function DynamicPage({
   const resolvedSearchParams = await searchParams;
   const headersList = await headers();
   const referer = headersList.get('referer') || '';
-  console.log('DynamicPage - referer:', referer);
 
   try {
-    console.log('DynamicPage - prefix:', prefix, 'routeParams:', routeParams);
     const project = await getProject(prefix);
-    console.log('DynamicPage - project:', project);
     if (!project) {
-      console.log('DynamicPage - project not found, calling notFound()');
       notFound();
     }
 
@@ -383,11 +379,8 @@ export default async function DynamicPage({
         const slug = param;
         const locale = "en";
 
-        console.log('DynamicPage - looking for post with slug:', slug);
         const post = await getPostBySlug(slug);
-        console.log('DynamicPage - found post:', post);
         if (!post) {
-          console.log('DynamicPage - post not found, calling notFound()');
           notFound();
         }
 
@@ -452,15 +445,7 @@ export default async function DynamicPage({
               <div className="max-w-4xl mx-auto">
                 {/* Breadcrumb Navigation */}
                 <div className="mb-6">
-                  <Breadcrumb
-                    items={generatePostDetailBreadcrumbs(
-                      project.name,
-                      title,
-                      slug,
-                      referer
-                    )}
-                    className="mb-4"
-                  />
+                  <ClientBreadcrumb name={project.name} title={title} slug={slug} className="mb-4" />
                 </div>
 
                 <article className="prose prose-lg max-w-none">
@@ -623,15 +608,7 @@ export default async function DynamicPage({
             <div className="max-w-4xl mx-auto">
               {/* Breadcrumb Navigation */}
               <div className="mb-6">
-                <Breadcrumb
-                  items={generatePostDetailBreadcrumbs(
-                    project.name,
-                    title,
-                    slug,
-                    referer
-                  )}
-                  className="mb-4"
-                />
+                <ClientBreadcrumb name={project.name} title={title} slug={slug} className="mb-4" />
               </div>
 
               <article className="prose prose-lg max-w-none">
