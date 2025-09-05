@@ -8,10 +8,10 @@
 export function generateArticleUrl(prefix: string, locale: string, slug: string): string {
   // Check if we're in production with rewrite (has /blog in path)
   let basePath = `/${prefix}`;
-  if (window.location.pathname.includes('/blog')) {
-    basePath = '/blog';
-  } else if (window.location.pathname.includes('/blog1')) {
+  if (window.location.pathname.includes('/blog1')) {
     basePath = '/blog1';
+  } else if (window.location.pathname.includes('/blog')) {
+    basePath = '/blog';
   }
   // const basePath = hasBlogPath ? '/blog' : `/${prefix}`;
   
