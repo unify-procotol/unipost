@@ -1,4 +1,4 @@
-import { getPaginatedPosts, getProject, getPostBySlug } from "@/lib/data";
+import { getPaginatedPosts, getProject, getPostBySlug, getProjects } from "@/lib/data";
 import PostsPageWrapper from "@/components/posts-page-wrapper";
 import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
@@ -24,6 +24,27 @@ import {
 } from "@/lib/seo-utils";
 import { generateFaviconIcons } from "@/lib/favicon-utils";
 import { headers } from 'next/headers';
+
+// Generate static params for dynamic routes
+export async function generateStaticParams() {
+  // Get all projects to generate static paths
+  const projects = await getProjects();
+  const params: Array<{ prefix: string; params: string[] }> = [];
+  
+  for (const project of projects) {
+    // Add project root path
+    params.push({ prefix: project.prefix, params: [] });
+    
+    // Add locale paths
+    for (const locale of project.locales) {
+      if (locale !== 'en') {
+        params.push({ prefix: project.prefix, params: [locale] });
+      }
+    }
+  }
+  
+  return params;
+}
 
 export async function generateMetadata({
   params,

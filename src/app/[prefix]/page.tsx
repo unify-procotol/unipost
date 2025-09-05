@@ -1,4 +1,4 @@
-import { getPaginatedPosts, getProject } from "@/lib/data";
+import { getPaginatedPosts, getProject, getProjects } from "@/lib/data";
 import dynamic from "next/dynamic";
 import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
@@ -22,6 +22,19 @@ import { notFound, redirect } from "next/navigation";
 import { PaginationQuerySchema } from "@/types/pagination";
 import type { Metadata } from "next";
 import { generateFaviconIcons } from "@/lib/favicon-utils";
+
+// Generate static params for dynamic routes
+export async function generateStaticParams() {
+  // Get all projects to generate static paths
+  const projects = await getProjects();
+  const params: Array<{ prefix: string }> = [];
+  
+  for (const project of projects) {
+    params.push({ prefix: project.prefix });
+  }
+  
+  return params;
+}
 
 export async function generateMetadata({
   params,
