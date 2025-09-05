@@ -4,8 +4,7 @@ import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
 import Breadcrumb, { ClientBreadcrumb } from "@/components/seo/breadcrumb";
 import {
-  generateProjectPostsBreadcrumbs,
-  generatePostDetailBreadcrumbs,
+  generateProjectPostsBreadcrumbs
 } from "@/lib/breadcrumb-utils";
 import { notFound, redirect } from "next/navigation";
 import { PaginationQuerySchema } from "@/types/pagination";
