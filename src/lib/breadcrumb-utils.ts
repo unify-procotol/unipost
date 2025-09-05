@@ -14,9 +14,17 @@ export function generateProjectPostsBreadcrumbs(projectName: string): Breadcrumb
 }
 
 export function generatePostDetailBreadcrumbs(projectName: string, postTitle: string, slug: string, referer: string): BreadcrumbItem[] {
-  // If locale is 'en', don't include it in the path
-  // const projectHref = locale === 'en' ? `/${prefix}` : `/${prefix}/${locale}`;
-  const projectHref = referer.replace(`/${slug}`, '');
+  // Extract the path without the slug from referer
+  let projectHref = '/';
+  if (referer) {
+    // Remove the slug from the end of the referer path
+    projectHref = referer.replace(`/${slug}`, '');
+    // If referer was just the slug, fallback to root
+    if (projectHref === '') {
+      projectHref = '/';
+    }
+  }
+  
   return [
     { label: 'Home', href: '/' },
     { label: projectName, href: projectHref },

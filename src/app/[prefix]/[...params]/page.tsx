@@ -302,7 +302,7 @@ export default async function DynamicPage({
   const { prefix, params: routeParams } = await params;
   const resolvedSearchParams = await searchParams;
   const headersList = await headers();
-  const referer = headersList.get('referer')!;
+  const referer = headersList.get('referer') || '';
 
   try {
     console.log('DynamicPage - prefix:', prefix, 'routeParams:', routeParams);
