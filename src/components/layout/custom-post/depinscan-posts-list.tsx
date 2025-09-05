@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { PostEntity } from "@/entities/post";
 import SafeImage from "../../ui/safe-image";
 import Pagination from "../../ui/pagination";
@@ -32,7 +32,6 @@ export default function DepinscanPostsList({
   onPageChange,
   onPageSizeChange
 }: DepinscanPostsListProps) {
-  const router = useRouter();
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
@@ -69,10 +68,11 @@ export default function DepinscanPostsList({
           const publishedAt = post.data?.published_at || post.created_at || new Date().toISOString();
 
           return (
-            <article
+            <Link
               key={post.id}
+              href={generateArticleUrl(prefix, locale, post.slug)}
+              prefetch={true}
               className="group flex gap-6 p-6 bg-white rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 cursor-pointer"
-              onClick={() => router.push(generateArticleUrl(prefix, locale, post.slug))}
             >
               {/* Left side - Image */}
               <div className="flex-shrink-0">
@@ -111,7 +111,7 @@ export default function DepinscanPostsList({
                   </p>
                 )}
               </div>
-            </article>
+            </Link>
           );
         })}
       </div>

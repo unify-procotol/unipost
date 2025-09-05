@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { PostEntity } from "@/entities/post";
 import SafeImage from "../../ui/safe-image";
 import { generateArticleUrl } from "@/lib/url-utils";
@@ -16,7 +16,6 @@ export default function FeaturedPostIotex({
   locale,
   prefix
 }: FeaturedPostIotexProps) {
-  const router = useRouter();
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
@@ -34,9 +33,10 @@ export default function FeaturedPostIotex({
   const publishedAt = post.data?.published_at || post.created_at || new Date().toISOString();
 
   return (
-    <div 
-      className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 rounded-3xl mb-10 border border-gray-200/60 shadow-xl cursor-pointer group hover:shadow-2xl transition-all duration-300"
-      onClick={() => router.push(generateArticleUrl(prefix, locale, post.slug))}
+    <Link 
+      href={generateArticleUrl(prefix, locale, post.slug)}
+      prefetch={true}
+      className="block relative overflow-hidden bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 rounded-3xl mb-10 border border-gray-200/60 shadow-xl cursor-pointer group hover:shadow-2xl transition-all duration-300"
     >
       {/* Background gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-100/20 via-gray-100/20 to-zinc-100/20 rounded-3xl"></div>
@@ -101,6 +101,6 @@ export default function FeaturedPostIotex({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 } 

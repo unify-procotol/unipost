@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { PostEntity } from "@/entities/post";
 import SafeImage from "../../ui/safe-image";
 import Pagination from "../../ui/pagination";
@@ -33,7 +33,6 @@ export default function MimoPostsList({
   onPageChange,
   onPageSizeChange
 }: MimoPostsListProps) {
-  const router = useRouter();
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
@@ -83,10 +82,11 @@ export default function MimoPostsList({
     const padding = size === "medium" ? "p-5" : "p-4";
 
     return (
-      <article
+      <Link
         key={post.id}
+        href={generateArticleUrl(prefix, locale, post.slug)}
+        prefetch={true}
         className={cardClasses}
-        onClick={() => router.push(generateArticleUrl(prefix, locale, post.slug))}
       >
         {cover && (
           <div className={`${imageAspect} overflow-hidden`}>
@@ -115,7 +115,7 @@ export default function MimoPostsList({
             </p>
           )}
         </div>
-      </article>
+      </Link>
     );
   };
 
