@@ -59,7 +59,7 @@ export default function MimoHeader({
   );
 
   return (
-    <div className="relative" style={{ backgroundColor: "#00E100" }}>
+    <div className="relative">
       {/* Background Image - Only show if not in post detail */}
       {!isPostDetail && (
         <div className="absolute inset-0">
@@ -80,7 +80,7 @@ export default function MimoHeader({
         }`}
       >
         {/* Top Navigation */}
-        <header className="px-4 sm:px-6 lg:px-8 py-4">
+        <header className={`px-4 sm:px-6 lg:px-8 py-4 ${isPostDetail ? 'bg-[#00E100]' : 'bg-transparent'}`}>
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between h-12 md:h-16">
               {/* Left: Logo and Navigation */}
@@ -165,7 +165,7 @@ export default function MimoHeader({
               {/* Main Logo */}
               <div className="flex items-center justify-center mb-4 md:mb-6">
                 <Image
-                  src="/images/mimo_logo.png"
+                  src="/images/main-logo.png"
                   alt="Mimo Logo"
                   width={400}
                   height={120}

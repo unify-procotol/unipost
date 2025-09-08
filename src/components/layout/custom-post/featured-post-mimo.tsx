@@ -43,13 +43,13 @@ export default function FeaturedPostMimo({
 
       <div className="relative grid lg:grid-cols-3 gap-0 min-h-[400px]">
         {/* Left side - Image (takes 2 columns) */}
-        <div className="relative overflow-hidden rounded-l-3xl lg:rounded-r-none lg:col-span-2">
+        <div className="relative overflow-hidden rounded-tl-3xl rounded-bl-3xl lg:rounded-r-none lg:col-span-2">
           {cover ? (
-            <div className="h-full min-h-[300px] lg:min-h-[400px]">
+            <div className="relative h-full min-h-[300px] lg:min-h-[400px]">
               <SafeImage
                 src={cover}
                 alt={displayTitle}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                className="absolute inset-0 w-full h-full object-contain bg-gray-50 group-hover:scale-105 transition-transform duration-700"
               />
             </div>
           ) : (
