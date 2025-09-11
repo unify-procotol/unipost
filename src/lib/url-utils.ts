@@ -18,7 +18,7 @@ export function generateArticleUrl(prefix: string, locale: string, slug: string)
   if (locale === "en") {
     return `${window.location.origin}${basePath}/${slug}`;
   }
-  return `${window.location.origin}${basePath}/${slug}`;
+  return `${window.location.origin}${basePath}/${locale}/${slug}`;
 }
 
 /**
