@@ -34,7 +34,7 @@ export default function PostsPageWrapper({
     params.set('page', page.toString());
     const queryString = params.toString();
     const basePath = locale === "en" ? `/${prefix}` : `/${prefix}/${locale}`;
-    router.push(`${basePath}?${queryString}`);
+    router.push(`${window.location.origin}${basePath}?${queryString}`);
   };
 
   const handlePageSizeChange = (pageSize: number) => {
@@ -44,7 +44,7 @@ export default function PostsPageWrapper({
     params.set('page', '1');
     const queryString = params.toString();
     const basePath = locale === "en" ? `/${prefix}` : `/${prefix}/${locale}`;
-    router.push(`${basePath}?${queryString}`);
+    router.push(`${window.location.origin}${basePath}?${queryString}`);
   };
 
   return (
