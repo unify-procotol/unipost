@@ -10,9 +10,47 @@ const nextConfig: NextConfig = {
     "@unilab/urpc-next",
     "@unilab/builtin-plugin",
   ],
+  async redirects() {
+    return [
+      // Redirect /blog/ to /blog (remove trailing slash) for all domains
+      {
+        source: '/blog/',
+        destination: '/blog',
+        permanent: false,
+        has: [
+          {
+            type: 'host',
+            value: 'mimo.exchange',
+          },
+        ],
+      },
+      {
+        source: '/blog/',
+        destination: '/blog',
+        permanent: false,
+        has: [
+          {
+            type: 'host',
+            value: 'iotex.io',
+          },
+        ],
+      },
+      {
+        source: '/blog/',
+        destination: '/blog',
+        permanent: false,
+        has: [
+          {
+            type: 'host',
+            value: 'blog.depinscan.io',
+          },
+        ],
+      },
+    ];
+  },
   async rewrites() {
     return [
-      // Rewrite /blog to /mimo for Mimo project (mimo.exchange)
+      // Rewrite /blog to project root for each domain
       {
         source: '/blog',
         destination: '/mimo',
@@ -23,20 +61,29 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      // Rewrite /blog/ to /mimo for Mimo project (mimo.exchange)
       {
-        source: '/blog/',
-        destination: '/mimo',
+        source: '/blog',
+        destination: '/iotex',
         has: [
           {
             type: 'host',
-            value: 'mimo.exchange',
+            value: 'iotex.io',
           },
         ],
       },
-      // Rewrite /blog/* to /mimo/* for Mimo project (mimo.exchange)
       {
-        source: '/blog/:path+',
+        source: '/blog',
+        destination: '/depinscan',
+        has: [
+          {
+            type: 'host',
+            value: 'blog.depinscan.io',
+          },
+        ],
+      },
+      // Rewrite /blog/* to project paths
+      {
+        source: '/blog/:path*',
         destination: '/mimo/:path*',
         has: [
           {
@@ -45,31 +92,8 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      // Rewrite /blog to /iotex for IoTeX project (iotex.io)
       {
-        source: '/blog',
-        destination: '/iotex',
-        has: [
-          {
-            type: 'host',
-            value: 'iotex.io',
-          },
-        ],
-      },
-      // Rewrite /blog/ to /iotex for IoTeX project (iotex.io)
-      {
-        source: '/blog/',
-        destination: '/iotex',
-        has: [
-          {
-            type: 'host',
-            value: 'iotex.io',
-          },
-        ],
-      },
-      // Rewrite /blog/* to /iotex/* for IoTeX project (iotex.io)
-      {
-        source: '/blog/:path+',
+        source: '/blog/:path*',
         destination: '/iotex/:path*',
         has: [
           {
@@ -78,31 +102,8 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      // Rewrite /blog to /depinscan for DePINScan project (blog.depinscan.io)
       {
-        source: '/blog',
-        destination: '/depinscan',
-        has: [
-          {
-            type: 'host',
-            value: 'blog.depinscan.io',
-          },
-        ],
-      },
-      // Rewrite /blog/ to /depinscan for DePINScan project (blog.depinscan.io)
-      {
-        source: '/blog/',
-        destination: '/depinscan',
-        has: [
-          {
-            type: 'host',
-            value: 'blog.depinscan.io',
-          },
-        ],
-      },
-      // Rewrite /blog/* to /depinscan/* for DePINScan project (blog.depinscan.io)
-      {
-        source: '/blog/:path+',
+        source: '/blog/:path*',
         destination: '/depinscan/:path*',
         has: [
           {
@@ -111,8 +112,6 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      // Fallback: for direct access to unipost.uni-labs.org, keep original paths
-      // This ensures direct access to /mimo/slug, /iotex/slug, /depinscan/slug works
     ];
   },
   images: {
