@@ -10,13 +10,12 @@ const nextConfig: NextConfig = {
     "@unilab/urpc-next",
     "@unilab/builtin-plugin",
   ],
-  async redirects() {
+  async rewrites() {
     return [
-      // Redirect /blog/ to /blog (remove trailing slash) for all domains
+      // Rewrite /blog and /blog/ to project root for each domain
       {
-        source: '/blog/',
-        destination: '/blog',
-        permanent: false,
+        source: '/blog',
+        destination: '/mimo',
         has: [
           {
             type: 'host',
@@ -26,33 +25,6 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/blog/',
-        destination: '/blog',
-        permanent: false,
-        has: [
-          {
-            type: 'host',
-            value: 'iotex.io',
-          },
-        ],
-      },
-      {
-        source: '/blog/',
-        destination: '/blog',
-        permanent: false,
-        has: [
-          {
-            type: 'host',
-            value: 'blog.depinscan.io',
-          },
-        ],
-      },
-    ];
-  },
-  async rewrites() {
-    return [
-      // Rewrite /blog to project root for each domain
-      {
-        source: '/blog',
         destination: '/mimo',
         has: [
           {
@@ -72,6 +44,16 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: '/blog/',
+        destination: '/iotex',
+        has: [
+          {
+            type: 'host',
+            value: 'iotex.io',
+          },
+        ],
+      },
+      {
         source: '/blog',
         destination: '/depinscan',
         has: [
@@ -81,9 +63,19 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      // Rewrite /blog/* to project paths
       {
-        source: '/blog/:path*',
+        source: '/blog/',
+        destination: '/depinscan',
+        has: [
+          {
+            type: 'host',
+            value: 'blog.depinscan.io',
+          },
+        ],
+      },
+      // Rewrite /blog/* to project paths (excluding empty path)
+      {
+        source: '/blog/:path+',
         destination: '/mimo/:path*',
         has: [
           {
@@ -93,7 +85,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: '/blog/:path*',
+        source: '/blog/:path+',
         destination: '/iotex/:path*',
         has: [
           {
@@ -103,7 +95,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: '/blog/:path*',
+        source: '/blog/:path+',
         destination: '/depinscan/:path*',
         has: [
           {
