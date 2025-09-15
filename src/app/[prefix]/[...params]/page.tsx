@@ -20,6 +20,9 @@ import {
   generateSEOTitle,
   extractKeywords,
   generateOGImageURL,
+  generateArticleCanonicalURL,
+  generateProjectDescription,
+  generateAlternatesLanguagesURL,
 } from "@/lib/seo-utils";
 import { generateFaviconIcons } from "@/lib/favicon-utils";
 
@@ -43,7 +46,6 @@ export async function generateMetadata({
     // Case 1: Single parameter - could be locale or slug
     if (routeParams.length === 1) {
       const param = routeParams[0];
-
       // Check if it's a valid locale
       if (project.locales.includes(param)) {
         const locale = param;
@@ -63,29 +65,30 @@ export async function generateMetadata({
 
         return {
           title: `${project.name} - ${languageName} Posts`,
-          description: `Browse ${languageName} posts from ${project.name}. Multilingual content management and translation.`,
+          description: generateProjectDescription(prefix, project.name),
           icons: generateFaviconIcons(prefix),
           openGraph: {
             title: `${project.name} - ${languageName} Posts`,
-            description: `Browse ${languageName} posts from ${project.name}`,
+            description: generateProjectDescription(prefix, project.name),
             type: "website",
             locale: locale,
             alternateLocale: project.locales.filter((loc) => loc !== locale),
+            siteName: project.name,
+          },
+          twitter: {
+            card: "summary_large_image",
+            title: `${project.name} - ${languageName} Posts`,
+            description: generateProjectDescription(prefix, project.name),
+            images: ["/og-image.png"],
           },
           alternates: {
-            languages: Object.fromEntries(
-              project.locales.map((loc) => [
-                loc,
-                loc === "en" ? `/${prefix}` : `/${prefix}/${loc}`,
-              ])
-            ),
+            languages: generateAlternatesLanguagesURL(prefix, project.locales),
           },
         };
       } else {
         // It's a slug - generate article page metadata with default locale (en)
         const slug = param;
         const locale = "en";
-
         const post = await getPostBySlug(slug);
         if (!post) {
           return {
@@ -121,7 +124,6 @@ export async function generateMetadata({
           title: optimizedTitle,
           description: optimizedDescription,
           keywords: keywords.join(", "),
-          authors: [{ name: project.name }],
           icons: generateFaviconIcons(prefix),
           openGraph: {
             title: optimizedTitle,
@@ -142,25 +144,16 @@ export async function generateMetadata({
             tags:
               post.data?.tags?.map((tag: { name: string }) => tag.name) || [],
             siteName: "UniPost",
-            url: `https://unipost.app/${prefix}/${slug}`,
           },
           twitter: {
             card: "summary_large_image",
             title: title,
             description: excerpt,
             images: featureImage ? [featureImage] : undefined,
-            creator: "@unipost",
           },
           alternates: {
-            canonical: `https://unipost.app/${prefix}/${slug}`,
-            languages: Object.fromEntries(
-              project.locales.map((loc) => [
-                loc,
-                loc === "en"
-                  ? `/${prefix}/${slug}`
-                  : `/${prefix}/${loc}/${slug}`,
-              ])
-            ),
+            canonical: generateArticleCanonicalURL(prefix, slug),
+            languages: generateAlternatesLanguagesURL(prefix, project.locales, slug),
           },
           robots: {
             index: true,
@@ -216,7 +209,6 @@ export async function generateMetadata({
         title: optimizedTitle,
         description: optimizedDescription,
         keywords: keywords.join(", "),
-        authors: [{ name: project.name }],
         icons: generateFaviconIcons(prefix),
         openGraph: {
           title: optimizedTitle,
@@ -236,29 +228,16 @@ export async function generateMetadata({
           modifiedTime: post.data?.updated_at,
           tags: post.data?.tags?.map((tag: { name: string }) => tag.name) || [],
           siteName: "UniPost",
-          url:
-            locale === "en"
-              ? `https://unipost.app/${prefix}/${slug}`
-              : `https://unipost.app/${prefix}/${locale}/${slug}`,
         },
         twitter: {
           card: "summary_large_image",
           title: title,
           description: excerpt,
           images: featureImage ? [featureImage] : undefined,
-          creator: "@unipost",
         },
         alternates: {
-          canonical:
-            locale === "en"
-              ? `https://unipost.app/${prefix}/${slug}`
-              : `https://unipost.app/${prefix}/${locale}/${slug}`,
-          languages: Object.fromEntries(
-            project.locales.map((loc) => [
-              loc,
-              loc === "en" ? `/${prefix}/${slug}` : `/${prefix}/${loc}/${slug}`,
-            ])
-          ),
+          canonical: generateArticleCanonicalURL(prefix, slug, locale),
+          languages: generateAlternatesLanguagesURL(prefix, project.locales, slug),
         },
         robots: {
           index: true,
@@ -414,7 +393,7 @@ export default async function DynamicPage({
           publishedTime: publishedAt,
           modifiedTime: originalData?.updated_at,
           author: project.name,
-          url: `https://unipost.app/${prefix}/${slug}`,
+          url: `https://unipost.uni-labs.org/${prefix}/${slug}`,
           language: locale,
         };
 
@@ -429,7 +408,7 @@ export default async function DynamicPage({
                 author: project.name,
                 publishedDate: publishedAt,
                 modifiedDate: originalData?.updated_at,
-                url: `https://unipost.app/${prefix}/${slug}`,
+                url: `https://unipost.uni-labs.org/${prefix}/${slug}`,
                 imageUrl: featureImage,
                 siteName: "UniPost",
                 tags:
@@ -574,8 +553,8 @@ export default async function DynamicPage({
         author: project.name,
         url:
           locale === "en"
-            ? `https://unipost.app/${prefix}/${slug}`
-            : `https://unipost.app/${prefix}/${locale}/${slug}`,
+            ? `https://unipost.uni-labs.org/${prefix}/${slug}`
+            : `https://unipost.uni-labs.org/${prefix}/${locale}/${slug}`,
         language: locale,
       };
 
@@ -592,8 +571,8 @@ export default async function DynamicPage({
               modifiedDate: originalData?.updated_at,
               url:
                 locale === "en"
-                  ? `https://unipost.app/${prefix}/${slug}`
-                  : `https://unipost.app/${prefix}/${locale}/${slug}`,
+                  ? `https://unipost.uni-labs.org/${prefix}/${slug}`
+                  : `https://unipost.uni-labs.org/${prefix}/${locale}/${slug}`,
               imageUrl: featureImage,
               siteName: "UniPost",
               tags:

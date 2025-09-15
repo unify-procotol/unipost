@@ -27,12 +27,12 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
           "@type": "WebSite",
           name: "UniPost",
           description: "Multilingual content management platform with Ghost CMS integration and AI translation",
-          url: "https://unipost.app",
+          url: "https://unipost.uni-labs.org",
           potentialAction: {
             "@type": "SearchAction",
             target: {
               "@type": "EntryPoint",
-              urlTemplate: "https://unipost.app/search?q={search_term_string}"
+              urlTemplate: "https://unipost.uni-labs.org/search?q={search_term_string}"
             },
             "query-input": "required name=search_term_string"
           },
@@ -41,7 +41,7 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
             name: "UniPost",
             logo: {
               "@type": "ImageObject",
-              url: "https://unipost.app/logo.png"
+              url: "https://unipost.uni-labs.org/logo.png"
             }
           }
         };
@@ -65,7 +65,7 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
             name: "UniPost",
             logo: {
               "@type": "ImageObject",
-              url: "https://unipost.app/logo.png"
+              url: "https://unipost.uni-labs.org/logo.png"
             }
           },
           mainEntityOfPage: {
@@ -76,7 +76,7 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
           isPartOf: {
             "@type": "WebSite",
             name: "UniPost",
-            url: "https://unipost.app"
+            url: "https://unipost.uni-labs.org"
           }
         };
 
@@ -86,8 +86,8 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
           "@type": "Organization",
           name: "UniPost",
           description: "Multilingual content management platform with Ghost CMS integration and AI translation",
-          url: "https://unipost.app",
-          logo: "https://unipost.app/logo.png",
+          url: "https://unipost.uni-labs.org",
+          logo: "https://unipost.uni-labs.org/logo.png",
           sameAs: [
             "https://twitter.com/unipost",
             "https://github.com/unipost"

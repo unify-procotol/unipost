@@ -211,3 +211,90 @@ export function generateBreadcrumbStructuredData(items: Array<{ name: string; ur
     }))
   };
 }
+
+/**
+ * Generate canonical URL for different projects
+ * @param prefix - Project prefix
+ * @returns Canonical URL for the project
+ */
+export function generateCanonicalURL(prefix: string): string {
+  switch (prefix) {
+    case "mimo":
+      return "https://mimo.exchange/blog";
+    case "iotex":
+      return "https://iotex.io/blog";
+    default:
+      return `https://unipost.uni-labs.org/${prefix}`;
+  }
+}
+
+/**
+ * Generate canonical URL for articles/posts
+ * @param prefix - Project prefix
+ * @param slug - Article slug
+ * @param locale - Article locale (optional, defaults to 'en')
+ * @returns Canonical URL for the article
+ */
+export function generateArticleCanonicalURL(prefix: string, slug: string, locale?: string): string {
+  const baseUrl = generateCanonicalURL(prefix);
+
+  if (locale && locale !== 'en') {
+    return `${baseUrl}/${locale}/${slug}`;
+  }
+
+  return `${baseUrl}/${slug}`;
+}
+
+/**
+ * Generate alternates languages URLs for different projects
+ * @param prefix - Project prefix
+ * @param locales - Array of locales
+ * @param slug - Article slug (optional, for article pages)
+ * @returns Object with locale as key and absolute URL as value
+ */
+export function generateAlternatesLanguagesURL(
+  prefix: string,
+  locales: string[],
+  slug?: string
+): Record<string, string> {
+  const baseUrl = generateCanonicalURL(prefix);
+
+  return Object.fromEntries(
+    locales.map((loc) => {
+      if (slug) {
+        // Article page URLs
+        if (loc === "en") {
+          return [loc, `${baseUrl}/${slug}`];
+        } else {
+          return [loc, `${baseUrl}/${loc}/${slug}`];
+        }
+      } else {
+        // Project page URLs
+        if (loc === "en") {
+          return [loc, baseUrl];
+        } else {
+          return [loc, `${baseUrl}/${loc}`];
+        }
+      }
+    })
+  );
+}
+
+/**
+ * Generate project-specific description
+ * @param prefix - Project prefix
+ * @param projectName - Project name
+ * @returns Description for the project
+ */
+export function generateProjectDescription(prefix: string, projectName?: string): string {
+  switch (prefix) {
+    case "mimo":
+      return "Thoughts, stories and ideas.";
+    case "iotex":
+      return "Blockchain, iot and smart devices. Iotex building the connected world. Learn whats happening in IoTeX ecosystem. Explore...";
+    default:
+      return projectName
+        ? `Browse posts from ${projectName}. Multilingual content management and translation.`
+        : "Multilingual content management and translation.";
+  }
+}

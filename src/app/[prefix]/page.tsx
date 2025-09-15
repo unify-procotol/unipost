@@ -22,6 +22,7 @@ import { notFound, redirect } from "next/navigation";
 import { PaginationQuerySchema } from "@/types/pagination";
 import type { Metadata } from "next";
 import { generateFaviconIcons } from "@/lib/favicon-utils";
+import { generateCanonicalURL, generateProjectDescription, generateAlternatesLanguagesURL } from "@/lib/seo-utils";
 
 export async function generateMetadata({
   params,
@@ -44,23 +45,25 @@ export async function generateMetadata({
 
     return {
       title: `${project.name} - Posts`,
-      description: `Browse posts from ${project.name}. Multilingual content management and translation.`,
+      description: generateProjectDescription(prefix, project.name),
       icons: generateFaviconIcons(prefix),
       openGraph: {
         title: `${project.name} - Posts`,
-        description: `Browse posts from ${project.name}`,
+        description: generateProjectDescription(prefix, project.name),
         type: "website",
         locale: locale,
         alternateLocale: project.locales.filter(loc => loc !== locale),
+        siteName: project.name,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${project.name} - Posts`,
+        description: generateProjectDescription(prefix, project.name),
+        images: ["/og-image.png"],
       },
       alternates: {
-        canonical: `https://unipost.app/${prefix}`,
-        languages: Object.fromEntries(
-          project.locales.map(loc => [
-            loc,
-            loc === "en" ? `/${prefix}` : `/${prefix}/${loc}`
-          ])
-        ),
+        canonical: generateCanonicalURL(prefix),
+        languages: generateAlternatesLanguagesURL(prefix, project.locales),
       },
     };
   } catch (error) {

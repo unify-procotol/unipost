@@ -60,10 +60,8 @@ export async function getPost(id: string): Promise<PostEntity | null> {
 
 export async function getPostBySlug(slug: string): Promise<PostEntity | null> {
   try {
-    console.log('getPostBySlug - searching for slug:', slug);
     const postAdapter = new PostAdapter();
     const data = await postAdapter.findBySlug(slug);
-    console.log('getPostBySlug - found data:', data);
     return data;
   } catch (error) {
     console.error('Error fetching post by slug:', error);

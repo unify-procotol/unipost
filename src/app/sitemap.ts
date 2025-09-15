@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getProjects, getPosts } from '@/lib/data';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://unipost.app';
+  const baseUrl = 'https://unipost.uni-labs.org';
   
   try {
     const projects = await getProjects();

@@ -18,7 +18,7 @@ const ProjectSelector = dynamic(() => import("@/components/project-selector"), {
 export const metadata: Metadata = {
   title: "Projects Dashboard",
   description: "Manage your multilingual content projects with UniPost. Create, organize, and translate your content across multiple languages with Ghost CMS integration.",
-  keywords: ["projects", "multilingual", "content management", "dashboard", "Ghost CMS", "translation"],
+// keywords: ["projects", "multilingual", "content management", "dashboard", "Ghost CMS", "translation"],
   openGraph: {
     title: "Projects Dashboard - UniPost",
     description: "Manage your multilingual content projects with UniPost. Create, organize, and translate your content across multiple languages.",

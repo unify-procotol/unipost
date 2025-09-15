@@ -26,10 +26,7 @@ export const metadata: Metadata = {
     template: "%s"
   },
   description: "UniPost is a powerful multilingual content management platform that integrates with Ghost CMS and provides AI-powered translation services for seamless global content distribution.",
-  keywords: ["multilingual", "content management", "Ghost CMS", "AI translation", "blog", "internationalization", "i18n"],
-  authors: [{ name: "UniPost Team" }],
-  creator: "UniPost",
-  publisher: "UniPost",
+// keywords: ["multilingual", "content management", "Ghost CMS", "AI translation", "blog", "internationalization", "i18n"],
   robots: {
     index: true,
     follow: true,
@@ -44,7 +41,6 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://unipost.app",
     siteName: "UniPost",
     title: "UniPost - Multilingual Content Management Platform",
     description: "Powerful multilingual content management with Ghost CMS integration and AI translation",
@@ -62,12 +58,11 @@ export const metadata: Metadata = {
     title: "UniPost - Multilingual Content Management Platform",
     description: "Powerful multilingual content management with Ghost CMS integration and AI translation",
     images: ["/og-image.png"],
-    creator: "@unipost",
   },
   verification: {
     google: "your-google-verification-code",
   },
-  metadataBase: new URL("https://unipost.app"),
+  metadataBase: new URL("https://unipost.uni-labs.org"),
 };
 
 export default function RootLayout({

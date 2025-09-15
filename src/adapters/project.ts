@@ -22,7 +22,6 @@ export class ProjectAdapter extends PostgresAdapter<ProjectEntity> {
       },
     });
     if (project) {
-      console.log("Updating project", project.id);
       const ghostPosts = await getPosts(project.ghost_api_key, project.ghost_domain);
       const post = new PostAdapter();
       const rows = ghostPosts.map((ghostPost) => {

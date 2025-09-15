@@ -43,7 +43,7 @@ export default function Breadcrumb({ items, className = "" }: BreadcrumbProps) {
         "@type": "ListItem",
         position: index + 1,
         name: item.label,
-        item: item.href ? `https://unipost.app${item.href}` : undefined,
+        item: item.href ? `https://unipost.uni-labs.org${item.href}` : undefined,
       })),
     };
 
