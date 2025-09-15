@@ -33,7 +33,16 @@ export default function PostsPageWrapper({
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', page.toString());
     const queryString = params.toString();
-    const basePath = locale === "en" ? `/${prefix}` : `/${prefix}/${locale}`;
+    // Check if we're in production with rewrite (has /blog in path)
+    let basePath = `/${prefix}`;
+    if (window.location.pathname.includes('/blog1')) {
+      basePath = '/blog1';
+    } else if (window.location.pathname.includes('/blog')) {
+      basePath = '/blog';
+    }
+    if (locale !== "en") {
+      basePath += `/${locale}`;
+    }
     router.push(`${window.location.origin}${basePath}?${queryString}`);
   };
 
@@ -43,7 +52,16 @@ export default function PostsPageWrapper({
     // Reset to page 1 when changing page size
     params.set('page', '1');
     const queryString = params.toString();
-    const basePath = locale === "en" ? `/${prefix}` : `/${prefix}/${locale}`;
+    // Check if we're in production with rewrite (has /blog in path)
+    let basePath = `/${prefix}`;
+    if (window.location.pathname.includes('/blog1')) {
+      basePath = '/blog1';
+    } else if (window.location.pathname.includes('/blog')) {
+      basePath = '/blog';
+    }
+    if (locale !== "en") {
+      basePath += `/${locale}`;
+    }
     router.push(`${window.location.origin}${basePath}?${queryString}`);
   };
 
