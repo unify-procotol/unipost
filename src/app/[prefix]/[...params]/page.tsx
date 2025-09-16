@@ -26,6 +26,10 @@ import {
 } from "@/lib/seo-utils";
 import { generateFaviconIcons } from "@/lib/favicon-utils";
 
+// ISR Cache: 1 day for article pages and localized project pages
+// This covers both article content (changes rarely) and project pages (acceptable delay)
+export const revalidate = 86400;
+
 export async function generateMetadata({
   params,
 }: {

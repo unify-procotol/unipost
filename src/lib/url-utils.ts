@@ -32,8 +32,10 @@ export function generateArticleUrl(prefix: string, locale: string, slug: string)
  * @returns Proper URL path
  */
 export function generateProjectUrl(prefix: string, locale: string): string {
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  
   if (locale === "en") {
-    return `/${prefix}`;
+    return `${origin}/${prefix}`;
   }
-  return `/${prefix}/${locale}`;
+  return `${origin}/${prefix}/${locale}`;
 }
