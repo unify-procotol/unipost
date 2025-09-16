@@ -18,6 +18,12 @@ export function middleware(request: NextRequest) {
   // Also check x-forwarded-host for proxy setups
   if (host === 'unipost.uni-labs.org' || host.includes('unipost')) {
     
+    // Skip paths with trailing slash to avoid redirect loops
+    if (pathname.endsWith('/')) {
+      console.log(`[Middleware] Skipping path with trailing slash: ${pathname}`);
+      return NextResponse.next();
+    }
+    
     // Only handle paths WITHOUT trailing slash to avoid redirect loops
     const pathMatchNoSlash = pathname.match(/^\/([^\/]+)\/([^\/]+)$/);
     const localePathMatchNoSlash = pathname.match(/^\/([^\/]+)\/(en|zh|es|fr|de|ja|ko|vi|pt|id)\/([^\/]+)$/);
