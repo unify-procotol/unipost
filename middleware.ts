@@ -4,6 +4,9 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const host = request.headers.get('host') || '';
 
+  // Debug logging
+  console.log(`[Middleware] ${host}${pathname}`);
+
   // Define project mappings
   const projectMappings: Record<string, string> = {
     'iotex.io': 'iotex',
