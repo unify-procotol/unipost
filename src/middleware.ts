@@ -17,18 +17,19 @@ export function middleware(request: NextRequest) {
   // These will have host as unipost.uni-labs.org but need to redirect to external domains
   // Also check x-forwarded-host for proxy setups
   if (host === 'unipost.uni-labs.org' || host.includes('unipost')) {
+    
     // Only handle paths WITHOUT trailing slash to avoid redirect loops
-    const pathMatch = pathname.match(/^\/([^\/]+)\/([^\/]+?)\/?$/);
-    const localePathMatch = pathname.match(/^\/([^\/]+)\/(en|zh|es|fr|de|ja|ko|vi|pt|id)\/([^\/]+?)\/?$/);
+    const pathMatchNoSlash = pathname.match(/^\/([^\/]+)\/([^\/]+)$/);
+    const localePathMatchNoSlash = pathname.match(/^\/([^\/]+)\/(en|zh|es|fr|de|ja|ko|vi|pt|id)\/([^\/]+)$/);
     
     // Handle article paths without trailing slash - redirect to external domain with slash
-    if (pathMatch) {
-      const [, project, slug] = pathMatch;
+    if (pathMatchNoSlash) {
+      const [, project, slug] = pathMatchNoSlash;
       const locales = ['en', 'zh', 'es', 'fr', 'de', 'ja', 'ko', 'vi', 'pt', 'id'];
       
-      console.log(`[Middleware] pathMatch found - project: ${project}, slug: ${slug}, hasTrailingSlash: ${pathname.endsWith('/')}`);
+      console.log(`[Middleware] pathMatchNoSlash found - project: ${project}, slug: ${slug}`);
       
-      if (!pathname.endsWith('/') && !locales.includes(slug) && projectMappings[project]) {
+      if (!locales.includes(slug) && projectMappings[project]) {
         const externalUrl = `${projectMappings[project]}/${slug}/`;
         console.log(`[Middleware] Redirecting: ${pathname} -> ${externalUrl}`);
         return NextResponse.redirect(externalUrl, 301);
@@ -36,12 +37,12 @@ export function middleware(request: NextRequest) {
     }
     
     // Handle locale article paths without trailing slash
-    if (localePathMatch) {
-      const [, project, locale, slug] = localePathMatch;
+    if (localePathMatchNoSlash) {
+      const [, project, locale, slug] = localePathMatchNoSlash;
       
-      console.log(`[Middleware] localePathMatch found - project: ${project}, locale: ${locale}, slug: ${slug}, hasTrailingSlash: ${pathname.endsWith('/')}`);
+      console.log(`[Middleware] localePathMatchNoSlash found - project: ${project}, locale: ${locale}, slug: ${slug}`);
       
-      if (!pathname.endsWith('/') && projectMappings[project]) {
+      if (projectMappings[project]) {
         const externalUrl = `${projectMappings[project]}/${locale}/${slug}/`;
         console.log(`[Middleware] Redirecting locale path: ${pathname} -> ${externalUrl}`);
         return NextResponse.redirect(externalUrl, 301);
