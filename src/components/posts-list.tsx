@@ -231,7 +231,7 @@ export default function PostsList({
             currentPage={pagination.currentPage}
             totalPages={pagination.totalPages}
             totalItems={pagination.totalItems}
-            pageSize={pagination.pageSize}
+            pageSize={prefix === "iotex" && pagination.currentPage === 1 ? 15 : pagination.pageSize}
             onPageChange={onPageChange || (() => {})}
             onPageSizeChange={onPageSizeChange}
             className="flex justify-center"

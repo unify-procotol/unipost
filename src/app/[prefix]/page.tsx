@@ -98,9 +98,13 @@ export default async function ProjectPage({
       notFound();
     }
 
-    // Set default pageSize based on project prefix
-    const defaultPageSize = prefix === "mimo" ? 15 : 10;
-    
+    // Set default pageSize based on project prefix and page
+    // For iotex first page: 16 (1 featured + 15 regular), other pages: 15
+    const isFirstPage = !resolvedSearchParams.page || resolvedSearchParams.page === "1";
+    const defaultPageSize = prefix === "mimo" ? 15 :
+                           (prefix === "iotex" && isFirstPage) ? 16 :
+                           prefix === "iotex" ? 15 : 10;
+
     // Parse and validate pagination parameters with project-specific defaults
     const paginationResult = PaginationQuerySchema.safeParse({
       page: resolvedSearchParams.page as string,

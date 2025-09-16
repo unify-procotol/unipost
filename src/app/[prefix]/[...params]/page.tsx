@@ -294,7 +294,7 @@ export default async function DynamicPage({
         // It's a locale - render project posts page
 
         // Set default pageSize based on project prefix
-        const defaultPageSize = prefix === "mimo" ? 15 : 10;
+        const defaultPageSize = prefix === "mimo" ? 15 : prefix === "iotex" ? 15 : 10;
 
         // Parse and validate pagination parameters with project-specific defaults
         const paginationResult = PaginationQuerySchema.safeParse({
