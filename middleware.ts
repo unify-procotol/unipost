@@ -11,6 +11,9 @@ export function middleware(request: NextRequest) {
     'blog.depinscan.io': 'depinscan',
   };
 
+  // Supported locales in the project
+  const supportedLocales = ['en', 'zh', 'es', 'fr', 'de', 'ja', 'ko', 'vi', 'pt'];
+
   // Handle external domain rewrite to internal paths
   for (const [domain, prefix] of Object.entries(projectMappings)) {
     if (host === domain) {
@@ -28,7 +31,39 @@ export function middleware(request: NextRequest) {
           const url = request.nextUrl.clone();
           // Handle trailing slash - remove it for consistent internal routing
           const cleanPath = pathAfterBlog.endsWith('/') ? pathAfterBlog.slice(0, -1) : pathAfterBlog;
-          url.pathname = cleanPath ? `/${prefix}/${cleanPath}` : `/${prefix}`;
+          
+          if (cleanPath) {
+            // Check if the path has multiple segments for internationalization
+            const pathSegments = cleanPath.split('/');
+            
+            if (pathSegments.length === 1) {
+              // Single segment: could be locale or article slug
+              const segment = pathSegments[0];
+              if (supportedLocales.includes(segment)) {
+                // It's a locale page: /blog/zh -> /prefix/zh
+                url.pathname = `/${prefix}/${segment}`;
+              } else {
+                // It's an article slug: /blog/article-name -> /prefix/article-name
+                url.pathname = `/${prefix}/${segment}`;
+              }
+            } else if (pathSegments.length === 2) {
+              // Two segments: could be locale/slug or category/slug
+              const [firstSegment, secondSegment] = pathSegments;
+              if (supportedLocales.includes(firstSegment)) {
+                // First segment is locale: /blog/zh/article-name -> /prefix/zh/article-name
+                url.pathname = `/${prefix}/${firstSegment}/${secondSegment}`;
+              } else {
+                // Not a locale pattern, preserve path: /blog/category/article -> /prefix/category/article
+                url.pathname = `/${prefix}/${cleanPath}`;
+              }
+            } else {
+              // More than 2 segments: preserve the path structure
+              url.pathname = `/${prefix}/${cleanPath}`;
+            }
+          } else {
+            url.pathname = `/${prefix}`;
+          }
+          
           return NextResponse.rewrite(url);
         }
       }
