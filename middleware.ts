@@ -4,7 +4,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const host = request.headers.get('host') || '';
 
-  // Debug logging - this should appear in logs if middleware is working
+  // Debug logging
   console.log(`[Middleware] Host: ${host}, Path: ${pathname}`);
 
   // Simple test - add a custom header to verify middleware is running
@@ -18,49 +18,38 @@ export function middleware(request: NextRequest) {
     'blog.depinscan.io': 'depinscan',
   };
 
-  // Handle external domain rewrite to internal paths
-  for (const [domain, prefix] of Object.entries(projectMappings)) {
-    if (host === domain) {
-      // Handle /blog and /blog/ routes
-      if (pathname === '/blog' || pathname === '/blog/') {
-        console.log(`[Middleware] Rewriting ${pathname} to /${prefix}`);
+  // Handle requests to unipost.uni-labs.org (internal domain)
+  if (host === 'unipost.uni-labs.org') {
+    for (const prefix of Object.values(projectMappings)) {
+      // Handle internal path normalization - remove trailing slash for consistency
+      if (pathname.startsWith(`/${prefix}/`) && pathname.endsWith('/') && pathname !== `/${prefix}/`) {
+        const cleanPath = pathname.slice(0, -1); // Remove trailing slash
+        console.log(`[Middleware] Normalizing internal path: ${pathname} -> ${cleanPath}`);
         const url = request.nextUrl.clone();
-        url.pathname = `/${prefix}`;
+        url.pathname = cleanPath;
         const rewriteResponse = NextResponse.rewrite(url);
-        rewriteResponse.headers.set('X-Middleware-Rewrite', `${pathname} -> /${prefix}`);
+        rewriteResponse.headers.set('X-Middleware-Normalize', `${pathname} -> ${cleanPath}`);
         return rewriteResponse;
       }
       
-      // Handle /blog/* routes - simplified version
-      if (pathname.startsWith('/blog/')) {
-        const pathAfterBlog = pathname.slice(6); // Remove '/blog/'
-        if (pathAfterBlog) {
-          // Clean trailing slash
-          const cleanPath = pathAfterBlog.endsWith('/') ? pathAfterBlog.slice(0, -1) : pathAfterBlog;
-          const newPath = cleanPath ? `/${prefix}/${cleanPath}` : `/${prefix}`;
-          
-          console.log(`[Middleware] Rewriting ${pathname} to ${newPath}`);
-          const url = request.nextUrl.clone();
-          url.pathname = newPath;
-          const rewriteResponse = NextResponse.rewrite(url);
-          rewriteResponse.headers.set('X-Middleware-Rewrite', `${pathname} -> ${newPath}`);
-          return rewriteResponse;
-        }
+      // Handle project root with trailing slash
+      if (pathname === `/${prefix}/`) {
+        console.log(`[Middleware] Normalizing project root: ${pathname} -> /${prefix}`);
+        const url = request.nextUrl.clone();
+        url.pathname = `/${prefix}`;
+        const rewriteResponse = NextResponse.rewrite(url);
+        rewriteResponse.headers.set('X-Middleware-Normalize', `${pathname} -> /${prefix}`);
+        return rewriteResponse;
       }
     }
+    
+    console.log(`[Middleware] Internal domain request: ${pathname}`);
+    return response;
   }
 
-  // Handle direct access to internal paths on unipost.uni-labs.org
-  if (host === 'unipost.uni-labs.org') {
-    for (const prefix of Object.values(projectMappings)) {
-      if (pathname.startsWith(`/${prefix}/`) || pathname === `/${prefix}` || pathname === `/${prefix}/`) {
-        console.log(`[Middleware] Direct access to internal path: ${pathname}`);
-        return response;
-      }
-    }
-  }
-
-  console.log(`[Middleware] No rewrite needed for ${host}${pathname}`);
+  // For external domains, let Render handle the rewriting
+  // We don't need to do anything here since Render's rewrite rules handle it
+  console.log(`[Middleware] External domain request: ${host}${pathname}`);
   return response;
 }
 
