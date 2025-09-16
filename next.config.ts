@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
-  trailingSlash: false,
+  trailingSlash: true,
   compress: true,
   poweredByHeader: false,
   generateEtags: true,
@@ -47,6 +47,17 @@ const nextConfig: NextConfig = {
   },
   assetPrefix: process.env.NODE_ENV === 'production' ? 'https://unipost.uni-labs.org' : '',
   
+  // URL redirects for SEO - redirect non-trailing slash URLs to trailing slash
+  async redirects() {
+    return [
+      {
+        source: '/:path+',
+        destination: '/:path+/',
+        permanent: true,
+      },
+    ];
+  },
+
   // CORS and caching configuration
   async headers() {
     return [
