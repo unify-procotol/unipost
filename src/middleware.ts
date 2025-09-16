@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
   
   // Handle article paths without trailing slash
   if (pathMatch) {
-    const [, prefix, slug] = pathMatch;
+    const [, , slug] = pathMatch;
     // Only redirect if it's likely an article (not a locale path)
     const locales = ['en', 'zh', 'es', 'fr', 'de', 'ja', 'ko', 'vi', 'pt', 'id'];
     if (!locales.includes(slug)) {
