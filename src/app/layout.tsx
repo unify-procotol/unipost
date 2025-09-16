@@ -28,15 +28,12 @@ export const metadata: Metadata = {
   description: "UniPost is a powerful multilingual content management platform that integrates with Ghost CMS and provides AI-powered translation services for seamless global content distribution.",
 // keywords: ["multilingual", "content management", "Ghost CMS", "AI translation", "blog", "internationalization", "i18n"],
   robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+    index: false,
+    follow: false,
+    noarchive: true,
+    nosnippet: true,
+    noimageindex: true,
+    nocache: true,
   },
   openGraph: {
     type: "website",

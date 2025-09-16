@@ -160,15 +160,12 @@ export async function generateMetadata({
             languages: generateAlternatesLanguagesURL(prefix, project.locales, slug),
           },
           robots: {
-            index: true,
-            follow: true,
-            googleBot: {
-              index: true,
-              follow: true,
-              "max-video-preview": -1,
-              "max-image-preview": "large",
-              "max-snippet": -1,
-            },
+            index: false,
+            follow: false,
+            noarchive: true,
+            nosnippet: true,
+            noimageindex: true,
+            nocache: true,
           },
         };
       }
@@ -244,15 +241,12 @@ export async function generateMetadata({
           languages: generateAlternatesLanguagesURL(prefix, project.locales, slug),
         },
         robots: {
-          index: true,
-          follow: true,
-          googleBot: {
-            index: true,
-            follow: true,
-            "max-video-preview": -1,
-            "max-image-preview": "large",
-            "max-snippet": -1,
-          },
+          index: false,
+          follow: false,
+          noarchive: true,
+          nosnippet: true,
+          noimageindex: true,
+          nocache: true,
         },
       };
     }

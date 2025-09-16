@@ -1,33 +1,9 @@
+# This site is accessed via rewrite from other domains
+# Direct access to unipost.uni-labs.org should not be indexed
 User-agent: *
-Allow: /
+Disallow: /
 
-# Sitemap
-Sitemap: https://unipost.uni-labs.org/sitemap.xml
-
-# Crawl-delay for better server performance
-Crawl-delay: 1
-
-# Allow all search engines to index the site
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Slurp
-Allow: /
-
-# Block access to admin and API routes
-Disallow: /api/
-Disallow: /admin/
-Disallow: /_next/
-Disallow: /static/
-
-# Allow language-specific content
-Allow: /en/
-Allow: /zh/
-Allow: /es/
-Allow: /fr/
-Allow: /de/
-Allow: /ja/
-Allow: /ko/
+# Block all crawlers from indexing this direct domain
+# Content is accessible via:
+# - iotex.io/blog
+# - mimo.exchange/blog
