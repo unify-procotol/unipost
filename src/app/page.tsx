@@ -4,6 +4,9 @@ import MainLayout from "@/components/layout/main-layout";
 import StructuredData from "@/components/seo/structured-data";
 import type { Metadata } from "next";
 
+// ISR Cache: 30 minutes for home page (projects list changes rarely)
+export const revalidate = 1800;
+
 const ProjectSelector = dynamic(() => import("@/components/project-selector"), {
   loading: () => (
     <div className="min-h-screen flex items-center justify-center">

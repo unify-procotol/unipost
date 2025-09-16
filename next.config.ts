@@ -3,7 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   devIndicators: false,
   trailingSlash: false,
-  /* config options here */
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: true,
   transpilePackages: [
     "@unilab/urpc",
     "@unilab/urpc-core",
@@ -13,6 +15,9 @@ const nextConfig: NextConfig = {
   images: {
     loader: process.env.NODE_ENV === 'production' ? 'custom' : 'default',
     loaderFile: process.env.NODE_ENV === 'production' ? './src/lib/image-loader.js' : undefined,
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     remotePatterns: [
       {
         protocol: 'https',
@@ -42,7 +47,7 @@ const nextConfig: NextConfig = {
   },
   assetPrefix: process.env.NODE_ENV === 'production' ? 'https://unipost.uni-labs.org' : '',
   
-  // CORS configuration
+  // CORS and caching configuration
   async headers() {
     return [
       {
@@ -76,6 +81,36 @@ const nextConfig: NextConfig = {
           {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
+          },
+        ],
+      },
+      {
+        // Cache static assets
+        source: '/_next/static/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Cache images
+        source: '/images/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
+          },
+        ],
+      },
+      {
+        // Cache content pages with short-term caching
+        source: '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=300, stale-while-revalidate=86400',
           },
         ],
       },

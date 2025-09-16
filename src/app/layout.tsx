@@ -1,8 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import PerformanceMonitor from "@/components/seo/performance-monitor";
 import { ModalProvider } from "@/contexts/modal-context";
+import dynamic from "next/dynamic";
+
+const PerformanceMonitor = dynamic(() => import("@/components/seo/performance-monitor"), {
+  ssr: false
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
