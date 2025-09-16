@@ -46,26 +46,6 @@ const nextConfig: NextConfig = {
     ],
   },
   assetPrefix: process.env.NODE_ENV === 'production' ? 'https://unipost.uni-labs.org' : '',
-  
-  // URL redirects for SEO - redirect non-trailing slash article URLs to trailing slash
-  async redirects() {
-    return [
-      {
-        // Redirect article paths without trailing slash to with trailing slash
-        // This matches patterns like /iotex/article-slug but not /iotex alone
-        source: '/:prefix([^/]+)/:slug([^/]+)',
-        destination: '/:prefix/:slug/',
-        permanent: true,
-      },
-      {
-        // Redirect locale article paths without trailing slash to with trailing slash
-        // This matches patterns like /iotex/en/article-slug but not /iotex/en alone
-        source: '/:prefix([^/]+)/:locale(en|zh|es|fr|de|ja|ko|vi|pt|id)/:slug([^/]+)',
-        destination: '/:prefix/:locale/:slug/',
-        permanent: true,
-      },
-    ];
-  },
 
   // CORS and caching configuration
   async headers() {
