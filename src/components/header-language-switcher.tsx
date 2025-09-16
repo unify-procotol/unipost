@@ -8,12 +8,15 @@ interface HeaderLanguageSwitcherProps {
   loading?: boolean;
 }
 
-export default function HeaderLanguageSwitcher({ project, loading = false }: HeaderLanguageSwitcherProps) {
+export default function HeaderLanguageSwitcher({
+  project,
+  loading = false,
+}: HeaderLanguageSwitcherProps) {
   const router = useRouter();
   const pathname = usePathname();
 
   // Extract prefix and locale from pathname
-  const pathSegments = pathname.split('/').filter(Boolean);
+  const pathSegments = pathname.split("/").filter(Boolean);
   const prefix = pathSegments[0]; // /[prefix]/...
 
   // State for current locale and page type
@@ -21,11 +24,9 @@ export default function HeaderLanguageSwitcher({ project, loading = false }: Hea
   const [pageType, setPageType] = useState<"project" | "article">("project");
   const [slug, setSlug] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  
+
   // Ref for dropdown container to handle outside clicks
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-
 
   // Determine locale and page type based on pathname and project data
   useEffect(() => {
@@ -58,21 +59,24 @@ export default function HeaderLanguageSwitcher({ project, loading = false }: Hea
   // Handle outside clicks to close dropdown
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   const handleLanguageChange = (locale: string) => {
     if (locale !== currentLocale && project) {
       let newPath: string;
-      
+
       if (pageType === "project") {
         // Project page
         if (locale === "en") {
@@ -88,7 +92,7 @@ export default function HeaderLanguageSwitcher({ project, loading = false }: Hea
           newPath = `/${prefix}/${locale}/${slug}`;
         }
       }
-      
+
       router.push(newPath);
       setIsDropdownOpen(false); // Close dropdown after selection
     }
@@ -99,13 +103,14 @@ export default function HeaderLanguageSwitcher({ project, loading = false }: Hea
     const languageNames: Record<string, string> = {
       en: "English",
       zh: "中文",
-      es: "Español", 
+      es: "Español",
       fr: "Français",
       de: "Deutsch",
       ja: "日本語",
       ko: "한국어",
       vi: "Tiếng Việt",
       pt: "Português",
+      id: "Indonesia",
     };
     return languageNames[locale] || locale.toUpperCase();
   };
@@ -119,8 +124,18 @@ export default function HeaderLanguageSwitcher({ project, loading = false }: Hea
   if (loading) {
     return (
       <div className="flex items-center gap-2">
-        <svg className="w-4 h-4 text-gray-600 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        <svg
+          className="w-4 h-4 text-gray-600 animate-spin"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
         </svg>
         <div className="w-12 h-6 bg-gray-300/50 rounded animate-pulse"></div>
       </div>
@@ -133,14 +148,24 @@ export default function HeaderLanguageSwitcher({ project, loading = false }: Hea
   }
 
   // Check if this is mimo project for different styling
-  const isMimo = project?.prefix === 'mimo';
+  const isMimo = project?.prefix === "mimo";
 
   return (
     <div className="flex items-center gap-2">
-      <svg className={`w-4 h-4 ${isMimo ? 'text-white/80' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+      <svg
+        className={`w-4 h-4 ${isMimo ? "text-white/80" : "text-gray-600"}`}
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+        />
       </svg>
-      
+
       {/* Language Dropdown */}
       <div className="relative" ref={dropdownRef}>
         <button
@@ -152,28 +177,35 @@ export default function HeaderLanguageSwitcher({ project, loading = false }: Hea
           }`}
           title="Switch language"
         >
-          <span className={isMimo ? 'text-white' : 'text-gray-700'}>
+          <span className={isMimo ? "text-white" : "text-gray-700"}>
             {getLanguageDisplayName(currentLocale)}
           </span>
-          <svg 
+          <svg
             className={`w-3 h-3 transition-transform duration-200 ${
-              isDropdownOpen ? 'rotate-180' : ''
-            } ${isMimo ? 'text-white/80' : 'text-gray-500'}`} 
-            fill="none" 
-            stroke="currentColor" 
+              isDropdownOpen ? "rotate-180" : ""
+            } ${isMimo ? "text-white/80" : "text-gray-500"}`}
+            fill="none"
+            stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
         </button>
 
         {/* Dropdown Menu */}
         {isDropdownOpen && (
-          <div className={`absolute top-full left-0 mt-1 min-w-[120px] rounded-md shadow-lg z-50 ${
-            isMimo 
-              ? 'bg-white border border-gray-200' 
-              : 'bg-white border border-gray-200'
-          }`}>
+          <div
+            className={`absolute top-full left-0 mt-1 min-w-[120px] rounded-md shadow-lg z-50 ${
+              isMimo
+                ? "bg-white border border-gray-200"
+                : "bg-white border border-gray-200"
+            }`}
+          >
             <div className="py-1">
               {project.locales.map((locale) => (
                 <button
@@ -190,8 +222,18 @@ export default function HeaderLanguageSwitcher({ project, loading = false }: Hea
                   <div className="flex items-center justify-between">
                     <span>{getLanguageDisplayName(locale)}</span>
                     {locale === currentLocale && (
-                      <svg className={`w-3 h-3 ${isMimo ? 'text-green-600' : 'text-blue-600'}`} fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      <svg
+                        className={`w-3 h-3 ${
+                          isMimo ? "text-green-600" : "text-blue-600"
+                        }`}
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     )}
                   </div>
