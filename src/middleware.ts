@@ -21,6 +21,19 @@ export function middleware(request: NextRequest) {
       return NextResponse.next();
     }
     
+    // Match project homepage like /project (no trailing slash)
+    const projectMatch = pathname.match(/^\/([^\/]+)$/);
+    
+    if (projectMatch) {
+      const [, project] = projectMatch;
+      
+      if (projectMappings[project]) {
+        const externalUrl = `${projectMappings[project]}/`;
+        console.log(`[Middleware] Redirecting project homepage: ${pathname} -> ${externalUrl}`);
+        return NextResponse.redirect(externalUrl, 301);
+      }
+    }
+    
     // Match paths like /project/article (no trailing slash)
     const articleMatch = pathname.match(/^\/([^\/]+)\/(.+)$/);
     
