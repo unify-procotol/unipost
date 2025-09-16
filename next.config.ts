@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
-  trailingSlash: true,
+  trailingSlash: false,
   compress: true,
   poweredByHeader: false,
   generateEtags: true,
@@ -47,12 +47,21 @@ const nextConfig: NextConfig = {
   },
   assetPrefix: process.env.NODE_ENV === 'production' ? 'https://unipost.uni-labs.org' : '',
   
-  // URL redirects for SEO - redirect non-trailing slash URLs to trailing slash
+  // URL redirects for SEO - redirect non-trailing slash article URLs to trailing slash
   async redirects() {
     return [
       {
-        source: '/:path+',
-        destination: '/:path+/',
+        // Redirect article paths without trailing slash to with trailing slash
+        // This matches patterns like /iotex/article-slug but not /iotex alone
+        source: '/:prefix([^/]+)/:slug([^/]+)',
+        destination: '/:prefix/:slug/',
+        permanent: true,
+      },
+      {
+        // Redirect locale article paths without trailing slash to with trailing slash
+        // This matches patterns like /iotex/en/article-slug but not /iotex/en alone
+        source: '/:prefix([^/]+)/:locale(en|zh|es|fr|de|ja|ko|vi|pt|id)/:slug([^/]+)',
+        destination: '/:prefix/:locale/:slug/',
         permanent: true,
       },
     ];
