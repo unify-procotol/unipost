@@ -25,7 +25,7 @@ export const ClientBreadcrumb = ({
   slug: string;
   className?: string;
 }) => {
-  const referer = window.location.href;
+  const referer = typeof window !== 'undefined' ? window.location.href : '';
   return (
     <Breadcrumb
       items={generatePostDetailBreadcrumbs(name, title, slug, referer)}

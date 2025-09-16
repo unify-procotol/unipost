@@ -8,17 +8,21 @@
 export function generateArticleUrl(prefix: string, locale: string, slug: string): string {
   // Check if we're in production with rewrite (has /blog in path)
   let basePath = `/${prefix}`;
-  if (window.location.pathname.includes('/blog1')) {
-    basePath = '/blog1';
-  } else if (window.location.pathname.includes('/blog')) {
-    basePath = '/blog';
+  if (typeof window !== 'undefined') {
+    if (window.location.pathname.includes('/blog1')) {
+      basePath = '/blog1';
+    } else if (window.location.pathname.includes('/blog')) {
+      basePath = '/blog';
+    }
   }
   // const basePath = hasBlogPath ? '/blog' : `/${prefix}`;
   
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  
   if (locale === "en") {
-    return `${window.location.origin}${basePath}/${slug}`;
+    return `${origin}${basePath}/${slug}`;
   }
-  return `${window.location.origin}${basePath}/${locale}/${slug}`;
+  return `${origin}${basePath}/${locale}/${slug}`;
 }
 
 /**

@@ -35,15 +35,20 @@ export default function PostsPageWrapper({
     const queryString = params.toString();
     // Check if we're in production with rewrite (has /blog in path)
     let basePath = `/${prefix}`;
-    if (window.location.pathname.includes('/blog1')) {
-      basePath = '/blog1';
-    } else if (window.location.pathname.includes('/blog')) {
-      basePath = '/blog';
+    if (typeof window !== 'undefined') {
+      if (window.location.pathname.includes('/blog1')) {
+        basePath = '/blog1';
+      } else if (window.location.pathname.includes('/blog')) {
+        basePath = '/blog';
+      }
     }
     if (locale !== "en") {
       basePath += `/${locale}`;
     }
-    router.push(`${window.location.origin}${basePath}?${queryString}`);
+    const targetUrl = typeof window !== 'undefined' 
+      ? `${window.location.origin}${basePath}?${queryString}`
+      : `${basePath}?${queryString}`;
+    router.push(targetUrl);
   };
 
   const handlePageSizeChange = (pageSize: number) => {
@@ -54,15 +59,20 @@ export default function PostsPageWrapper({
     const queryString = params.toString();
     // Check if we're in production with rewrite (has /blog in path)
     let basePath = `/${prefix}`;
-    if (window.location.pathname.includes('/blog1')) {
-      basePath = '/blog1';
-    } else if (window.location.pathname.includes('/blog')) {
-      basePath = '/blog';
+    if (typeof window !== 'undefined') {
+      if (window.location.pathname.includes('/blog1')) {
+        basePath = '/blog1';
+      } else if (window.location.pathname.includes('/blog')) {
+        basePath = '/blog';
+      }
     }
     if (locale !== "en") {
       basePath += `/${locale}`;
     }
-    router.push(`${window.location.origin}${basePath}?${queryString}`);
+    const targetUrl = typeof window !== 'undefined' 
+      ? `${window.location.origin}${basePath}?${queryString}`
+      : `${basePath}?${queryString}`;
+    router.push(targetUrl);
   };
 
   return (
