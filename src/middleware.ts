@@ -15,11 +15,12 @@ export function middleware(request: NextRequest) {
   // Handle requests that come through external domain rewrites
   // These will have host as unipost.uni-labs.org but need to redirect to external domains
   if (host === 'unipost.uni-labs.org') {
+    // Only handle paths WITHOUT trailing slash to avoid redirect loops
     const pathMatch = pathname.match(/^\/([^\/]+)\/([^\/]+)$/);
     const localePathMatch = pathname.match(/^\/([^\/]+)\/(en|zh|es|fr|de|ja|ko|vi|pt|id)\/([^\/]+)$/);
     
     // Handle article paths without trailing slash - redirect to external domain with slash
-    if (pathMatch) {
+    if (pathMatch && !pathname.endsWith('/')) {
       const [, project, slug] = pathMatch;
       const locales = ['en', 'zh', 'es', 'fr', 'de', 'ja', 'ko', 'vi', 'pt', 'id'];
       
@@ -31,7 +32,7 @@ export function middleware(request: NextRequest) {
     }
     
     // Handle locale article paths without trailing slash
-    if (localePathMatch) {
+    if (localePathMatch && !pathname.endsWith('/')) {
       const [, project, locale, slug] = localePathMatch;
       if (projectMappings[project]) {
         const externalUrl = `${projectMappings[project]}/${locale}/${slug}/`;
