@@ -3,9 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const host = request.headers.get('host') || '';
-  const forwarded = request.headers.get('x-forwarded-host') || '';
   
-  console.log(`[Middleware] Host: ${host}, X-Forwarded-Host: ${forwarded}, Path: ${pathname}`);
+  console.log(`[Middleware] Host: ${host}, Path: ${pathname}`);
   
   // Define project mappings for external redirects
   const projectMappings: Record<string, string> = {
@@ -13,51 +12,31 @@ export function middleware(request: NextRequest) {
     'mimo': 'https://mimo.exchange/blog', 
   };
   
-  // Handle requests that come through external domain rewrites
-  // These will have host as unipost.uni-labs.org but need to redirect to external domains
-  // Also check x-forwarded-host for proxy setups
+  // Only process requests to unipost domain
   if (host === 'unipost.uni-labs.org' || host.includes('unipost')) {
     
-    // Skip paths with trailing slash to avoid redirect loops
+    // Skip paths with trailing slash - they should render normally
     if (pathname.endsWith('/')) {
-      console.log(`[Middleware] Skipping path with trailing slash: ${pathname}`);
+      console.log(`[Middleware] Path has trailing slash, render normally: ${pathname}`);
       return NextResponse.next();
     }
     
-    // Only handle paths WITHOUT trailing slash to avoid redirect loops
-    const pathMatchNoSlash = pathname.match(/^\/([^\/]+)\/([^\/]+)$/);
-    const localePathMatchNoSlash = pathname.match(/^\/([^\/]+)\/(en|zh|es|fr|de|ja|ko|vi|pt|id)\/([^\/]+)$/);
+    // Match paths like /project/article (no trailing slash)
+    const articleMatch = pathname.match(/^\/([^\/]+)\/(.+)$/);
     
-    // Handle article paths without trailing slash - redirect to external domain with slash
-    if (pathMatchNoSlash) {
-      const [, project, slug] = pathMatchNoSlash;
-      const locales = ['en', 'zh', 'es', 'fr', 'de', 'ja', 'ko', 'vi', 'pt', 'id'];
-      
-      console.log(`[Middleware] pathMatchNoSlash found - project: ${project}, slug: ${slug}`);
-      
-      if (!locales.includes(slug) && projectMappings[project]) {
-        const externalUrl = `${projectMappings[project]}/${slug}/`;
-        console.log(`[Middleware] Redirecting: ${pathname} -> ${externalUrl}`);
-        return NextResponse.redirect(externalUrl, 301);
-      }
-    }
-    
-    // Handle locale article paths without trailing slash
-    if (localePathMatchNoSlash) {
-      const [, project, locale, slug] = localePathMatchNoSlash;
-      
-      console.log(`[Middleware] localePathMatchNoSlash found - project: ${project}, locale: ${locale}, slug: ${slug}`);
+    if (articleMatch) {
+      const [, project, slug] = articleMatch;
       
       if (projectMappings[project]) {
-        const externalUrl = `${projectMappings[project]}/${locale}/${slug}/`;
-        console.log(`[Middleware] Redirecting locale path: ${pathname} -> ${externalUrl}`);
+        const externalUrl = `${projectMappings[project]}/${slug}/`;
+        console.log(`[Middleware] Redirecting no-slash path: ${pathname} -> ${externalUrl}`);
         return NextResponse.redirect(externalUrl, 301);
       }
     }
     
     console.log(`[Middleware] No redirect needed for: ${pathname}`);
   } else {
-    console.log(`[Middleware] External host, skipping: ${host}${pathname}`);
+    console.log(`[Middleware] External host, skipping: ${host}`);
   }
   
   return NextResponse.next();
