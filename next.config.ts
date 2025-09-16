@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
-  trailingSlash: true,
+  trailingSlash: false,
   /* config options here */
   transpilePackages: [
     "@unilab/urpc",

@@ -21,14 +21,16 @@ export function middleware(request: NextRequest) {
   // Handle requests to unipost.uni-labs.org (internal domain)
   if (host === 'unipost.uni-labs.org') {
     for (const prefix of Object.values(projectMappings)) {
-      // Handle internal path normalization - remove trailing slash for consistency
+      // Special handling for paths that would cause Next.js redirects
+      // When Next.js wants to redirect /mimo/article/ -> /mimo/article,
+      // we intercept and rewrite to prevent the redirect
       if (pathname.startsWith(`/${prefix}/`) && pathname.endsWith('/') && pathname !== `/${prefix}/`) {
         const cleanPath = pathname.slice(0, -1); // Remove trailing slash
-        console.log(`[Middleware] Normalizing internal path: ${pathname} -> ${cleanPath}`);
+        console.log(`[Middleware] Preventing Next.js redirect, rewriting: ${pathname} -> ${cleanPath}`);
         const url = request.nextUrl.clone();
         url.pathname = cleanPath;
         const rewriteResponse = NextResponse.rewrite(url);
-        rewriteResponse.headers.set('X-Middleware-Normalize', `${pathname} -> ${cleanPath}`);
+        rewriteResponse.headers.set('X-Middleware-Prevent-Redirect', `${pathname} -> ${cleanPath}`);
         return rewriteResponse;
       }
       
@@ -47,9 +49,16 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // For external domains, let Render handle the rewriting
-  // We don't need to do anything here since Render's rewrite rules handle it
-  console.log(`[Middleware] External domain request: ${host}${pathname}`);
+  // For external domains, also handle Render rewrite edge cases
+  for (const [domain, prefix] of Object.entries(projectMappings)) {
+    if (host === domain) {
+      // Handle the case where external domain requests might need special handling
+      console.log(`[Middleware] External domain ${domain} request: ${pathname}`);
+      return response;
+    }
+  }
+
+  console.log(`[Middleware] Other external domain request: ${host}${pathname}`);
   return response;
 }
 
