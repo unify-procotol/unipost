@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const headers = Object.fromEntries(request.headers.entries());
-  
-  // Skip middleware for system paths and static files
+
+  // 跳过系统路径和静态文件
   if (
     pathname.startsWith('/_next/') ||
     pathname.startsWith('/api/') ||
@@ -13,161 +13,87 @@ export function middleware(request: NextRequest) {
     pathname.startsWith('/sitemap.xml') ||
     pathname.startsWith('/images/') ||
     pathname.startsWith('/public/') ||
-    pathname.includes('.') // Skip files with extensions
+    pathname.includes('.') // 跳过带扩展名的文件
   ) {
-    console.log('⏭️ Skipping middleware for system path:', pathname);
     return NextResponse.next();
   }
-  
-  console.log('🔍 Middleware executed:', {
+
+  console.log('🔍 Middleware 执行:', {
     pathname,
     search,
     host: headers['host'],
     'x-forwarded-host': headers['x-forwarded-host'],
     'x-forwarded-proto': headers['x-forwarded-proto'],
     'x-original-host': headers['x-original-host'],
-    'cf-connecting-ip': headers['cf-connecting-ip'],
     referer: headers['referer']
   });
 
-  // Check if URL ends with trailing slash
-  const hasTrailingSlash = pathname.endsWith('/');
-  
-  // Special handling for root path
-  if (pathname === '/') {
-    console.log('✅ Root path, no redirect needed:', pathname);
-    return NextResponse.next();
-  }
-  
-  // Detect if this is a rewrite scenario
+  // 检测是否是通过rewrite访问的
   const isRewriteScenario = detectRewriteScenario(pathname, headers);
-  
-  console.log('🔍 Rewrite scenario detection result:', isRewriteScenario);
 
-  // If path doesn't have trailing slash, we need to redirect
-  if (!hasTrailingSlash) {
-    let redirectUrl: URL;
-    
-    if (isRewriteScenario) {
-      // For rewrite scenarios, redirect to the external URL with trailing slash
-      const externalPath = getExternalPath(pathname);
-      const externalOrigin = getExternalOrigin(headers, pathname);
-      redirectUrl = new URL(externalPath + '/' + search, externalOrigin);
-      
-      console.log('🔄 Redirecting rewrite scenario to external URL with trailing slash:', {
+  if (isRewriteScenario) {
+    // 如果是rewrite场景，重定向所有iotex路径到对应的blog路径
+    if (pathname.startsWith('/iotex')) {
+      let blogPath: string;
+
+      if (pathname === '/iotex/') {
+        // /iotex/ -> /blog/
+        blogPath = '/blog/';
+      } else if (pathname === '/iotex') {
+        // /iotex -> /blog/
+        blogPath = '/blog/';
+      } else {
+        // 其他iotex路径，如 /iotex/page/1 -> /blog/page/1
+        blogPath = pathname.replace('/iotex/', '/blog/');
+        // 确保以斜杠结尾
+        if (!blogPath.endsWith('/')) {
+          blogPath += '/';
+        }
+      }
+
+      const externalUrl = new URL(blogPath + search, 'https://w3bstream.com');
+      console.log('🔄 重定向rewrite场景到外部URL:', {
         from: request.url,
-        to: redirectUrl.toString(),
-        internalPath: pathname,
-        externalPath: externalPath,
-        externalOrigin: externalOrigin
+        to: externalUrl.toString(),
+        reason: '映射到外部blog路径并规范化URL'
       });
-    } else {
-      // Normal scenario, redirect to the same host with trailing slash
-      redirectUrl = new URL(pathname + '/' + search, request.url);
-      
-      console.log('🔄 Redirecting to same host with trailing slash:', {
-        from: request.url,
-        to: redirectUrl.toString(),
-        pathname: pathname
-      });
+      return NextResponse.redirect(externalUrl, 301);
     }
-    
-    // Return 301 redirect
-    return NextResponse.redirect(redirectUrl, 301);
   }
 
-  console.log('✅ No redirect needed for:', pathname);
+  // 其他路径保持不变
   return NextResponse.next();
 }
 
 /**
- * Detect if this request is coming through a rewrite scenario
- * Since Cloudflare doesn't always pass X-Forwarded-Host, we need to use other signals
+ * 检测是否是通过rewrite访问的
  */
 function detectRewriteScenario(pathname: string, headers: Record<string, string>): boolean {
   const host = headers['host'] || '';
   const forwardedHost = headers['x-forwarded-host'] || headers['x-original-host'] || '';
-  
-  // Method 1: Check if we have forwarded headers
+
+  // 方法1: 检查是否有转发头
   if (forwardedHost && forwardedHost !== host) {
-    console.log('🔍 Detected rewrite via forwarded headers');
+    console.log('🔍 通过转发头检测到rewrite');
     return true;
   }
-  
-  // Method 2: Check if the pathname suggests a rewrite
-  // If we're receiving /iotex/, /mimo/, or /depinscan/ paths, it's likely a rewrite from /blog/
+
+  // 方法2: 检查路径是否以项目前缀开头
   if (pathname.startsWith('/iotex') || pathname.startsWith('/mimo') || pathname.startsWith('/depinscan')) {
-    console.log('🔍 Detected rewrite via pathname pattern');
+    console.log('🔍 通过路径模式检测到rewrite');
     return true;
   }
-  
-  // Method 3: Check if we're on a render/test domain but not accessing /blog path
+
+  // 方法3: 检查是否在render域名上但不是/blog路径
   const isRenderDomain = host.includes('onrender.com') || host.includes('uni-labs.org');
   const isNotBlogPath = !pathname.startsWith('/blog');
-  if (isRenderDomain && isNotBlogPath && 
+  if (isRenderDomain && isNotBlogPath &&
       (pathname.startsWith('/iotex') || pathname.startsWith('/mimo') || pathname.startsWith('/depinscan'))) {
-    console.log('🔍 Detected rewrite via domain and path combination');
+    console.log('🔍 通过域名和路径组合检测到rewrite');
     return true;
   }
-  
+
   return false;
-}
-
-/**
- * Get the external path that should be used for redirect
- */
-function getExternalPath(internalPath: string): string {
-  // Map internal project paths to /blog/
-  if (internalPath.startsWith('/iotex/')) {
-    return internalPath.replace('/iotex/', '/blog/');
-  }
-  if (internalPath === '/iotex') {
-    return '/blog';
-  }
-  
-  if (internalPath.startsWith('/mimo/')) {
-    return internalPath.replace('/mimo/', '/blog/');
-  }
-  if (internalPath === '/mimo') {
-    return '/blog';
-  }
-  
-  if (internalPath.startsWith('/depinscan/')) {
-    return internalPath.replace('/depinscan/', '/blog/');
-  }
-  if (internalPath === '/depinscan') {
-    return '/blog';
-  }
-  
-  // Default: assume it should be under /blog/
-  if (!internalPath.startsWith('/blog/')) {
-    return `/blog${internalPath}`;
-  }
-  
-  return internalPath;
-}
-
-/**
- * Get the external origin for redirect
- * Since we can't always rely on forwarded headers, we need to be smart about this
- */
-function getExternalOrigin(headers: Record<string, string>, pathname: string): string {
-  const forwardedHost = headers['x-forwarded-host'] || headers['x-original-host'];
-  const forwardedProto = headers['x-forwarded-proto'] || 'https';
-  
-  // If we have forwarded host, use it
-  if (forwardedHost) {
-    return `${forwardedProto}://${forwardedHost}`;
-  }
-  
-  // If pathname suggests it's from w3bstream (iotex project), use w3bstream.com
-  if (pathname.startsWith('/iotex')) {
-    return 'https://w3bstream.com';
-  }
-  
-  // For other projects, we might need different domains
-  // For now, default to w3bstream.com
-  return 'https://w3bstream.com';
 }
 
 export const config = {
