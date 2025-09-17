@@ -13,7 +13,7 @@ const SubscribeSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await request.json()
     
     // Validate request data
     const validatedData = SubscribeSchema.parse(body);
