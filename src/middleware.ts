@@ -28,27 +28,19 @@ export function middleware(request: NextRequest) {
     referer: headers['referer']
   });
 
-  // Check if URL ends with trailing slash
-  const hasTrailingSlash = pathname.endsWith('/');
+  // Detect if this is a rewrite scenario from external domain (like w3bstream.com)
+  const isRewriteScenario = detectRewriteScenario(headers);
   
-  // Special handling for root path only
-  if (pathname === '/') {
-    console.log('✅ Root path, no redirect needed:', pathname);
-    return NextResponse.next();
-  }
-  
-  // If path doesn't have trailing slash, redirect to add it
-  if (!hasTrailingSlash) {
-    // Detect if this is a rewrite scenario from external domain (like w3bstream.com)
-    const isRewriteScenario = detectRewriteScenario(headers);
+  console.log('🔍 Rewrite scenario detection result:', isRewriteScenario);
+
+  if (isRewriteScenario) {
+    // For rewrite scenarios, we need to check if the original external URL needs trailing slash
+    const externalPath = getExternalPath(pathname);
+    const shouldRedirect = shouldRedirectForExternalPath(externalPath, pathname);
     
-    let redirectUrl: URL;
-    
-    if (isRewriteScenario) {
-      // This is a rewrite scenario, redirect to the external URL with trailing slash
-      const externalPath = getExternalPath(pathname);
+    if (shouldRedirect) {
       const externalOrigin = getExternalOrigin(headers);
-      redirectUrl = new URL(externalPath + '/' + search, externalOrigin);
+      const redirectUrl = new URL(externalPath + '/' + search, externalOrigin);
       
       console.log('🔄 Redirecting rewrite scenario to external URL with trailing slash:', {
         from: request.url,
@@ -57,19 +49,31 @@ export function middleware(request: NextRequest) {
         externalPath: externalPath,
         externalOrigin: externalOrigin
       });
-    } else {
-      // Normal scenario, redirect to the same host with trailing slash
-      redirectUrl = new URL(pathname + '/' + search, request.url);
+      
+      return NextResponse.redirect(redirectUrl, 301);
+    }
+  } else {
+    // Normal scenario - check internal URL trailing slash
+    const hasTrailingSlash = pathname.endsWith('/');
+    
+    // Special handling for root path only
+    if (pathname === '/') {
+      console.log('✅ Root path, no redirect needed:', pathname);
+      return NextResponse.next();
+    }
+    
+    // If path doesn't have trailing slash, redirect to add it
+    if (!hasTrailingSlash) {
+      const redirectUrl = new URL(pathname + '/' + search, request.url);
       
       console.log('🔄 Redirecting to same host with trailing slash:', {
         from: request.url,
         to: redirectUrl.toString(),
         pathname: pathname
       });
+      
+      return NextResponse.redirect(redirectUrl, 301);
     }
-    
-    // Return 301 redirect for SEO
-    return NextResponse.redirect(redirectUrl, 301);
   }
 
   console.log('✅ No redirect needed for:', pathname);
@@ -97,7 +101,7 @@ function detectRewriteScenario(headers: Record<string, string>): boolean {
                         host.includes('unipost-test-only.onrender.com') ||
                         host.includes('localhost');
   
-  console.log('🔍 Rewrite detection:', {
+  console.log('🔍 Rewrite detection details:', {
     host,
     forwardedHost,
     hasForwardedHost,
@@ -110,14 +114,42 @@ function detectRewriteScenario(headers: Record<string, string>): boolean {
 }
 
 /**
+ * Check if we should redirect for external path based on the mapping
+ */
+function shouldRedirectForExternalPath(externalPath: string, internalPath: string): boolean {
+  // Based on render rewrite config:
+  // /blog/ → /mimo (or /iotex based on logs)
+  // /blog* → /mimo* (or /iotex*)
+  
+  // If internal path has trailing slash but external path doesn't, we should redirect
+  const internalHasSlash = internalPath.endsWith('/');
+  const externalHasSlash = externalPath.endsWith('/');
+  
+  // Special case: if internal is /iotex/ or /mimo/ and external is /blog, we should redirect to /blog/
+  if (internalHasSlash && !externalHasSlash) {
+    if ((internalPath === '/iotex/' || internalPath === '/mimo/') && externalPath === '/blog') {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+/**
  * Get the external path that should be used for redirect
- * Based on the render rewrite config:
- * /blog/ → /mimo
- * /blog* → /mimo*
+ * Based on the render rewrite config and actual logs
  */
 function getExternalPath(internalPath: string): string {
-  // The rewrite maps /blog/* to /mimo/*
-  // So we need to map back from /mimo/* to /blog/*
+  // From the logs, it seems /blog is being rewritten to /iotex/
+  // So we need to map back from /iotex/* to /blog/*
+  if (internalPath.startsWith('/iotex/')) {
+    return internalPath.replace('/iotex/', '/blog/');
+  }
+  if (internalPath === '/iotex') {
+    return '/blog';
+  }
+  
+  // Also handle /mimo mapping (in case it's used)
   if (internalPath.startsWith('/mimo/')) {
     return internalPath.replace('/mimo/', '/blog/');
   }
@@ -126,13 +158,6 @@ function getExternalPath(internalPath: string): string {
   }
   
   // For other project paths, map them to /blog/ as well
-  if (internalPath.startsWith('/iotex/')) {
-    return internalPath.replace('/iotex/', '/blog/');
-  }
-  if (internalPath === '/iotex') {
-    return '/blog';
-  }
-  
   if (internalPath.startsWith('/depinscan/')) {
     return internalPath.replace('/depinscan/', '/blog/');
   }
