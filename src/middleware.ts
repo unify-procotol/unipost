@@ -39,30 +39,17 @@ export function middleware(request: NextRequest) {
   
   // If path doesn't have trailing slash, redirect to add it
   if (!hasTrailingSlash) {
-    // Get the original host from headers (for rewritten requests)
-    const originalHost = headers['x-forwarded-host'] || headers['host'];
-    
     // Build the redirect URL with trailing slash
-    let redirectUrl: URL;
-    
-    // If we have a referer that's different from current host, use it for redirect
-    if (headers['referer'] && headers['x-forwarded-host']) {
-      // This is a rewritten request
-      const refererUrl = new URL(headers['referer']);
-      redirectUrl = new URL(pathname + '/' + search, refererUrl.origin);
-    } else {
-      // Normal request
-      redirectUrl = new URL(pathname + '/' + search, request.url);
-    }
+    const redirectUrl = new URL(pathname + '/' + search, request.url);
     
     console.log('🔄 Redirecting to add trailing slash:', {
       from: request.url,
       to: redirectUrl.toString(),
-      originalHost,
-      hasXForwardedHost: !!headers['x-forwarded-host']
+      pathname: pathname,
+      newPath: pathname + '/'
     });
     
-    // Return 301 redirect
+    // Return 301 redirect - Next.js will handle the rewrite context
     return NextResponse.redirect(redirectUrl, 301);
   }
 
