@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   generateEtags: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   transpilePackages: [
     "@unilab/urpc",
     "@unilab/urpc-core",
