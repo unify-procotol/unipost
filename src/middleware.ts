@@ -39,40 +39,140 @@ export function middleware(request: NextRequest) {
   
   // If path doesn't have trailing slash, redirect to add it
   if (!hasTrailingSlash) {
-    let redirectPath = pathname + '/';
+    // Detect if this is a rewrite scenario from external domain (like w3bstream.com)
+    const isRewriteScenario = detectRewriteScenario(headers);
     
-    // Handle rewrite case: if this is a rewrite from /blog/* to /iotex/*
-    // we need to redirect back to the original /blog/* path
-    if (pathname.startsWith('/iotex/') && headers['referer']) {
-      try {
-        const refererUrl = new URL(headers['referer']);
-        if (refererUrl.pathname.startsWith('/blog/')) {
-          // Map back from /iotex/xxx to /blog/xxx
-          const articleSlug = pathname.replace('/iotex/', '');
-          redirectPath = `/blog/${articleSlug}/`;
-        }
-      } catch (e) {
-        // If referer parsing fails, fallback to normal redirect
-        console.error(e)
-      }
+    let redirectUrl: URL;
+    
+    if (isRewriteScenario) {
+      // This is a rewrite scenario, redirect to the external URL with trailing slash
+      const externalPath = getExternalPath(pathname);
+      const externalOrigin = getExternalOrigin(headers);
+      redirectUrl = new URL(externalPath + '/' + search, externalOrigin);
+      
+      console.log('🔄 Redirecting rewrite scenario to external URL with trailing slash:', {
+        from: request.url,
+        to: redirectUrl.toString(),
+        internalPath: pathname,
+        externalPath: externalPath,
+        externalOrigin: externalOrigin
+      });
+    } else {
+      // Normal scenario, redirect to the same host with trailing slash
+      redirectUrl = new URL(pathname + '/' + search, request.url);
+      
+      console.log('🔄 Redirecting to same host with trailing slash:', {
+        from: request.url,
+        to: redirectUrl.toString(),
+        pathname: pathname
+      });
     }
     
-    const redirectUrl = new URL(redirectPath + search, request.url);
-    
-    console.log('🔄 Redirecting to add trailing slash:', {
-      from: request.url,
-      to: redirectUrl.toString(),
-      pathname: pathname,
-      redirectPath: redirectPath,
-      referer: headers['referer']
-    });
-    
-    // Return 301 redirect
+    // Return 301 redirect for SEO
     return NextResponse.redirect(redirectUrl, 301);
   }
 
   console.log('✅ No redirect needed for:', pathname);
   return NextResponse.next();
+}
+
+/**
+ * Detect if this request is coming through a rewrite scenario from external domain
+ */
+function detectRewriteScenario(headers: Record<string, string>): boolean {
+  const host = headers['host'] || '';
+  const forwardedHost = headers['x-forwarded-host'] || '';
+  const referer = headers['referer'] || '';
+  
+  // Check if the forwarded host is different from the actual host
+  // This indicates a rewrite scenario
+  const hasForwardedHost = Boolean(forwardedHost && forwardedHost !== host);
+  
+  // Check if the request is coming from an external domain
+  const isFromExternalDomain = forwardedHost.includes('w3bstream.com') || 
+                              referer.includes('w3bstream.com');
+  
+  // Check if this is not a direct access to unipost domains
+  const isDirectAccess = host.includes('unipost.uni-labs.org') || 
+                        host.includes('unipost-test-only.onrender.com') ||
+                        host.includes('localhost');
+  
+  console.log('🔍 Rewrite detection:', {
+    host,
+    forwardedHost,
+    hasForwardedHost,
+    isFromExternalDomain,
+    isDirectAccess,
+    referer
+  });
+  
+  return hasForwardedHost || isFromExternalDomain;
+}
+
+/**
+ * Get the external path that should be used for redirect
+ * Based on the render rewrite config:
+ * /blog/ → /mimo
+ * /blog* → /mimo*
+ */
+function getExternalPath(internalPath: string): string {
+  // The rewrite maps /blog/* to /mimo/*
+  // So we need to map back from /mimo/* to /blog/*
+  if (internalPath.startsWith('/mimo/')) {
+    return internalPath.replace('/mimo/', '/blog/');
+  }
+  if (internalPath === '/mimo') {
+    return '/blog';
+  }
+  
+  // For other project paths, map them to /blog/ as well
+  if (internalPath.startsWith('/iotex/')) {
+    return internalPath.replace('/iotex/', '/blog/');
+  }
+  if (internalPath === '/iotex') {
+    return '/blog';
+  }
+  
+  if (internalPath.startsWith('/depinscan/')) {
+    return internalPath.replace('/depinscan/', '/blog/');
+  }
+  if (internalPath === '/depinscan') {
+    return '/blog';
+  }
+  
+  // For any other paths that might be accessed directly, assume they should be under /blog/
+  if (!internalPath.startsWith('/blog/')) {
+    return `/blog${internalPath}`;
+  }
+  
+  return internalPath;
+}
+
+/**
+ * Get the external origin for redirect
+ */
+function getExternalOrigin(headers: Record<string, string>): string {
+  const forwardedHost = headers['x-forwarded-host'];
+  const forwardedProto = headers['x-forwarded-proto'] || 'https';
+  const referer = headers['referer'];
+  
+  // Try to get origin from forwarded headers first (most reliable)
+  if (forwardedHost) {
+    return `${forwardedProto}://${forwardedHost}`;
+  }
+  
+  // Try to get origin from referer as backup
+  if (referer) {
+    try {
+      const refererUrl = new URL(referer);
+      return refererUrl.origin;
+    } catch (e) {
+      console.warn('Failed to parse referer URL:', referer);
+    }
+  }
+  
+  // Fallback to w3bstream.com (the main external domain)
+  return 'https://w3bstream.com';
 }
 
 export const config = {
