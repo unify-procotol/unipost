@@ -53,6 +53,7 @@ export function middleware(request: NextRequest) {
         }
       } catch (e) {
         // If referer parsing fails, fallback to normal redirect
+        console.error(e)
       }
     }
     
