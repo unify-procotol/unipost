@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   devIndicators: false,
-  trailingSlash: false,
+  trailingSlash: true,
   compress: true,
   poweredByHeader: false,
   generateEtags: true,
