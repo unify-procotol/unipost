@@ -31,25 +31,42 @@ export function middleware(request: NextRequest) {
   // Check if URL ends with trailing slash
   const hasTrailingSlash = pathname.endsWith('/');
   
-  // Special handling for root paths and language paths
-  if (pathname === '/' || pathname.match(/^\/[a-z]{2}$/)) {
-    console.log('✅ Root or language path, no redirect needed:', pathname);
+  // Special handling for root path only
+  if (pathname === '/') {
+    console.log('✅ Root path, no redirect needed:', pathname);
     return NextResponse.next();
   }
   
   // If path doesn't have trailing slash, redirect to add it
   if (!hasTrailingSlash) {
-    // Build the redirect URL with trailing slash
-    const redirectUrl = new URL(pathname + '/' + search, request.url);
+    let redirectPath = pathname + '/';
+    
+    // Handle rewrite case: if this is a rewrite from /blog/* to /iotex/*
+    // we need to redirect back to the original /blog/* path
+    if (pathname.startsWith('/iotex/') && headers['referer']) {
+      try {
+        const refererUrl = new URL(headers['referer']);
+        if (refererUrl.pathname.startsWith('/blog/')) {
+          // Map back from /iotex/xxx to /blog/xxx
+          const articleSlug = pathname.replace('/iotex/', '');
+          redirectPath = `/blog/${articleSlug}/`;
+        }
+      } catch (e) {
+        // If referer parsing fails, fallback to normal redirect
+      }
+    }
+    
+    const redirectUrl = new URL(redirectPath + search, request.url);
     
     console.log('🔄 Redirecting to add trailing slash:', {
       from: request.url,
       to: redirectUrl.toString(),
       pathname: pathname,
-      newPath: pathname + '/'
+      redirectPath: redirectPath,
+      referer: headers['referer']
     });
     
-    // Return 301 redirect - Next.js will handle the rewrite context
+    // Return 301 redirect
     return NextResponse.redirect(redirectUrl, 301);
   }
 
