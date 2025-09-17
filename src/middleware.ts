@@ -20,39 +20,34 @@ export function middleware(request: NextRequest) {
 
   console.log("🛠️ Middleware triggered for:", {
     pathname,
+    host: headers["host"],
     referer: headers["referer"],
   });
 
   // 处理 /iotex 路径的重定向到外部 /blog 路径，并规范化URL
   if (pathname.startsWith("/iotex")) {
-    let blogPath: string;
-
-    if (pathname === "/iotex/") {
-      // 如果已经是 /iotex/，正常渲染页面，不做处理
+    if (pathname.endsWith("/")) {
+      // 如果以 / 结尾，正常访问
       return NextResponse.next();
-    } else if (pathname === "/iotex") {
-      // /iotex -> /blog/
-      blogPath = "/blog/";
     } else {
-      // 其他 iotex 路径，如 /iotex/page/1 -> /blog/page/1
-      blogPath = pathname.replace("/iotex/", "/blog/");
-      // 确保以斜杠结尾
+      // 如果不以 / 结尾，重定向到对应的 /blog 路径，并添加 /
+      let blogPath = pathname.replace("/iotex", "/blog");
       if (!blogPath.endsWith("/")) {
         blogPath += "/";
       }
+
+      // 构建外部URL
+      const externalUrl = new URL(blogPath + search, "https://w3bstream.com");
+
+      console.log("🔄 重定向到外部URL:", {
+        from: request.url,
+        to: externalUrl.toString(),
+        referer: headers["referer"],
+        reason: "映射到外部blog路径并规范化URL",
+      });
+
+      return NextResponse.redirect(externalUrl, 301);
     }
-
-    // 构建外部URL
-    const externalUrl = new URL(blogPath + search, "https://w3bstream.com");
-
-    console.log("🔄 重定向到外部URL:", {
-      from: request.url,
-      to: externalUrl.toString(),
-      referer: headers["referer"],
-      reason: "映射到外部blog路径并规范化URL",
-    });
-
-    return NextResponse.redirect(externalUrl, 301);
   }
 
   // 其他路径保持不变
