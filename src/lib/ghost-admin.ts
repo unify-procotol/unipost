@@ -25,9 +25,10 @@ export class GhostSubscriptionService {
 
   async subscribe(data: SubscriptionData): Promise<{ success: boolean; message: string; member?: unknown }> {
     try {
+      console.log('[Ghost Subscription] Starting subscription for:', data.email);
       // First check if member already exists
       const existingMembers = await this.api.members.browse({
-        filter: `email:${data.email}`,
+        filter: `email:'${data.email}'`,
         limit: 1,
       });
 
