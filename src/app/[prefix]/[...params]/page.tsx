@@ -3,7 +3,9 @@ import PostsPageWrapper from "@/components/posts-page-wrapper";
 import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
 import Breadcrumb, { ClientBreadcrumb } from "@/components/seo/breadcrumb";
-import { generateProjectPostsBreadcrumbs } from "@/lib/breadcrumb-utils";
+import {
+  generateProjectPostsBreadcrumbs
+} from "@/lib/breadcrumb-utils";
 import { notFound, redirect } from "next/navigation";
 import { PaginationQuerySchema } from "@/types/pagination";
 import type { Metadata } from "next";
@@ -155,11 +157,7 @@ export async function generateMetadata({
           },
           alternates: {
             canonical: generateArticleCanonicalURL(prefix, slug),
-            languages: generateAlternatesLanguagesURL(
-              prefix,
-              project.locales,
-              slug
-            ),
+            languages: generateAlternatesLanguagesURL(prefix, project.locales, slug),
           },
           robots: {
             index: false,
@@ -240,11 +238,7 @@ export async function generateMetadata({
         },
         alternates: {
           canonical: generateArticleCanonicalURL(prefix, slug, locale),
-          languages: generateAlternatesLanguagesURL(
-            prefix,
-            project.locales,
-            slug
-          ),
+          languages: generateAlternatesLanguagesURL(prefix, project.locales, slug),
         },
         robots: {
           index: false,
@@ -300,8 +294,7 @@ export default async function DynamicPage({
         // It's a locale - render project posts page
 
         // Set default pageSize based on project prefix
-        const defaultPageSize =
-          prefix === "mimo" ? 15 : prefix === "iotex" ? 15 : 10;
+        const defaultPageSize = prefix === "mimo" ? 15 : prefix === "iotex" ? 15 : 10;
 
         // Parse and validate pagination parameters with project-specific defaults
         const paginationResult = PaginationQuerySchema.safeParse({
@@ -375,6 +368,15 @@ export default async function DynamicPage({
         const excerpt = localizedContent?.desc || originalData?.excerpt || "";
         const html = localizedContent?.content || originalData?.html || "";
 
+        // Format date
+        const formattedDate = publishedAt
+          ? new Date(publishedAt).toLocaleDateString('en-US', {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          : "";
+
         // Clean and prepare content for display
         const displayContent = html
           .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
@@ -416,12 +418,7 @@ export default async function DynamicPage({
               <div className="max-w-4xl mx-auto">
                 {/* Breadcrumb Navigation */}
                 <div className="mb-6">
-                  <ClientBreadcrumb
-                    name={project.name}
-                    title={title}
-                    slug={slug}
-                    className="mb-4"
-                  />
+                  <ClientBreadcrumb name={project.name} title={title} slug={slug} className="mb-4" />
                 </div>
 
                 <article className="prose prose-lg max-w-none">
@@ -452,11 +449,13 @@ export default async function DynamicPage({
                         </p>
                       )}
 
-                      <div className="flex items-center gap-4 text-gray-600 text-sm">
-                        <time dateTime={publishedAt}>{publishedAt}</time>
-                        <span>•</span>
-                        <span>{project.name}</span>
-                      </div>
+                      {formattedDate && (
+                        <div className="flex items-center gap-4 text-gray-600 text-sm">
+                          <time dateTime={publishedAt}>{formattedDate}</time>
+                          <span>•</span>
+                          <span>{project.name}</span>
+                        </div>
+                      )}
                     </div>
                   </header>
 
@@ -527,6 +526,15 @@ export default async function DynamicPage({
       const excerpt = localizedContent?.desc || originalData?.excerpt || "";
       const html = localizedContent?.content || originalData?.html || "";
 
+      // Format date
+      const formattedDate = publishedAt
+        ? new Date(publishedAt).toLocaleDateString('en-US', {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        : "";
+
       // Clean and prepare content for display
       const displayContent = html
         .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
@@ -573,12 +581,7 @@ export default async function DynamicPage({
             <div className="max-w-4xl mx-auto">
               {/* Breadcrumb Navigation */}
               <div className="mb-6">
-                <ClientBreadcrumb
-                  name={project.name}
-                  title={title}
-                  slug={slug}
-                  className="mb-4"
-                />
+                <ClientBreadcrumb name={project.name} title={title} slug={slug} className="mb-4" />
               </div>
 
               <article className="prose prose-lg max-w-none">
@@ -609,11 +612,13 @@ export default async function DynamicPage({
                       </p>
                     )}
 
-                    <div className="flex items-center gap-4 text-gray-600 text-sm">
-                      <time dateTime={publishedAt}>{publishedAt}</time>
-                      <span>•</span>
-                      <span>{project.name}</span>
-                    </div>
+                    {formattedDate && (
+                      <div className="flex items-center gap-4 text-gray-600 text-sm">
+                        <time dateTime={publishedAt}>{formattedDate}</time>
+                        <span>•</span>
+                        <span>{project.name}</span>
+                      </div>
+                    )}
                   </div>
                 </header>
 
