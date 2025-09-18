@@ -30,8 +30,22 @@ export function middleware(request: NextRequest) {
   }
 
   // 如果不是 / 结尾的并且包含 /iotex，则重定向到 https://w3bstream.com/blog/
+  // 但是要检查是否来自 Render 的 rewrite，避免重定向循环
   if (pathname.includes("/iotex")) {
-    // 将 /iotex 替换为 /blog，并确保结尾带上 /
+    const host = headers["host"];
+    const referer = headers["referer"];
+    
+    // 如果 referer 来自 w3bstream.com，说明这是 Render rewrite 的结果，不要重定向
+    if (referer && referer.includes("w3bstream.com")) {
+      console.log("📝 检测到来自 w3bstream.com 的 rewrite，跳过重定向:", {
+        pathname,
+        host,
+        referer,
+      });
+      return NextResponse.next();
+    }
+    
+    // 否则执行重定向
     let blogPath = pathname.replace("/iotex", "/blog");
     if (!blogPath.endsWith("/")) {
       blogPath += "/";

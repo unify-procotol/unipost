@@ -87,36 +87,36 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-      {
-        // Cache static assets
-        source: '/_next/static/(.*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        // Cache images
-        source: '/images/(.*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=86400, stale-while-revalidate=604800',
-          },
-        ],
-      },
-      {
-        // Cache content pages with short-term caching
-        source: '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, s-maxage=300, stale-while-revalidate=86400',
-          },
-        ],
-      },
+      // {
+      //   // Cache static assets
+      //   source: '/_next/static/(.*)',
+      //   headers: [
+      //     {
+      //       key: 'Cache-Control',
+      //       value: 'public, max-age=31536000, immutable',
+      //     },
+      //   ],
+      // },
+      // {
+      //   // Cache images
+      //   source: '/images/(.*)',
+      //   headers: [
+      //     {
+      //       key: 'Cache-Control',
+      //       value: 'public, max-age=86400, stale-while-revalidate=604800',
+      //     },
+      //   ],
+      // },
+      // {
+      //   // Cache content pages with short-term caching
+      //   source: '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+      //   headers: [
+      //     {
+      //       key: 'Cache-Control',
+      //       value: 'public, s-maxage=300, stale-while-revalidate=86400',
+      //     },
+      //   ],
+      // },
     ];
   },
 };
