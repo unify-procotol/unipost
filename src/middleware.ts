@@ -24,30 +24,30 @@ export function middleware(request: NextRequest) {
     referer: headers["referer"],
   });
 
-  // 处理 /iotex 路径的重定向到外部 /blog 路径，并规范化URL
-  if (pathname.startsWith("/iotex")) {
-    if (pathname.endsWith("/")) {
-      // 如果以 / 结尾，正常访问
-      return NextResponse.next();
-    } else {
-      // 如果不以 / 结尾，重定向到对应的 /blog 路径，并添加 /
-      let blogPath = pathname.replace("/iotex", "/blog");
-      if (!blogPath.endsWith("/")) {
-        blogPath += "/";
-      }
+  // 如果pathname是以 / 结尾的，则正常显示页面
+  if (pathname.endsWith("/")) {
+    return NextResponse.next();
+  }
 
-      // 构建外部URL
-      const externalUrl = new URL(blogPath + search, "https://w3bstream.com");
-
-      console.log("🔄 重定向到外部URL:", {
-        from: request.url,
-        to: externalUrl.toString(),
-        referer: headers["referer"],
-        reason: "映射到外部blog路径并规范化URL",
-      });
-
-      return NextResponse.redirect(externalUrl, 301);
+  // 如果不是 / 结尾的并且包含 /iotex，则重定向到 https://w3bstream.com/blog/
+  if (pathname.includes("/iotex")) {
+    // 将 /iotex 替换为 /blog，并确保结尾带上 /
+    let blogPath = pathname.replace("/iotex", "/blog");
+    if (!blogPath.endsWith("/")) {
+      blogPath += "/";
     }
+
+    // 构建外部URL
+    const externalUrl = new URL(blogPath + search, "https://w3bstream.com");
+
+    console.log("🔄 重定向到外部URL:", {
+      from: request.url,
+      to: externalUrl.toString(),
+      referer: headers["referer"],
+      reason: "iotex路径重定向到w3bstream.com/blog",
+    });
+
+    return NextResponse.redirect(externalUrl, 301);
   }
 
   // 其他路径保持不变
