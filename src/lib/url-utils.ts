@@ -9,17 +9,7 @@ export function generateArticleUrl(prefix: string, locale: string, slug: string)
   // Check if we're in production with rewrite (has /blog in path) or accessed through rewrite
   let basePath = `/${prefix}`;
   if (typeof window !== 'undefined') {
-    // Check if we're on a different domain (rewrite scenario) first
-    const isExternalDomain = window.location.hostname !== 'unipost.uni-labs.org' &&
-                            window.location.hostname !== 'unipost-test-only.onrender.com' &&
-                            window.location.hostname !== 'localhost';
-    console.log('window.location.hostname', window.location.hostname)
-    // If we're on external domain (like w3bstream.com), always use /blog
-    if (isExternalDomain) {
-      basePath = '/blog';
-    }
-    // Direct access with /blog in path on our own domain
-    else if (window.location.pathname.includes('/blog1')) {
+    if (window.location.pathname.includes('/blog1')) {
       basePath = '/blog1';
     } else if (window.location.pathname.includes('/blog')) {
       basePath = '/blog';
@@ -46,12 +36,9 @@ export function generateProjectUrl(prefix: string, locale: string): string {
   // Check if we're on a different domain (rewrite scenario)
   let basePath = `/${prefix}`;
   if (typeof window !== 'undefined') {
-    const isExternalDomain = window.location.hostname !== 'unipost.uni-labs.org' &&
-                            window.location.hostname !== 'unipost-test-only.onrender.com' &&
-                            window.location.hostname !== 'localhost';
-    
-    // If we're on external domain (like w3bstream.com), always use /blog
-    if (isExternalDomain) {
+    if (window.location.pathname.includes('/blog1')) {
+      basePath = '/blog1';
+    } else if (window.location.pathname.includes('/blog')) {
       basePath = '/blog';
     }
   }
@@ -61,11 +48,6 @@ export function generateProjectUrl(prefix: string, locale: string): string {
     url = `${origin}${basePath}`;
   } else {
     url = `${origin}${basePath}/${locale}`;
-  }
-  
-  // Ensure trailing slash for SEO
-  if (!url.endsWith('/')) {
-    url += '/';
   }
   
   return url;
