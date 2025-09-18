@@ -1,9 +1,11 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { PublicProjectEntity } from "@/entities/public-project";
 import HeaderLanguageSwitcher from "../../header-language-switcher";
 import SubscribeButton from "../../subscribe-button";
+import { generateProjectUrl } from "@/lib/url-utils";
 
 interface MimoHeaderProps {
   project?: PublicProjectEntity | null;
@@ -87,7 +89,7 @@ export default function MimoHeader({
               <div className="flex items-center space-x-4 md:space-x-8">
                 {/* Logo and Brand - Only show in post detail with mimo logo */}
                 {isPostDetail && (
-                  <Link href="/mimo" className="flex items-center space-x-2">
+                  <Link href={project ? generateProjectUrl(project.prefix, locale) : "/mimo"} className="flex items-center space-x-2">
                     <Image
                       src="/images/mimo_logo.png"
                       alt="Mimo Logo"
