@@ -73,7 +73,7 @@ export default function Header({ project, locale = 'en', isPostDetail = false }:
             <div className="flex items-center space-x-4 md:space-x-8">
               {/* Logo and Brand */}
               <Link 
-                href={project ? generateProjectUrl(project.prefix, locale, typeof window !== "undefined" ? window.location.href : undefined) : "/"}
+                href={project ? generateProjectUrl(project.prefix, locale) : "/"}
                 className="flex items-center space-x-2"
               >
                 {project?.prefix === 'depinscan' ? (
