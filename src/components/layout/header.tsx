@@ -13,9 +13,10 @@ interface HeaderProps {
   project?: PublicProjectEntity | null;
   locale?: string;
   isPostDetail?: boolean;
+  isRewrite?: boolean;
 }
 
-export default function Header({ project, locale = 'en', isPostDetail = false }: HeaderProps) {
+export default function Header({ project, locale = 'en', isPostDetail = false, isRewrite = false }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -73,7 +74,7 @@ export default function Header({ project, locale = 'en', isPostDetail = false }:
             <div className="flex items-center space-x-4 md:space-x-8">
               {/* Logo and Brand */}
               <Link 
-                href={project ? generateProjectUrl(project.prefix, locale) : "/"} 
+                href={project ? generateProjectUrl(project.prefix, locale, isRewrite) : "/"}
                 className="flex items-center space-x-2"
               >
                 {project?.prefix === 'depinscan' ? (

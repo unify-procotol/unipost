@@ -9,6 +9,8 @@ import {
 import { notFound, redirect } from "next/navigation";
 import { PaginationQuerySchema } from "@/types/pagination";
 import type { Metadata } from "next";
+import { detectRewrite } from "@/lib/url-utils";
+import { headers } from "next/headers";
 
 // Post detail page components
 import SubscribeButton from "@/components/subscribe-button";
@@ -277,6 +279,10 @@ export default async function DynamicPage({
   const { prefix, params: routeParams } = await params;
   const resolvedSearchParams = await searchParams;
 
+  // Detect if this request is through rewrite
+  const headersList = await headers();
+  const isRewrite = detectRewrite({ headers: headersList });
+
   try {
     const project = await getProject(prefix);
     if (!project) {
@@ -325,7 +331,7 @@ export default async function DynamicPage({
         );
 
         return (
-          <MainLayout project={project} locale={locale}>
+          <MainLayout project={project} locale={locale} isRewrite={isRewrite}>
             <div className="min-h-screen">
               <Container className="py-8 px-4">
                 {/* Breadcrumb Navigation */}
@@ -396,7 +402,7 @@ export default async function DynamicPage({
         };
 
         return (
-          <MainLayout project={project} locale={locale} isPostDetail={true}>
+          <MainLayout project={project} locale={locale} isPostDetail={true} isRewrite={isRewrite}>
             <StructuredData type="article" data={articleStructuredData} />
 
             <JsonLd
@@ -557,7 +563,7 @@ export default async function DynamicPage({
       };
 
       return (
-        <MainLayout project={project} locale={locale} isPostDetail={true}>
+        <MainLayout project={project} locale={locale} isPostDetail={true} isRewrite={isRewrite}>
           <StructuredData type="article" data={articleStructuredData} />
 
           <JsonLd

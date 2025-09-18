@@ -3,6 +3,8 @@ import dynamic from "next/dynamic";
 import MainLayout from "@/components/layout/main-layout";
 import Container from "@/components/ui/container";
 import Breadcrumb from "@/components/seo/breadcrumb";
+import { detectRewrite } from "@/lib/url-utils";
+import { headers } from "next/headers";
 
 const PostsPageWrapper = dynamic(() => import("@/components/posts-page-wrapper"), {
   loading: () => (
@@ -90,6 +92,10 @@ export default async function ProjectPage({
   const locale = "en"; // Default locale
   const resolvedSearchParams = await searchParams;
 
+  // Detect if this request is through rewrite
+  const headersList = await headers();
+  const isRewrite = detectRewrite({ headers: headersList });
+
   try {
     // Get project information
     const project = await getProject(prefix);
@@ -127,21 +133,21 @@ export default async function ProjectPage({
     );
 
     return (
-      <MainLayout project={project} locale={locale}>
+      <MainLayout project={project} locale={locale} isRewrite={isRewrite}>
         <div className="min-h-screen">
           <Container className="py-8 px-4">
             {/* Breadcrumb Navigation */}
             <div className="mb-8">
-              <Breadcrumb 
+              <Breadcrumb
                 items={generateProjectPostsBreadcrumbs(project.name)}
                 className="text-gray-600 hover:text-gray-900 transition-colors"
               />
             </div>
 
             {/* Posts List */}
-            <PostsPageWrapper 
-              posts={paginatedResult.data} 
-              locale={locale} 
+            <PostsPageWrapper
+              posts={paginatedResult.data}
+              locale={locale}
               prefix={prefix}
               pagination={paginatedResult.pagination}
             />
