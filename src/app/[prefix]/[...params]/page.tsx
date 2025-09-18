@@ -381,7 +381,27 @@ export default async function DynamicPage({
         const displayContent = html
           .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
           .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
-          .replace(/javascript:/gi, "");
+          .replace(/javascript:/gi, "")
+          .replace(/<a\b([^>]*)>/gi, (match, attrs) => {
+            // Check if target attribute already exists
+            if (!attrs.includes('target=')) {
+              // Add target="_blank" and rel="noopener noreferrer"
+              const relMatch = attrs.match(/rel=["']([^"']*)["']/);
+              if (relMatch) {
+                // Update existing rel attribute
+                const existingRel = relMatch[1];
+                const newRel = existingRel.includes('noopener') && existingRel.includes('noreferrer') 
+                  ? existingRel 
+                  : `${existingRel} noopener noreferrer`.trim();
+                attrs = attrs.replace(/rel=["'][^"']*["']/, `rel="${newRel}"`);
+              } else {
+                // Add new rel attribute
+                attrs += ' rel="noopener noreferrer"';
+              }
+              return `<a${attrs} target="_blank">`;
+            }
+            return match;
+          });
 
         // Prepare structured data for the article
         const articleStructuredData = {
@@ -539,7 +559,27 @@ export default async function DynamicPage({
       const displayContent = html
         .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
         .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
-        .replace(/javascript:/gi, "");
+        .replace(/javascript:/gi, "")
+        .replace(/<a\b([^>]*)>/gi, (match, attrs) => {
+          // Check if target attribute already exists
+          if (!attrs.includes('target=')) {
+            // Add target="_blank" and rel="noopener noreferrer"
+            const relMatch = attrs.match(/rel=["']([^"']*)["']/);
+            if (relMatch) {
+              // Update existing rel attribute
+              const existingRel = relMatch[1];
+              const newRel = existingRel.includes('noopener') && existingRel.includes('noreferrer')
+                ? existingRel
+                : `${existingRel} noopener noreferrer`.trim();
+              attrs = attrs.replace(/rel=["'][^"']*["']/, `rel="${newRel}"`);
+            } else {
+              // Add new rel attribute
+              attrs += ' rel="noopener noreferrer"';
+            }
+            return `<a${attrs} target="_blank">`;
+          }
+          return match;
+        });
 
       // Prepare structured data for the article
       const articleStructuredData = {
