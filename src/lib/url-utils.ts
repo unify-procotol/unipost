@@ -34,6 +34,7 @@ export function generateProjectUrl(prefix: string, locale: string): string {
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   
   // Check if we're on a different domain (rewrite scenario)
+  console.log('-----', window, window?.location?.pathname)
   let basePath = `/${prefix}`;
   if (typeof window !== 'undefined') {
     if (window.location.pathname.includes('/blog1')) {
