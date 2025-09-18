@@ -2,6 +2,7 @@
 
 import { generatePostDetailBreadcrumbs } from "@/lib/breadcrumb-utils";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 interface BreadcrumbItem {
   label: string;
@@ -25,7 +26,35 @@ export const ClientBreadcrumb = ({
   slug: string;
   className?: string;
 }) => {
-  const referer = typeof window !== 'undefined' ? window.location.href : '';
+  const [referer, setReferer] = useState('');
+  
+  useEffect(() => {
+    // Update referer when component mounts or when URL changes
+    const updateReferer = () => {
+      if (typeof window !== 'undefined') {
+        setReferer(window.location.href);
+      }
+    };
+    
+    updateReferer();
+    
+    // Listen for popstate events (browser back/forward)
+    window.addEventListener('popstate', updateReferer);
+    
+    
+    // Monitor for URL changes by checking periodically
+    const intervalId = setInterval(() => {
+      if (typeof window !== 'undefined' && window.location.href !== referer) {
+        updateReferer();
+      }
+    }, 100);
+    
+    return () => {
+      window.removeEventListener('popstate', updateReferer);
+      clearInterval(intervalId);
+    };
+  }, [referer]);
+  
   return (
     <Breadcrumb
       items={generatePostDetailBreadcrumbs(name, title, slug, referer)}

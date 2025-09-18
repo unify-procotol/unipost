@@ -16,12 +16,34 @@ export function generateProjectPostsBreadcrumbs(projectName: string): Breadcrumb
 export function generatePostDetailBreadcrumbs(projectName: string, postTitle: string, slug: string, referer: string): BreadcrumbItem[] {
   // Extract the path without the slug from referer
   let projectHref = '/';
+  
   if (referer) {
-    // Remove the slug from the end of the referer path
-    projectHref = referer.replace(`/${slug}`, '');
-    // If referer was just the slug, fallback to root
-    if (projectHref === '') {
-      projectHref = '/';
+    try {
+      const url = new URL(referer);
+      const pathname = url.pathname;
+      
+      // Remove the slug from the end of the pathname
+      let basePath = pathname.replace(`/${slug}`, '').replace(`/${slug}/`, '/');
+      
+      // If the path becomes empty or just '/', it means we're at root
+      if (!basePath || basePath === '' || basePath === '/') {
+        projectHref = '/';
+      } else {
+        // Ensure the path starts with '/' and ends with '/' for consistency
+        if (!basePath.startsWith('/')) {
+          basePath = '/' + basePath;
+        }
+        if (!basePath.endsWith('/')) {
+          basePath = basePath + '/';
+        }
+        projectHref = `${url.origin}${basePath}`;
+      }
+    } catch (error) {
+      // If URL parsing fails, fallback to simple string replacement
+      projectHref = referer.replace(`/${slug}`, '').replace(`/${slug}/`, '/');
+      if (projectHref === '' || projectHref === referer) {
+        projectHref = '/';
+      }
     }
   }
   
