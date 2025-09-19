@@ -25,7 +25,7 @@ import { generateFaviconIcons } from "@/lib/favicon-utils";
 import { generateCanonicalURL, generateProjectDescription, generateAlternatesLanguagesURL } from "@/lib/seo-utils";
 
 // ISR Cache: 10 minutes for project list pages
-export const revalidate = 600;
+export const revalidate = 15;
 
 export async function generateMetadata({
   params,
