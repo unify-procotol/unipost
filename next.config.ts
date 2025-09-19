@@ -48,7 +48,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://unipost.uni-labs.org' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://unipost-test-only.onrender.com' : '',
 
   // CORS and caching configuration
   async headers() {
