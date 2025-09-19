@@ -25,6 +25,8 @@ import {
   generateAlternatesLanguagesURL,
 } from "@/lib/seo-utils";
 import { generateFaviconIcons } from "@/lib/favicon-utils";
+import { getGhostPost } from "@/lib/ghost";
+import { PostEntity } from "@/entities/post";
 
 // ISR Cache: 1 day for article pages and localized project pages
 // This covers both article content (changes rarely) and project pages (acceptable delay)
@@ -352,9 +354,25 @@ export default async function DynamicPage({
         const slug = param;
         const locale = "en";
 
-        const post = await getPostBySlug(slug);
+        let post = await getPostBySlug(slug);
         if (!post) {
-          notFound();
+          const ghostPost = await getGhostPost(prefix, slug);
+          if (!ghostPost) {
+            notFound();
+          }
+          post = {
+            data: ghostPost,
+            i18n: {
+              en: ghostPost.html
+            },
+            project_id: project.id,
+            slug: slug,
+            created_at: ghostPost.published_at,
+            updated_at: ghostPost.updated_at,
+            feature_image: ghostPost.feature_image,
+            tags: ghostPost.tags,
+            published_at: ghostPost.published_at,
+          } as unknown as PostEntity;
         }
 
         // Get the content for the current locale, fallback to original
