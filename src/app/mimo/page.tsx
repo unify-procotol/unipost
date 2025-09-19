@@ -24,16 +24,11 @@ import type { Metadata } from "next";
 import { generateFaviconIcons } from "@/lib/favicon-utils";
 import { generateCanonicalURL, generateProjectDescription, generateAlternatesLanguagesURL } from "@/lib/seo-utils";
 
-// ISR Cache: 10 minutes for project list pages
 export const revalidate = 15;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ prefix: string }>;
-}): Promise<Metadata> {
-  const { prefix } = await params;
-  const locale = "en"; // Default locale
+export async function generateMetadata(): Promise<Metadata> {
+  const prefix = "mimo";
+  const locale = "en";
 
   try {
     const project = await getProject(prefix);
@@ -79,33 +74,26 @@ export async function generateMetadata({
   }
 }
 
-export default async function ProjectPage({
-  params,
+export default async function MimoProjectPage({
   searchParams,
 }: {
-  params: Promise<{ prefix: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { prefix } = await params;
-  const locale = "en"; // Default locale
+  const prefix = "mimo";
+  const locale = "en";
   const resolvedSearchParams = await searchParams;
 
   try {
-    // Get project information
     const project = await getProject(prefix);
 
     if (!project) {
       notFound();
     }
 
-    // Set default pageSize based on project prefix and page
-    // For iotex first page: 16 (1 featured + 15 regular), other pages: 15
-    const isFirstPage = !resolvedSearchParams.page || resolvedSearchParams.page === "1";
-    const defaultPageSize = prefix === "mimo" ? 15 :
-                           (prefix === "iotex" && isFirstPage) ? 16 :
-                           prefix === "iotex" ? 15 : 10;
+    // Set default pageSize for mimo
+    const defaultPageSize = 15;
 
-    // Parse and validate pagination parameters with project-specific defaults
+    // Parse and validate pagination parameters
     const paginationResult = PaginationQuerySchema.safeParse({
       page: resolvedSearchParams.page as string,
       pageSize: resolvedSearchParams.pageSize as string || defaultPageSize.toString(),
@@ -116,7 +104,6 @@ export default async function ProjectPage({
       redirect(`/${prefix}`);
     }
 
-    // Use project-specific default if no pageSize provided
     const finalPageSize = resolvedSearchParams.pageSize ? paginationResult.data.pageSize : defaultPageSize;
 
     // Get paginated posts

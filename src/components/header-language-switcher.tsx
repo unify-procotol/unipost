@@ -1,4 +1,5 @@
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { ProjectEntity } from "@/entities/project";
 import { PublicProjectEntity } from "@/entities/public-project";
@@ -12,49 +13,42 @@ export default function HeaderLanguageSwitcher({
   project,
   loading = false,
 }: HeaderLanguageSwitcherProps) {
-  const router = useRouter();
   const pathname = usePathname();
 
-  // Extract prefix and locale from pathname
+  // Extract locale and project from pathname
   const pathSegments = pathname.split("/").filter(Boolean);
-  const prefix = pathSegments[0]; // /[prefix]/...
-
-  // State for current locale and page type
-  const [currentLocale, setCurrentLocale] = useState<string>("en");
-  const [pageType, setPageType] = useState<"project" | "article">("project");
-  const [slug, setSlug] = useState<string | null>(null);
+  const firstSegment = pathSegments[0];
+  
+  // Check if we're on old route format (e.g., /iotex/slug) or new format (e.g., /en/iotex/slug)
+  const isOldRouteFormat = project && project.prefix === firstSegment;
+  const isNewRouteFormat = project && project.locales.includes(firstSegment);
+  
+  // Determine current locale
+  let currentLocale = "en";
+  if (isNewRouteFormat) {
+    currentLocale = firstSegment;
+  } else if (isOldRouteFormat) {
+    currentLocale = "en"; // Old routes are always English
+  }
+  
+  // Determine page type and slug based on path structure
+  let pageType: "project" | "article" = "project";
+  let slug: string | null = null;
+  
+  if (isNewRouteFormat) {
+    // New format: /[locale]/[project] or /[locale]/[project]/[slug]
+    pageType = pathSegments.length === 3 ? "article" : "project";
+    slug = pathSegments.length === 3 ? pathSegments[2] : null;
+  } else if (isOldRouteFormat) {
+    // Old format: /[project] or /[project]/[slug]
+    pageType = pathSegments.length === 2 ? "article" : "project";
+    slug = pathSegments.length === 2 ? pathSegments[1] : null;
+  }
+  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Ref for dropdown container to handle outside clicks
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Determine locale and page type based on pathname and project data
-  useEffect(() => {
-    if (pathSegments.length === 1) {
-      // /[prefix] - English project page
-      setCurrentLocale("en");
-      setPageType("project");
-      setSlug(null);
-    } else if (pathSegments.length === 2) {
-      const secondSegment = pathSegments[1];
-      if (project && project.locales.includes(secondSegment)) {
-        // It's a locale - /[prefix]/[locale]
-        setCurrentLocale(secondSegment);
-        setPageType("project");
-        setSlug(null);
-      } else if (project) {
-        // It's a slug - /[prefix]/[slug] (only if project is loaded)
-        setCurrentLocale("en");
-        setPageType("article");
-        setSlug(secondSegment);
-      }
-    } else if (pathSegments.length === 3) {
-      // /[prefix]/[locale]/[slug] - Non-English article page
-      setCurrentLocale(pathSegments[1]);
-      setPageType("article");
-      setSlug(pathSegments[2]);
-    }
-  }, [pathSegments, project]);
 
   // Handle outside clicks to close dropdown
   useEffect(() => {
@@ -73,28 +67,23 @@ export default function HeaderLanguageSwitcher({
     };
   }, []);
 
-  const handleLanguageChange = (locale: string) => {
-    if (locale !== currentLocale && project) {
-      let newPath: string;
-
-      if (pageType === "project") {
-        // Project page
-        if (locale === "en") {
-          newPath = `/${prefix}`;
-        } else {
-          newPath = `/${prefix}/${locale}`;
-        }
+  const generateLanguageUrl = (locale: string) => {
+    if (!project) return "#";
+    
+    if (pageType === "project") {
+      // Project page
+      if (locale === "en") {
+        return `/${project.prefix}`;
       } else {
-        // Article page
-        if (locale === "en") {
-          newPath = `/${prefix}/${slug}`;
-        } else {
-          newPath = `/${prefix}/${locale}/${slug}`;
-        }
+        return `/${locale}/${project.prefix}`;
       }
-
-      router.push(newPath);
-      setIsDropdownOpen(false); // Close dropdown after selection
+    } else {
+      // Article page
+      if (locale === "en") {
+        return `/${project.prefix}/${slug}`;
+      } else {
+        return `/${locale}/${project.prefix}/${slug}`;
+      }
     }
   };
 
@@ -116,7 +105,7 @@ export default function HeaderLanguageSwitcher({
   };
 
   // Don't show if not in a project context
-  if (!prefix) {
+  if (!project) {
     return null;
   }
 
@@ -208,10 +197,11 @@ export default function HeaderLanguageSwitcher({
           >
             <div className="py-1">
               {project.locales.map((locale) => (
-                <button
+                <Link
                   key={locale}
-                  onClick={() => handleLanguageChange(locale)}
-                  className={`cursor-pointer w-full text-left px-3 py-2 text-xs font-medium transition-colors duration-150 ${
+                  href={generateLanguageUrl(locale)}
+                  onClick={() => setIsDropdownOpen(false)}
+                  className={`cursor-pointer w-full text-left px-3 py-2 text-xs font-medium transition-colors duration-150 block ${
                     locale === currentLocale
                       ? isMimo
                         ? "bg-green-50 text-green-600 font-semibold"
@@ -237,7 +227,7 @@ export default function HeaderLanguageSwitcher({
                       </svg>
                     )}
                   </div>
-                </button>
+                </Link>
               ))}
             </div>
           </div>
