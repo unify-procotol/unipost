@@ -139,13 +139,25 @@ export default async function LocalizedProjectPage({
 
     // Use user-specified pageSize if provided, otherwise use project-specific default
     const finalPageSize = paginationResult.data.pageSize;
+    
+    // IoTeX special logic: if user sets pageSize=15 on first page, fetch 16 for better layout
+    const actualFetchSize = prefix === "iotex" && 
+                           paginationResult.data.page === 1 && 
+                           finalPageSize === 15
+                           ? 16 
+                           : finalPageSize;
 
     // Get paginated posts
     const paginatedResult = await getPaginatedPosts(
       prefix,
       paginationResult.data.page,
-      finalPageSize
+      actualFetchSize
     );
+    
+    // Adjust pagination metadata for IoTeX first page with pageSize=15
+    if (prefix === "iotex" && paginationResult.data.page === 1 && finalPageSize === 15 && actualFetchSize === 16) {
+      paginatedResult.pagination.pageSize = 15; // Display as 15 in pagination UI
+    }
 
     return (
       <MainLayout project={project} locale={locale}>
