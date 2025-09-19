@@ -19,16 +19,20 @@ export default function HeaderLanguageSwitcher({
   const pathSegments = pathname.split("/").filter(Boolean);
   const firstSegment = pathSegments[0];
   
-  // Check if we're on old route format (e.g., /iotex/slug) or new format (e.g., /en/iotex/slug)
+  // Check different route formats
   const isOldRouteFormat = project && project.prefix === firstSegment;
   const isNewRouteFormat = project && project.locales.includes(firstSegment);
+  const isBlogRouteFormat = firstSegment === "blog"; // /blog or /blog/slug
+  const isLocalizedBlogFormat = pathSegments.length >= 2 && project && project.locales.includes(firstSegment) && pathSegments[1] === "blog"; // /[locale]/blog or /[locale]/blog/slug
   
   // Determine current locale
   let currentLocale = "en";
   if (isNewRouteFormat) {
     currentLocale = firstSegment;
-  } else if (isOldRouteFormat) {
-    currentLocale = "en"; // Old routes are always English
+  } else if (isLocalizedBlogFormat) {
+    currentLocale = firstSegment;
+  } else if (isOldRouteFormat || isBlogRouteFormat) {
+    currentLocale = "en"; // These routes are always English
   }
   
   // Determine page type and slug based on path structure
@@ -39,6 +43,14 @@ export default function HeaderLanguageSwitcher({
     // New format: /[locale]/[project] or /[locale]/[project]/[slug]
     pageType = pathSegments.length === 3 ? "article" : "project";
     slug = pathSegments.length === 3 ? pathSegments[2] : null;
+  } else if (isLocalizedBlogFormat) {
+    // Format: /[locale]/blog or /[locale]/blog/[slug]
+    pageType = pathSegments.length === 3 ? "article" : "project";
+    slug = pathSegments.length === 3 ? pathSegments[2] : null;
+  } else if (isBlogRouteFormat) {
+    // Format: /blog or /blog/[slug]
+    pageType = pathSegments.length === 2 ? "article" : "project";
+    slug = pathSegments.length === 2 ? pathSegments[1] : null;
   } else if (isOldRouteFormat) {
     // Old format: /[project] or /[project]/[slug]
     pageType = pathSegments.length === 2 ? "article" : "project";
