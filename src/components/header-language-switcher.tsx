@@ -70,19 +70,46 @@ export default function HeaderLanguageSwitcher({
   const generateLanguageUrl = (locale: string) => {
     if (!project) return "#";
     
+    // Detect if we're in a rewrite environment (actual project domain)
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const isLocalhost = origin.includes("localhost");
+    const isUniLabsOrg = origin.includes("unipost.uni-labs.org");
+    const isRenderTest = origin.includes("unipost-test-only.onrender.com");
+    const isDirectAccess = isLocalhost || isUniLabsOrg || isRenderTest;
+    
     if (pageType === "project") {
       // Project page
-      if (locale === "en") {
-        return `/${project.prefix}`;
+      if (isDirectAccess) {
+        // Direct access: use project prefix
+        if (locale === "en") {
+          return `/${project.prefix}`;
+        } else {
+          return `/${locale}/${project.prefix}`;
+        }
       } else {
-        return `/${locale}/${project.prefix}`;
+        // Rewrite environment: use /blog
+        if (locale === "en") {
+          return `/blog`;
+        } else {
+          return `/${locale}/blog`;
+        }
       }
     } else {
       // Article page
-      if (locale === "en") {
-        return `/${project.prefix}/${slug}`;
+      if (isDirectAccess) {
+        // Direct access: use project prefix
+        if (locale === "en") {
+          return `/${project.prefix}/${slug}`;
+        } else {
+          return `/${locale}/${project.prefix}/${slug}`;
+        }
       } else {
-        return `/${locale}/${project.prefix}/${slug}`;
+        // Rewrite environment: use /blog
+        if (locale === "en") {
+          return `/blog/${slug}`;
+        } else {
+          return `/${locale}/blog/${slug}`;
+        }
       }
     }
   };
