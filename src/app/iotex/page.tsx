@@ -106,24 +106,32 @@ export default async function IoTexProjectPage({
     }
 
     const finalPageSize = paginationResult.data.pageSize;
-    
-    // IoTeX special logic: if user sets pageSize=15 on first page, fetch 16 for better layout
-    const actualFetchSize = prefix === "iotex" && 
-                           paginationResult.data.page === 1 && 
-                           finalPageSize === 15
-                           ? 16 
-                           : finalPageSize;
 
     // Get paginated posts
     const paginatedResult = await getPaginatedPosts(
       prefix,
       paginationResult.data.page,
-      actualFetchSize
+      finalPageSize
     );
     
-    // Adjust pagination metadata for IoTeX first page with pageSize=15
-    if (prefix === "iotex" && paginationResult.data.page === 1 && finalPageSize === 15 && actualFetchSize === 16) {
-      paginatedResult.pagination.pageSize = 15; // Display as 15 in pagination UI
+    // Adjust pagination metadata for IoTeX first page default case (16 data -> show as 15 in UI)
+    if (prefix === "iotex" && 
+        paginationResult.data.page === 1 && 
+        finalPageSize === 16 && 
+        !resolvedSearchParams.pageSize) {
+      paginatedResult.pagination.pageSize = 15; // Display as 15 in pagination UI for default case
+    }
+    
+    // Adjust for user-specified pageSize=15 on first page
+    if (prefix === "iotex" && 
+        paginationResult.data.page === 1 && 
+        finalPageSize === 15 && 
+        resolvedSearchParams.pageSize) {
+      // Fetch one more post for better layout, but keep pagination as 15
+      const extraData = await getPaginatedPosts(prefix, 1, 16);
+      if (extraData.data.length > 15) {
+        paginatedResult.data = extraData.data; // Use 16 posts for layout
+      }
     }
 
     return (
