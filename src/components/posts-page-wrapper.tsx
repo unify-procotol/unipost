@@ -33,18 +33,32 @@ export default function PostsPageWrapper({
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', page.toString());
     const queryString = params.toString();
-    // Check if we're in production with rewrite (has /blog in path)
-    let basePath = `/${prefix}`;
-    if (typeof window !== 'undefined') {
-      if (window.location.pathname.includes('/blog1')) {
-        basePath = '/blog1';
-      } else if (window.location.pathname.includes('/blog')) {
+    
+    // Detect environment and generate correct path
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const isLocalhost = origin.includes("localhost");
+    const isUniLabsOrg = origin.includes("unipost.uni-labs.org");
+    const isRenderTest = origin.includes("unipost-test-only.onrender.com");
+    const isDirectAccess = isLocalhost || isUniLabsOrg || isRenderTest;
+    
+    let basePath: string;
+    
+    if (isDirectAccess) {
+      // Direct access: use project prefix format
+      if (locale === "en") {
+        basePath = `/${prefix}`;
+      } else {
+        basePath = `/${locale}/${prefix}`;
+      }
+    } else {
+      // Rewrite environment: use /blog format
+      if (locale === "en") {
         basePath = '/blog';
+      } else {
+        basePath = `/${locale}/blog`;
       }
     }
-    if (locale !== "en") {
-      basePath += `/${locale}`;
-    }
+    
     const targetUrl = typeof window !== 'undefined' 
       ? `${window.location.origin}${basePath}?${queryString}`
       : `${basePath}?${queryString}`;
@@ -57,18 +71,32 @@ export default function PostsPageWrapper({
     // Reset to page 1 when changing page size
     params.set('page', '1');
     const queryString = params.toString();
-    // Check if we're in production with rewrite (has /blog in path)
-    let basePath = `/${prefix}`;
-    if (typeof window !== 'undefined') {
-      if (window.location.pathname.includes('/blog1')) {
-        basePath = '/blog1';
-      } else if (window.location.pathname.includes('/blog')) {
+    
+    // Detect environment and generate correct path
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const isLocalhost = origin.includes("localhost");
+    const isUniLabsOrg = origin.includes("unipost.uni-labs.org");
+    const isRenderTest = origin.includes("unipost-test-only.onrender.com");
+    const isDirectAccess = isLocalhost || isUniLabsOrg || isRenderTest;
+    
+    let basePath: string;
+    
+    if (isDirectAccess) {
+      // Direct access: use project prefix format
+      if (locale === "en") {
+        basePath = `/${prefix}`;
+      } else {
+        basePath = `/${locale}/${prefix}`;
+      }
+    } else {
+      // Rewrite environment: use /blog format
+      if (locale === "en") {
         basePath = '/blog';
+      } else {
+        basePath = `/${locale}/blog`;
       }
     }
-    if (locale !== "en") {
-      basePath += `/${locale}`;
-    }
+    
     const targetUrl = typeof window !== 'undefined' 
       ? `${window.location.origin}${basePath}?${queryString}`
       : `${basePath}?${queryString}`;

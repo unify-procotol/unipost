@@ -104,7 +104,7 @@ export default async function MimoProjectPage({
       redirect(`/${prefix}`);
     }
 
-    const finalPageSize = resolvedSearchParams.pageSize ? paginationResult.data.pageSize : defaultPageSize;
+    const finalPageSize = paginationResult.data.pageSize;
 
     // Get paginated posts
     const paginatedResult = await getPaginatedPosts(

@@ -137,8 +137,8 @@ export default async function LocalizedProjectPage({
       redirect(`/${locale}/${prefix}`);
     }
 
-    // Use project-specific default if no pageSize provided
-    const finalPageSize = resolvedSearchParams.pageSize ? paginationResult.data.pageSize : defaultPageSize;
+    // Use user-specified pageSize if provided, otherwise use project-specific default
+    const finalPageSize = paginationResult.data.pageSize;
 
     // Get paginated posts
     const paginatedResult = await getPaginatedPosts(
