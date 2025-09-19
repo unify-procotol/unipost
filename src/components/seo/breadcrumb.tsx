@@ -20,10 +20,14 @@ export const ClientBreadcrumb = ({
   name,
   title,
   slug,
+  locale,
+  projectPrefix,
 }: {
   name: string;
   title: string;
   slug: string;
+  locale?: string;
+  projectPrefix?: string;
   className?: string;
 }) => {
   const [referer, setReferer] = useState('');
@@ -57,7 +61,7 @@ export const ClientBreadcrumb = ({
   
   return (
     <Breadcrumb
-      items={generatePostDetailBreadcrumbs(name, title, slug, referer)}
+      items={generatePostDetailBreadcrumbs(name, title, slug, referer, locale, projectPrefix)}
       className={className}
     />
   );

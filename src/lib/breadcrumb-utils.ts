@@ -13,37 +13,41 @@ export function generateProjectPostsBreadcrumbs(projectName: string): Breadcrumb
   ];
 }
 
-export function generatePostDetailBreadcrumbs(projectName: string, postTitle: string, slug: string, referer: string): BreadcrumbItem[] {
+export function generatePostDetailBreadcrumbs(projectName: string, postTitle: string, slug: string, referer: string, locale?: string, projectPrefix?: string): BreadcrumbItem[] {
   // Extract the path without the slug from referer
   let projectHref = '/';
   
   if (referer) {
     try {
       const url = new URL(referer);
-      const pathname = url.pathname;
+      const origin = url.origin;
       
-      // Remove the slug from the end of the pathname
-      let basePath = pathname.replace(`/${slug}`, '').replace(`/${slug}/`, '/');
+      // Detect if we're in a rewrite environment (actual project domain)
+      const isLocalhost = origin.includes("localhost");
+      const isUniLabsOrg = origin.includes("unipost.uni-labs.org");
+      const isRenderTest = origin.includes("unipost-test-only.onrender.com");
+      const isDirectAccess = isLocalhost || isUniLabsOrg || isRenderTest;
       
-      // If the path becomes empty or just '/', it means we're at root
-      if (!basePath || basePath === '' || basePath === '/') {
-        projectHref = '/';
+      if (isDirectAccess) {
+        // Direct access: use project prefix format
+        if (locale && locale !== "en" && projectPrefix) {
+          projectHref = `/${locale}/${projectPrefix}`;
+        } else if (projectPrefix) {
+          projectHref = `/${projectPrefix}`;
+        } else {
+          projectHref = '/';
+        }
       } else {
-        // Ensure the path starts with '/' and ends with '/' for consistency
-        if (!basePath.startsWith('/')) {
-          basePath = '/' + basePath;
+        // Rewrite environment: use /blog format
+        if (locale && locale !== "en") {
+          projectHref = `/${locale}/blog`;
+        } else {
+          projectHref = '/blog';
         }
-        if (!basePath.endsWith('/')) {
-          basePath = basePath + '/';
-        }
-        projectHref = `${url.origin}${basePath}`;
       }
     } catch (error) {
-      // If URL parsing fails, fallback to simple string replacement
-      projectHref = referer.replace(`/${slug}`, '').replace(`/${slug}/`, '/');
-      if (projectHref === '' || projectHref === referer) {
-        projectHref = '/';
-      }
+      // If URL parsing fails, fallback
+      projectHref = '/';
     }
   }
   

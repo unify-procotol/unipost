@@ -1,4 +1,23 @@
 /**
+ * Detect if we're in a rewrite environment and get the correct base path
+ */
+function getRewriteInfo(): { isRewrite: boolean; basePath: string } {
+  if (typeof window === "undefined") return { isRewrite: false, basePath: "" };
+  
+  const pathname = window.location.pathname;
+  
+  // Check if we're accessed through a rewrite (e.g., iotex.io/blog -> /iotex)
+  // In rewrite environment, the actual path doesn't contain /blog
+  // But we can detect this by checking if we're on external domains
+  const origin = window.location.origin;
+  const isExternalDomain = !origin.includes("localhost") && 
+                          !origin.includes("unipost.uni-labs.org") && 
+                          !origin.includes("unipost-test-only.onrender.com");
+  
+  return { isRewrite: isExternalDomain, basePath: "" };
+}
+
+/**
  * Generate article URL based on locale
  * @param prefix - Project prefix
  * @param locale - Current locale
@@ -10,22 +29,23 @@ export function generateArticleUrl(
   locale: string,
   slug: string
 ): string {
-  // Check if we're in production with rewrite (has /blog in path) or accessed through rewrite
-  let basePath = `/${prefix}`;
-  if (typeof window !== "undefined") {
-    if (window.location.pathname.includes("/blog1")) {
-      basePath = "/blog1";
-    } else if (window.location.pathname.includes("/blog")) {
-      basePath = "/blog";
-    }
-  }
-
+  const { isRewrite } = getRewriteInfo();
   const origin = typeof window !== "undefined" ? window.location.origin : "";
 
-  if (locale === "en") {
-    return `${origin}${basePath}/${slug}/`;
+  if (isRewrite) {
+    // In rewrite environment: iotex.io/blog -> /iotex
+    // Article links should be: iotex.io/blog/:slug (blog replaces project name)
+    if (locale === "en") {
+      return `${origin}/blog/${slug}`;
+    }
+    return `${origin}/${locale}/blog/${slug}`;
+  } else {
+    // Direct access to unipost domain
+    if (locale === "en") {
+      return `${origin}/${prefix}/${slug}`;
+    }
+    return `${origin}/${locale}/${prefix}/${slug}`;
   }
-  return `${origin}${basePath}/${locale}/${slug}/`;
 }
 
 /**
@@ -35,45 +55,35 @@ export function generateArticleUrl(
  * @returns Proper URL path
  */
 export function generateProjectUrl(prefix: string, locale: string): string {
+  const { isRewrite } = getRewriteInfo();
   const origin = typeof window !== "undefined" ? window.location.origin : "";
 
-  // Special handling for different environments and prefixes
+  // In rewrite environment, use /blog path instead of project name
+  if (isRewrite) {
+    if (locale === "en") {
+      return `${origin}/blog`;
+    } else {
+      return `${origin}/${locale}/blog`;
+    }
+  }
+
+  // For direct unipost domain access
   const isLocalhost = origin.includes("localhost");
-  const isUniLabsOrg = origin.includes("https://unipost.uni-labs.org");
-  const isRenderTest = origin.includes("https://unipost-test-only.onrender.com");
+  const isUniLabsOrg = origin.includes("unipost.uni-labs.org");
+  const isRenderTest = origin.includes("unipost-test-only.onrender.com");
   
-  // For localhost and internal domains, use normal prefix routing
   if (isLocalhost || isUniLabsOrg || isRenderTest) {
-    const basePath = `/${prefix}`;
     if (locale === "en") {
-      return `${origin}${basePath}`;
+      return `${origin}/${prefix}`;
     } else {
-      return `${origin}${basePath}/${locale}`;
+      return `${origin}/${locale}/${prefix}`;
     }
   }
 
-  // For external domains, map to specific external URLs
-  if (prefix === "iotex") {
-    if (locale === "en") {
-      return "https://iotex.io/blog/";
-    } else {
-      return `https://iotex.io/blog/${locale}/`;
-    }
-  }
-  
-  if (prefix === "mimo") {
-    if (locale === "en") {
-      return "https://mimo.exchange/blog/";
-    } else {
-      return `https://mimo.exchange/blog/${locale}/`;
-    }
-  }
-
-  // Fallback to prefix routing for other cases
-  const basePath = `/${prefix}`;
+  // Fallback to new routing structure
   if (locale === "en") {
-    return `${origin}${basePath}`;
+    return `${origin}/${prefix}`;
   } else {
-    return `${origin}${basePath}/${locale}`;
+    return `${origin}/${locale}/${prefix}`;
   }
 }
