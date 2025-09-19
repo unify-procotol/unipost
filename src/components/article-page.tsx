@@ -226,7 +226,14 @@ export default async function ArticlePage({
         <Container className="py-8 px-4">
           <div className="max-w-4xl mx-auto">
             <div className="mb-6">
-              <ClientBreadcrumb name={project.name} title={title} slug={slug} className="mb-4" />
+              <ClientBreadcrumb 
+                name={project.name} 
+                title={title} 
+                slug={slug} 
+                locale={locale}
+                projectPrefix={project.prefix}
+                className="mb-4" 
+              />
             </div>
 
             <article className="prose prose-lg max-w-none">
