@@ -31,18 +31,18 @@ export function generatePostDetailBreadcrumbs(projectName: string, postTitle: st
       if (isDirectAccess) {
         // Direct access: use project prefix format
         if (locale && locale !== "en" && projectPrefix) {
-          projectHref = `/${locale}/${projectPrefix}`;
+          projectHref = `/${locale}/${projectPrefix}/`;
         } else if (projectPrefix) {
-          projectHref = `/${projectPrefix}`;
+          projectHref = `/${projectPrefix}/`;
         } else {
           projectHref = '/';
         }
       } else {
         // Rewrite environment: use /blog format
         if (locale && locale !== "en") {
-          projectHref = `/${locale}/blog`;
+          projectHref = `/${locale}/blog/`;
         } else {
-          projectHref = '/blog';
+          projectHref = '/blog/';
         }
       }
     } catch (error) {

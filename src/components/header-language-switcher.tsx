@@ -89,21 +89,23 @@ export default function HeaderLanguageSwitcher({
     const isRenderTest = origin.includes("unipost-test-only.onrender.com");
     const isDirectAccess = isLocalhost || isUniLabsOrg || isRenderTest;
     
+    let url: string;
+    
     if (pageType === "project") {
       // Project page
       if (isDirectAccess) {
         // Direct access: use project prefix
         if (locale === "en") {
-          return `/${project.prefix}`;
+          url = `/${project.prefix}`;
         } else {
-          return `/${locale}/${project.prefix}`;
+          url = `/${locale}/${project.prefix}`;
         }
       } else {
         // Rewrite environment: use /blog
         if (locale === "en") {
-          return `/blog`;
+          url = `/blog`;
         } else {
-          return `/${locale}/blog`;
+          url = `/${locale}/blog`;
         }
       }
     } else {
@@ -111,19 +113,26 @@ export default function HeaderLanguageSwitcher({
       if (isDirectAccess) {
         // Direct access: use project prefix
         if (locale === "en") {
-          return `/${project.prefix}/${slug}`;
+          url = `/${project.prefix}/${slug}`;
         } else {
-          return `/${locale}/${project.prefix}/${slug}`;
+          url = `/${locale}/${project.prefix}/${slug}`;
         }
       } else {
         // Rewrite environment: use /blog
         if (locale === "en") {
-          return `/blog/${slug}`;
+          url = `/blog/${slug}`;
         } else {
-          return `/${locale}/blog/${slug}`;
+          url = `/${locale}/blog/${slug}`;
         }
       }
     }
+    
+    // Ensure all URLs end with /
+    if (!url.endsWith('/')) {
+      url += '/';
+    }
+    
+    return url;
   };
 
   // Get language display name

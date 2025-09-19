@@ -46,16 +46,16 @@ export default function PostsPageWrapper({
     if (isDirectAccess) {
       // Direct access: use project prefix format
       if (locale === "en") {
-        basePath = `/${prefix}`;
+        basePath = `/${prefix}/`;
       } else {
-        basePath = `/${locale}/${prefix}`;
+        basePath = `/${locale}/${prefix}/`;
       }
     } else {
       // Rewrite environment: use /blog format
       if (locale === "en") {
-        basePath = '/blog';
+        basePath = '/blog/';
       } else {
-        basePath = `/${locale}/blog`;
+        basePath = `/${locale}/blog/`;
       }
     }
     
@@ -84,16 +84,16 @@ export default function PostsPageWrapper({
     if (isDirectAccess) {
       // Direct access: use project prefix format
       if (locale === "en") {
-        basePath = `/${prefix}`;
+        basePath = `/${prefix}/`;
       } else {
-        basePath = `/${locale}/${prefix}`;
+        basePath = `/${locale}/${prefix}/`;
       }
     } else {
       // Rewrite environment: use /blog format
       if (locale === "en") {
-        basePath = '/blog';
+        basePath = '/blog/';
       } else {
-        basePath = `/${locale}/blog`;
+        basePath = `/${locale}/blog/`;
       }
     }
     
