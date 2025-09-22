@@ -67,9 +67,7 @@ export default function PostsPageWrapper({
       }
     }
     
-    const targetUrl = typeof window !== 'undefined' 
-      ? `${window.location.origin}${basePath}?${queryString}`
-      : `${basePath}?${queryString}`;
+    const targetUrl = `${basePath}?${queryString}`;
     router.push(targetUrl);
   };
 
@@ -113,9 +111,7 @@ export default function PostsPageWrapper({
       }
     }
     
-    const targetUrl = typeof window !== 'undefined' 
-      ? `${window.location.origin}${basePath}?${queryString}`
-      : `${basePath}?${queryString}`;
+    const targetUrl = `${basePath}?${queryString}`;
     router.push(targetUrl);
   };
 
