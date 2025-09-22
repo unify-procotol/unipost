@@ -36,15 +36,15 @@ export function generateArticleUrl(
     // In rewrite environment: iotex.io/blog -> /iotex
     // Article links should be: iotex.io/blog/:slug (blog replaces project name)
     if (locale === "en") {
-      return `${origin}/blog/${slug}`;
+      return `${origin}/blog/${slug}/`;
     }
-    return `${origin}/${locale}/blog/${slug}`;
+    return `${origin}/${locale}/blog/${slug}/`;
   } else {
     // Direct access to unipost domain
     if (locale === "en") {
-      return `${origin}/${prefix}/${slug}`;
+      return `${origin}/${prefix}/${slug}/`;
     }
-    return `${origin}/${locale}/${prefix}/${slug}`;
+    return `${origin}/${locale}/${prefix}/${slug}/`;
   }
 }
 
@@ -61,9 +61,9 @@ export function generateProjectUrl(prefix: string, locale: string): string {
   // In rewrite environment, use /blog path instead of project name
   if (isRewrite) {
     if (locale === "en") {
-      return `${origin}/blog`;
+      return `${origin}/blog/`;
     } else {
-      return `${origin}/${locale}/blog`;
+      return `${origin}/${locale}/blog/`;
     }
   }
 
@@ -74,16 +74,16 @@ export function generateProjectUrl(prefix: string, locale: string): string {
   
   if (isLocalhost || isUniLabsOrg || isRenderTest) {
     if (locale === "en") {
-      return `${origin}/${prefix}`;
+      return `${origin}/${prefix}/`;
     } else {
-      return `${origin}/${locale}/${prefix}`;
+      return `${origin}/${locale}/${prefix}/`;
     }
   }
 
   // Fallback to new routing structure
   if (locale === "en") {
-    return `${origin}/${prefix}`;
+    return `${origin}/${prefix}/`;
   } else {
-    return `${origin}/${locale}/${prefix}`;
+    return `${origin}/${locale}/${prefix}/`;
   }
 }
