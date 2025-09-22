@@ -42,15 +42,15 @@ export default function PostsPageWrapper({
     const isUniLabsOrg = origin.includes("unipost.uni-labs.org");
     const isRenderTest = origin.includes("unipost-test-only.onrender.com");
     
-    // Check if we're in a rewrite environment by examining the current path
-    // If the current path starts with /blog, we're in a rewrite environment
-    const isRewriteEnvironment = pathname.startsWith('/blog') || pathname.startsWith(`/${locale}/blog`);
-    
-    const isDirectAccess = (isLocalhost || isUniLabsOrg || isRenderTest) && !isRewriteEnvironment;
+    // If we're on any of the direct access domains AND the path starts with project prefix, it's direct access
+    // If we're on other domains OR the path starts with /blog, it's rewrite environment
+    const isDirectAccess = (isLocalhost || isUniLabsOrg || isRenderTest) && 
+                           (pathname.startsWith(`/${prefix}`) || pathname.startsWith(`/${locale}/${prefix}`));
     
     let basePath: string;
     
     if (isDirectAccess) {
+      console.log(11, origin, pathname)
       // Direct access: use project prefix format
       if (locale === "en") {
         basePath = `/${prefix}/`;
@@ -58,6 +58,7 @@ export default function PostsPageWrapper({
         basePath = `/${locale}/${prefix}/`;
       }
     } else {
+      console.log(22, origin, pathname)
       // Rewrite environment: use /blog format
       if (locale === "en") {
         basePath = '/blog/';
@@ -87,15 +88,15 @@ export default function PostsPageWrapper({
     const isUniLabsOrg = origin.includes("unipost.uni-labs.org");
     const isRenderTest = origin.includes("unipost-test-only.onrender.com");
     
-    // Check if we're in a rewrite environment by examining the current path
-    // If the current path starts with /blog, we're in a rewrite environment
-    const isRewriteEnvironment = pathname.startsWith('/blog') || pathname.startsWith(`/${locale}/blog`);
-    
-    const isDirectAccess = (isLocalhost || isUniLabsOrg || isRenderTest) && !isRewriteEnvironment;
+    // If we're on any of the direct access domains AND the path starts with project prefix, it's direct access
+    // If we're on other domains OR the path starts with /blog, it's rewrite environment
+    const isDirectAccess = (isLocalhost || isUniLabsOrg || isRenderTest) && 
+                           (pathname.startsWith(`/${prefix}`) || pathname.startsWith(`/${locale}/${prefix}`));
     
     let basePath: string;
     
     if (isDirectAccess) {
+      console.log(1, origin, pathname)
       // Direct access: use project prefix format
       if (locale === "en") {
         basePath = `/${prefix}/`;
@@ -103,6 +104,7 @@ export default function PostsPageWrapper({
         basePath = `/${locale}/${prefix}/`;
       }
     } else {
+      console.log(2, origin, pathname)
       // Rewrite environment: use /blog format
       if (locale === "en") {
         basePath = '/blog/';
