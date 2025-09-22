@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import CustomSelect from "./custom-select";
 
 interface PaginationProps {
   currentPage: number;
@@ -72,15 +73,12 @@ export default function Pagination({
     return rangeWithDots;
   };
 
-  const handlePageSizeChange = async (newPageSize: number) => {
+  const handlePageSizeChange = (newPageSize: number) => {
     if (!onPageSizeChange) return;
 
     setIsChangingPageSize(true);
-    try {
-      await onPageSizeChange(newPageSize);
-    } finally {
-      setIsChangingPageSize(false);
-    }
+    onPageSizeChange(newPageSize);
+    setIsChangingPageSize(false);
   };
 
   const startItem = (currentPage - 1) * pageSize + 1;
@@ -113,23 +111,15 @@ export default function Pagination({
         {/* Page size selector */}
         {showPageSizeSelector && onPageSizeChange && (
           <div className="flex items-center gap-2">
-            <label htmlFor="pageSize" className="text-sm text-gray-600">
+            <label className="text-sm text-gray-600">
               Show:
             </label>
-            <select
-              id="pageSize"
+            <CustomSelect
               value={pageSize}
-              onChange={(e) => handlePageSizeChange(parseInt(e.target.value))}
+              options={PAGE_SIZE_OPTIONS.map(size => ({ value: size, label: size.toString() }))}
+              onChange={handlePageSizeChange}
               disabled={isChangingPageSize}
-              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg px-3 py-1 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
-              aria-label="Posts per page"
-            >
-              {PAGE_SIZE_OPTIONS.map((size) => (
-                <option key={size} value={size} className="cursor-pointer">
-                  {size}
-                </option>
-              ))}
-            </select>
+            />
           </div>
         )}
 
