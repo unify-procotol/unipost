@@ -1,4 +1,4 @@
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { ProjectEntity } from "@/entities/project";
@@ -14,6 +14,7 @@ export default function HeaderLanguageSwitcher({
   loading = false,
 }: HeaderLanguageSwitcherProps) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   // Extract locale and project from pathname
   const pathSegments = pathname.split("/").filter(Boolean);
@@ -130,6 +131,12 @@ export default function HeaderLanguageSwitcher({
     // Ensure all URLs end with /
     if (!url.endsWith('/')) {
       url += '/';
+    }
+    
+    // Preserve current query parameters
+    const currentQuery = searchParams.toString();
+    if (currentQuery) {
+      url += `?${currentQuery}`;
     }
     
     return url;
