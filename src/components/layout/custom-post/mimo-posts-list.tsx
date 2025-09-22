@@ -21,8 +21,7 @@ interface MimoPostsListProps {
   locale: string;
   prefix: string;
   pagination?: PaginationMeta;
-  onPageChange?: (page: number) => void;
-  onPageSizeChange?: (pageSize: number) => void;
+  generatePaginationLink?: (page: number, pageSize?: number) => string;
 }
 
 export default function MimoPostsList({
@@ -30,8 +29,7 @@ export default function MimoPostsList({
   locale,
   prefix,
   pagination,
-  onPageChange,
-  onPageSizeChange
+  generatePaginationLink
 }: MimoPostsListProps) {
 
   const formatDate = (dateString: string) => {
@@ -156,8 +154,7 @@ export default function MimoPostsList({
             totalPages={pagination.totalPages}
             totalItems={pagination.totalItems}
             pageSize={pagination.pageSize}
-            onPageChange={onPageChange || (() => {})}
-            onPageSizeChange={onPageSizeChange}
+            generatePaginationLink={generatePaginationLink}
             className="flex justify-center"
           />
         </div>

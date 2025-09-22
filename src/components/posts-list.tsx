@@ -33,8 +33,7 @@ interface PostsListProps {
   locale: string;
   prefix: string;
   pagination?: PaginationMeta;
-  onPageChange?: (page: number) => void;
-  onPageSizeChange?: (pageSize: number) => void;
+  generatePaginationLink?: (page: number, pageSize?: number) => string;
 }
 
 export default function PostsList({
@@ -42,8 +41,7 @@ export default function PostsList({
   locale,
   prefix,
   pagination,
-  onPageChange,
-  onPageSizeChange
+  generatePaginationLink
 }: PostsListProps) {
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
@@ -78,8 +76,7 @@ export default function PostsList({
         locale={locale}
         prefix={prefix}
         pagination={pagination}
-        onPageChange={onPageChange}
-        onPageSizeChange={onPageSizeChange}
+        generatePaginationLink={generatePaginationLink}
       />
     );
   }
@@ -91,8 +88,7 @@ export default function PostsList({
         locale={locale}
         prefix={prefix}
         pagination={pagination}
-        onPageChange={onPageChange}
-        onPageSizeChange={onPageSizeChange}
+        generatePaginationLink={generatePaginationLink}
       />
     );
   }
@@ -232,8 +228,7 @@ export default function PostsList({
             totalPages={pagination.totalPages}
             totalItems={pagination.totalItems}
             pageSize={pagination.pageSize}
-            onPageChange={onPageChange || (() => {})}
-            onPageSizeChange={onPageSizeChange}
+            generatePaginationLink={generatePaginationLink}
             className="flex justify-center"
           />
         </div>
