@@ -36,10 +36,17 @@ export default function PostsPageWrapper({
     
     // Detect environment and generate correct path
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
+    
     const isLocalhost = origin.includes("localhost");
     const isUniLabsOrg = origin.includes("unipost.uni-labs.org");
     const isRenderTest = origin.includes("unipost-test-only.onrender.com");
-    const isDirectAccess = isLocalhost || isUniLabsOrg || isRenderTest;
+    
+    // Check if we're in a rewrite environment by examining the current path
+    // If the current path starts with /blog, we're in a rewrite environment
+    const isRewriteEnvironment = pathname.startsWith('/blog') || pathname.startsWith(`/${locale}/blog`);
+    
+    const isDirectAccess = (isLocalhost || isUniLabsOrg || isRenderTest) && !isRewriteEnvironment;
     
     let basePath: string;
     
@@ -74,10 +81,17 @@ export default function PostsPageWrapper({
     
     // Detect environment and generate correct path
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
+    
     const isLocalhost = origin.includes("localhost");
     const isUniLabsOrg = origin.includes("unipost.uni-labs.org");
     const isRenderTest = origin.includes("unipost-test-only.onrender.com");
-    const isDirectAccess = isLocalhost || isUniLabsOrg || isRenderTest;
+    
+    // Check if we're in a rewrite environment by examining the current path
+    // If the current path starts with /blog, we're in a rewrite environment
+    const isRewriteEnvironment = pathname.startsWith('/blog') || pathname.startsWith(`/${locale}/blog`);
+    
+    const isDirectAccess = (isLocalhost || isUniLabsOrg || isRenderTest) && !isRewriteEnvironment;
     
     let basePath: string;
     
