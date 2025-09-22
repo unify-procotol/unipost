@@ -164,7 +164,7 @@ export default async function ArticlePage({
     const html = localizedContent?.content || originalData?.html || "";
 
     const formattedDate = publishedAt
-      ? new Date(publishedAt).toLocaleDateString('en-US', {
+      ? new Date(publishedAt).toLocaleDateString(locale, {
           year: "numeric",
           month: "long",
           day: "numeric",
