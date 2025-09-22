@@ -9,6 +9,7 @@ interface PaginationProps {
   totalItems: number;
   pageSize: number;
   generatePaginationLink?: (page: number, pageSize?: number) => string;
+  onPageSizeChange?: (pageSize: number) => void;
   showPageSizeSelector?: boolean;
   className?: string;
 }
@@ -21,6 +22,7 @@ export default function Pagination({
   totalItems,
   pageSize,
   generatePaginationLink,
+  onPageSizeChange,
   showPageSizeSelector = true,
   className = "",
 }: PaginationProps) {
@@ -70,13 +72,15 @@ export default function Pagination({
     return rangeWithDots;
   };
 
-  const handlePageSizeChange = (newPageSize: number) => {
-    if (!generatePaginationLink) return;
+  const handlePageSizeChange = async (newPageSize: number) => {
+    if (!onPageSizeChange) return;
 
     setIsChangingPageSize(true);
-    // Navigate to page 1 with new page size
-    const newUrl = generatePaginationLink(1, newPageSize);
-    window.location.href = newUrl;
+    try {
+      await onPageSizeChange(newPageSize);
+    } finally {
+      setIsChangingPageSize(false);
+    }
   };
 
   const startItem = (currentPage - 1) * pageSize + 1;
@@ -107,7 +111,7 @@ export default function Pagination({
 
       <div className="flex items-center gap-4">
         {/* Page size selector */}
-        {showPageSizeSelector && generatePaginationLink && (
+        {showPageSizeSelector && onPageSizeChange && (
           <div className="flex items-center gap-2">
             <label htmlFor="pageSize" className="text-sm text-gray-600">
               Show:

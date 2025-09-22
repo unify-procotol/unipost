@@ -21,6 +21,7 @@ interface DepinscanPostsListProps {
   prefix: string;
   pagination?: PaginationMeta;
   generatePaginationLink?: (page: number, pageSize?: number) => string;
+  onPageSizeChange?: (pageSize: number) => void;
 }
 
 export default function DepinscanPostsList({
@@ -28,7 +29,8 @@ export default function DepinscanPostsList({
   locale,
   prefix,
   pagination,
-  generatePaginationLink
+  generatePaginationLink,
+  onPageSizeChange
 }: DepinscanPostsListProps) {
 
   const formatDate = (dateString: string) => {
@@ -123,6 +125,7 @@ export default function DepinscanPostsList({
             totalItems={pagination.totalItems}
             pageSize={pagination.pageSize}
             generatePaginationLink={generatePaginationLink}
+            onPageSizeChange={onPageSizeChange}
             className="flex justify-center"
           />
         </div>

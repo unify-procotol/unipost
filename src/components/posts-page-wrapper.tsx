@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import PostsList from './posts-list';
 import { PostEntity } from '@/entities/post';
 
@@ -26,6 +26,7 @@ export default function PostsPageWrapper({
   prefix,
   pagination,
 }: PostsPageWrapperProps) {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   // Generate the base path for pagination links
@@ -72,6 +73,17 @@ export default function PostsPageWrapper({
     return `${basePath}?${queryString}`;
   };
 
+  const handlePageSizeChange = (pageSize: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('pageSize', pageSize.toString());
+    // Reset to page 1 when changing page size
+    params.set('page', '1');
+    const queryString = params.toString();
+    const basePath = getBasePath();
+    const targetUrl = `${basePath}?${queryString}`;
+    router.push(targetUrl);
+  };
+
   return (
     <PostsList
       posts={posts}
@@ -79,6 +91,7 @@ export default function PostsPageWrapper({
       prefix={prefix}
       pagination={pagination}
       generatePaginationLink={generatePaginationLink}
+      onPageSizeChange={handlePageSizeChange}
     />
   );
 }
