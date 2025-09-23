@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 
 // ISR Cache: 30 minutes for home page (projects list changes rarely)
 export const revalidate = 1800;
+export const config = { amp: 'hybrid' };
 
 const ProjectSelector = dynamic(() => import("@/components/project-selector"), {
   loading: () => (

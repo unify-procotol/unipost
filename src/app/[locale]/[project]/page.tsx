@@ -25,6 +25,7 @@ import { generateFaviconIcons } from "@/lib/favicon-utils";
 import { generateCanonicalURL, generateProjectDescription, generateAlternatesLanguagesURL } from "@/lib/seo-utils";
 
 export const revalidate = 15;
+export const config = { amp: 'hybrid' };
 
 export async function generateMetadata({
   params,

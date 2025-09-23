@@ -50,6 +50,53 @@ const nextConfig: NextConfig = {
   },
   assetPrefix: process.env.NODE_ENV === 'production' ? 'https://unipost.uni-labs.org' : '',
 
+  // AMP rewrites
+  async rewrites() {
+    return [
+      // Project article AMP routes
+      {
+        source: '/iotex/:slug/amp',
+        destination: '/iotex/:slug?amp=1'
+      },
+      {
+        source: '/mimo/:slug/amp',
+        destination: '/mimo/:slug?amp=1'
+      },
+      {
+        source: '/depinscan/:slug/amp',
+        destination: '/depinscan/:slug?amp=1'
+      },
+      // Localized article AMP routes
+      {
+        source: '/:locale/:project/:slug/amp',
+        destination: '/:locale/:project/:slug?amp=1'
+      },
+      // Project list AMP routes
+      {
+        source: '/iotex/amp',
+        destination: '/iotex?amp=1'
+      },
+      {
+        source: '/mimo/amp',
+        destination: '/mimo?amp=1'
+      },
+      {
+        source: '/depinscan/amp',
+        destination: '/depinscan?amp=1'
+      },
+      // Localized project list AMP routes
+      {
+        source: '/:locale/:project/amp',
+        destination: '/:locale/:project?amp=1'
+      },
+      // Home page AMP route
+      {
+        source: '/amp',
+        destination: '/?amp=1'
+      }
+    ];
+  },
+
   // CORS and caching configuration
   async headers() {
     return [
