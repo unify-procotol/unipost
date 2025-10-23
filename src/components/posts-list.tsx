@@ -11,6 +11,10 @@ const MimoPostsList = dynamic(() => import("./layout/custom-post/mimo-posts-list
   loading: () => <div className="animate-pulse">Loading posts...</div>,
 });
 
+const IopayPostsList = dynamic(() => import("./layout/custom-post/iopay-posts-list"), {
+  loading: () => <div className="animate-pulse">Loading posts...</div>,
+});
+
 const FeaturedPostIotex = dynamic(() => import("./layout/custom-post/featured-post-iotex"), {
   loading: () => <div className="h-96 animate-pulse bg-gray-100 rounded-lg"></div>,
 });
@@ -74,6 +78,19 @@ export default function PostsList({
   if (prefix === "mimo") {
     return (
       <MimoPostsList
+        posts={posts}
+        locale={locale}
+        prefix={prefix}
+        pagination={pagination}
+        generatePaginationLink={generatePaginationLink}
+        onPageSizeChange={onPageSizeChange}
+      />
+    );
+  }
+
+  if (prefix === "iopay") {
+    return (
+      <IopayPostsList
         posts={posts}
         locale={locale}
         prefix={prefix}

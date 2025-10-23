@@ -6,6 +6,7 @@ import HeaderLanguageSwitcher from "../header-language-switcher";
 import SubscribeButton from "../subscribe-button";
 import { PublicProjectEntity } from "@/entities/public-project";
 import MimoHeader from "./custom-header/mimo-header";
+import IopayHeader from "./custom-header/iopay-header";
 import Image from "next/image";
 import { generateProjectUrl } from "@/lib/url-utils";
 
@@ -25,6 +26,10 @@ export default function Header({ project, locale = 'en', isPostDetail = false }:
   // Switch to different header styles based on project prefix
   if (project?.prefix === 'mimo') {
     return <MimoHeader project={project} locale={locale} isPostDetail={isPostDetail} />;
+  }
+
+  if (project?.prefix === 'iopay') {
+    return <IopayHeader project={project} locale={locale} isPostDetail={isPostDetail} />;
   }
 
   // Navigation items for reuse in both desktop and mobile

@@ -1,0 +1,27 @@
+import ArticlePage, { generateArticleMetadata } from "@/components/article-page";
+import type { Metadata } from "next";
+
+export const revalidate = 86400;
+export const config = { amp: 'hybrid' };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const prefix = "iopay";
+
+  return generateArticleMetadata({ prefix, slug, locale: "en" });
+}
+
+export default async function IopayArticlePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const prefix = "iopay";
+
+  return <ArticlePage prefix={prefix} slug={slug} locale="en" />;
+}

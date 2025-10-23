@@ -7,17 +7,17 @@ import HeaderLanguageSwitcher from "../../header-language-switcher";
 import SubscribeButton from "../../subscribe-button";
 import { generateProjectUrl } from "@/lib/url-utils";
 
-interface MimoHeaderProps {
+interface IopayHeaderProps {
   project?: PublicProjectEntity | null;
   locale?: string;
   isPostDetail?: boolean;
 }
 
-export default function MimoHeader({
+export default function IopayHeader({
   project,
   locale = "en",
   isPostDetail = false,
-}: MimoHeaderProps) {
+}: IopayHeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -66,8 +66,8 @@ export default function MimoHeader({
       {!isPostDetail && (
         <div className="absolute inset-0">
           <Image
-            src="/images/mimo_header.png"
-            alt="Mimo Header Background"
+            src="/images/iopay_header.png"
+            alt="ioPay Header Background"
             fill
             className="object-cover"
             priority
@@ -82,21 +82,22 @@ export default function MimoHeader({
         }`}
       >
         {/* Top Navigation */}
-        <header className={`px-4 sm:px-6 lg:px-8 py-4 ${isPostDetail ? 'bg-[#00E100]' : 'bg-transparent'}`}>
+        <header className={`px-4 sm:px-6 lg:px-8 py-4 ${isPostDetail ? 'bg-[#FF1A75]' : 'bg-transparent'}`}>
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between h-12 md:h-16">
               {/* Left: Logo and Navigation */}
               <div className="flex items-center space-x-4 md:space-x-8">
-                {/* Logo and Brand - Only show in post detail with mimo logo */}
+                {/* Logo and Brand - Only show in post detail with iopay logo */}
                 {isPostDetail && (
-                  <Link href={project ? generateProjectUrl(project.prefix, locale) : "/mimo"} className="flex items-center space-x-2">
-                    <Image
-                      src="/images/mimo_logo.png"
-                      alt="Mimo Logo"
+                  <Link href={project ? generateProjectUrl(project.prefix, locale) : "/iopay"} className="flex items-center space-x-2 text-[2rem] font-bold text-white">
+                    {/* <Image
+                      src="/images/iopay_logo.png"
+                      alt="ioPay Logo"
                       width={120}
                       height={36}
                       className="max-h-[28px] md:max-h-[36px] w-auto"
-                    />
+                    /> */}
+                    ioPay Blog
                   </Link>
                 )}
 
@@ -167,8 +168,8 @@ export default function MimoHeader({
               {/* Main Logo */}
               <div className="flex items-center justify-center mb-4 md:mb-6">
                 <Image
-                  src="/images/mimo-main-logo.png"
-                  alt="Mimo Logo"
+                  src="/images/iopay-main-logo.png"
+                  alt="ioPay Logo"
                   width={400}
                   height={120}
                   className="max-h-[80px] md:max-h-[120px] w-auto"

@@ -30,6 +30,12 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'iopay.me',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'iotex.io',
         port: '',
         pathname: '/**',
@@ -63,6 +69,10 @@ const nextConfig: NextConfig = {
         destination: '/mimo/:slug?amp=1'
       },
       {
+        source: '/iopay/:slug/amp',
+        destination: '/iopay/:slug?amp=1'
+      },
+      {
         source: '/depinscan/:slug/amp',
         destination: '/depinscan/:slug?amp=1'
       },
@@ -79,6 +89,10 @@ const nextConfig: NextConfig = {
       {
         source: '/mimo/amp',
         destination: '/mimo?amp=1'
+      },
+      {
+        source: '/iopay/amp',
+        destination: '/iopay?amp=1'
       },
       {
         source: '/depinscan/amp',
