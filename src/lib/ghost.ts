@@ -41,6 +41,10 @@ export async function updateSinglePostContent(ghost_api_key: string = '1fbd2275d
   // console.log(post.html);
 
   const postData = await db`select * from posts where  data ->> 'id' = ${postId}`;
+  if (!postData[0] || !post.html) {
+    console.log('Post not found or html is empty');
+    return;
+  }
   await db`update posts set content = ${post.html}, i18n = '{}' where id = ${postData[0].id}`;
   console.log('Post updated');
 }
