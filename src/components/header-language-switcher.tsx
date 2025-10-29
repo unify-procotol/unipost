@@ -9,6 +9,65 @@ interface HeaderLanguageSwitcherProps {
   loading?: boolean;
 }
 
+// Project color theme configuration
+interface ProjectColorTheme {
+  iconClass: string;
+  iconStyle?: React.CSSProperties;
+  buttonClass: string;
+  buttonStyle?: React.CSSProperties;
+  buttonTextClass: string;
+  buttonTextStyle?: React.CSSProperties;
+  dropdownArrowClass: string;
+  dropdownArrowStyle?: React.CSSProperties;
+  selectedItemClass: string;
+  selectedItemStyle?: React.CSSProperties;
+  selectedIconClass: string;
+  selectedIconStyle?: React.CSSProperties;
+}
+
+const PROJECT_COLOR_THEMES: Record<string, ProjectColorTheme> = {
+  mimo: {
+    iconClass: "text-white/80",
+    buttonClass:
+      "bg-white/20 text-white hover:bg-white/30 border border-white/30",
+    buttonTextClass: "text-white",
+    dropdownArrowClass: "text-white/80",
+    selectedItemClass: "bg-green-50 text-green-600 font-semibold",
+    selectedIconClass: "text-green-600",
+  },
+  iopay: {
+    iconClass: "",
+    iconStyle: { color: "#9d5dfb" },
+    buttonClass: "bg-gray-200/80 hover:bg-gray-300/80 border border-gray-300/50",
+    buttonStyle: { color: "#9d5dfb" },
+    buttonTextClass: "",
+    buttonTextStyle: { color: "#9d5dfb" },
+    dropdownArrowClass: "",
+    dropdownArrowStyle: { color: "#9d5dfb" },
+    selectedItemClass: "bg-purple-50 font-semibold",
+    selectedItemStyle: { color: "#9d5dfb" },
+    selectedIconClass: "",
+    selectedIconStyle: { color: "#9d5dfb" },
+  },
+  default: {
+    iconClass: "text-gray-600",
+    buttonClass:
+      "bg-gray-200/80 text-gray-700 hover:bg-gray-300/80 hover:text-gray-900 border border-gray-300/50",
+    buttonTextClass: "text-gray-700",
+    dropdownArrowClass: "text-gray-500",
+    selectedItemClass: "bg-blue-50 text-blue-600 font-semibold",
+    selectedIconClass: "text-blue-600",
+  },
+};
+
+// Get color theme for a project
+const getProjectTheme = (
+  project?: ProjectEntity | PublicProjectEntity | null
+): ProjectColorTheme => {
+  if (!project?.prefix) return PROJECT_COLOR_THEMES.default;
+  return PROJECT_COLOR_THEMES[project.prefix] || PROJECT_COLOR_THEMES.default;
+};
+
 // Internal component that uses searchParams
 function LanguageSwitcherContent({
   project,
@@ -192,13 +251,14 @@ function LanguageSwitcherContent({
     return null;
   }
 
-  // Check if this is mimo project for different styling
-  const isMimo = project?.prefix === "mimo";
+  // Get project color theme
+  const theme = getProjectTheme(project);
 
   return (
     <div className="flex items-center gap-2">
       <svg
-        className={`w-4 h-4 ${isMimo ? "text-white/80" : "text-gray-600"}`}
+        className={`w-4 h-4 ${theme.iconClass}`}
+        style={theme.iconStyle}
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -215,20 +275,21 @@ function LanguageSwitcherContent({
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className={`cursor-pointer flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded transition-all duration-200 min-w-[80px] ${
-            isMimo
-              ? "bg-white/20 text-white hover:bg-white/30 border border-white/30"
-              : "bg-gray-200/80 text-gray-700 hover:bg-gray-300/80 hover:text-gray-900 border border-gray-300/50"
-          }`}
+          className={`cursor-pointer flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded transition-all duration-200 min-w-[80px] ${theme.buttonClass}`}
+          style={theme.buttonStyle}
           title="Switch language"
         >
-          <span className={isMimo ? "text-white" : "text-gray-700"}>
+          <span
+            className={theme.buttonTextClass}
+            style={theme.buttonTextStyle}
+          >
             {getLanguageDisplayName(currentLocale)}
           </span>
           <svg
             className={`w-3 h-3 transition-transform duration-200 ${
               isDropdownOpen ? "rotate-180" : ""
-            } ${isMimo ? "text-white/80" : "text-gray-500"}`}
+            } ${theme.dropdownArrowClass}`}
+            style={theme.dropdownArrowStyle}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -244,13 +305,7 @@ function LanguageSwitcherContent({
 
         {/* Dropdown Menu */}
         {isDropdownOpen && (
-          <div
-            className={`absolute top-full left-0 mt-1 min-w-[120px] rounded-md shadow-lg z-50 ${
-              isMimo
-                ? "bg-white border border-gray-200"
-                : "bg-white border border-gray-200"
-            }`}
-          >
+          <div className="absolute top-full left-0 mt-1 min-w-[120px] rounded-md shadow-lg z-50 bg-white border border-gray-200">
             <div className="py-1">
               {project.locales.map((locale) => (
                 <Link
@@ -259,19 +314,19 @@ function LanguageSwitcherContent({
                   onClick={() => setIsDropdownOpen(false)}
                   className={`cursor-pointer w-full text-left px-3 py-2 text-xs font-medium transition-colors duration-150 block ${
                     locale === currentLocale
-                      ? isMimo
-                        ? "bg-green-50 text-green-600 font-semibold"
-                        : "bg-blue-50 text-blue-600 font-semibold"
+                      ? theme.selectedItemClass
                       : "text-gray-700 hover:bg-gray-50"
                   }`}
+                  style={
+                    locale === currentLocale ? theme.selectedItemStyle : undefined
+                  }
                 >
                   <div className="flex items-center justify-between">
                     <span>{getLanguageDisplayName(locale)}</span>
                     {locale === currentLocale && (
                       <svg
-                        className={`w-3 h-3 ${
-                          isMimo ? "text-green-600" : "text-blue-600"
-                        }`}
+                        className={`w-3 h-3 ${theme.selectedIconClass}`}
+                        style={theme.selectedIconStyle}
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >

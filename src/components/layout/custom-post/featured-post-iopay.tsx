@@ -91,7 +91,7 @@ export default function FeaturedPostIopay({
 
             {/* Read more button */}
             <div className="pt-3">
-              <div className="inline-flex items-center px-5 py-2.5 bg-[#00E100] text-white font-semibold rounded-xl">
+              <div className="inline-flex items-center px-5 py-2.5 bg-[#9d5dfb] text-white font-semibold rounded-xl">
                 Read Full Article
                 <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />

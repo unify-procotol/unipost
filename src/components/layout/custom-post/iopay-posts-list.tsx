@@ -74,8 +74,8 @@ export default function IopayPostsList({
     const publishedAt = post.data?.published_at || post.created_at || new Date().toISOString();
 
     const cardClasses = size === "medium" 
-      ? "group bg-white/90 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-300/50 hover:border-green-400/60 hover:bg-white transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-green-200/30"
-      : "group bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-300/50 hover:border-green-400/60 hover:bg-white/90 transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-green-200/30";
+      ? "group bg-white/90 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-300/50 hover:border-[#9d5dfb]/60 hover:bg-white transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-[#9d5dfb]/30"
+      : "group bg-white/80 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-300/50 hover:border-[#9d5dfb]/60 hover:bg-white/90 transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-[#9d5dfb]/30";
 
     const imageAspect = size === "medium" ? "aspect-[5/3]" : "aspect-video";
     const titleSize = size === "medium" ? "text-lg font-bold" : "text-base font-bold";
@@ -105,7 +105,7 @@ export default function IopayPostsList({
             </span>
           </div>
 
-          <h3 className={`${titleSize} text-gray-900 mb-3 group-hover:text-green-700 transition-colors line-clamp-2 leading-tight`}>
+          <h3 className={`${titleSize} text-gray-900 mb-3 group-hover:text-[#9d5dfb] transition-colors line-clamp-2 leading-tight`}>
             {displayTitle}
           </h3>
 

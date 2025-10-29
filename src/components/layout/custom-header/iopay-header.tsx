@@ -78,7 +78,7 @@ export default function IopayHeader({
 
       <div
         className={`relative z-10 flex flex-col h-full ${
-          isPostDetail ? "min-h-[64px]" : "min-h-[500px] md:min-h-[670px]"
+          isPostDetail ? "min-h-[64px]" : "min-h-[500px] md:min-h-[570px]"
         }`}
       >
         {/* Top Navigation */}
@@ -117,7 +117,7 @@ export default function IopayHeader({
                       locale={locale}
                       variant="outline"
                       size="sm"
-                      className="bg-white text-green-500 hover:bg-gray-100 border-white"
+                      className="bg-white !text-[#9d5dfb] hover:bg-gray-100 border-white"
                     />
                   )}
                 </div>

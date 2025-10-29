@@ -26,9 +26,12 @@ export function getProjectFavicon(prefix: string): FaviconConfig {
     depinscan: {
       href: `${process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : ''}/images/depinscan_icon.svg`,
       type: 'image/svg+xml'
+    },
+    iopay: {
+      href: `${process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : ''}/images/iopay_icon.svg`,
+      type: 'image/svg+xml'
     }
   };
-
   // Return project-specific favicon or default to iotex
   return faviconMap[prefix] || faviconMap.iotex;
 }
