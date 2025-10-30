@@ -22,6 +22,9 @@ import { generateFaviconIcons } from "@/lib/favicon-utils";
 import { getGhostPost } from "@/lib/ghost";
 import { PostEntity } from "@/entities/post";
 
+// Markdown rendering
+import { MarkdownRenderer } from "@/components/MarkdownRenderer";
+
 interface ArticlePageProps {
   prefix: string;
   slug: string;
@@ -31,7 +34,7 @@ interface ArticlePageProps {
 export async function generateArticleMetadata({
   prefix,
   slug,
-  locale = "en"
+  locale = "en",
 }: ArticlePageProps): Promise<Metadata> {
   try {
     const project = await getProject(prefix);
@@ -54,7 +57,8 @@ export async function generateArticleMetadata({
 
     const localizedContent = post.i18n?.[locale];
     const originalData = post.data;
-    const title = localizedContent?.title || originalData?.title || "Untitled Post";
+    const title =
+      localizedContent?.title || originalData?.title || "Untitled Post";
     const excerpt = localizedContent?.desc || originalData?.excerpt || "";
     const content = localizedContent?.content || originalData?.html || "";
     const featureImage = originalData?.feature_image;
@@ -103,8 +107,16 @@ export async function generateArticleMetadata({
         images: featureImage ? [featureImage] : undefined,
       },
       alternates: {
-        canonical: generateArticleCanonicalURL(prefix, slug, locale !== "en" ? locale : undefined),
-        languages: generateAlternatesLanguagesURL(prefix, project.locales, slug),
+        canonical: generateArticleCanonicalURL(
+          prefix,
+          slug,
+          locale !== "en" ? locale : undefined
+        ),
+        languages: generateAlternatesLanguagesURL(
+          prefix,
+          project.locales,
+          slug
+        ),
       },
       robots: {
         index: false,
@@ -128,7 +140,7 @@ export async function generateArticleMetadata({
 export default async function ArticlePage({
   prefix,
   slug,
-  locale = "en"
+  locale = "en",
 }: ArticlePageProps) {
   try {
     const project = await getProject(prefix);
@@ -157,7 +169,8 @@ export default async function ArticlePage({
 
     const localizedContent = post.i18n?.[locale];
     const originalData = post.data;
-    const title = localizedContent?.title || originalData?.title || "Untitled Post";
+    const title =
+      localizedContent?.title || originalData?.title || "Untitled Post";
     const publishedAt = originalData?.published_at;
     const featureImage = originalData?.feature_image;
     const excerpt = localizedContent?.desc || originalData?.excerpt || "";
@@ -176,13 +189,15 @@ export default async function ArticlePage({
       .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
       .replace(/javascript:/gi, "")
       .replace(/<a\b([^>]*)>/gi, (match, attrs) => {
-        if (!attrs.includes('target=')) {
+        if (!attrs.includes("target=")) {
           const relMatch = attrs.match(/rel=["']([^"']*)["']/);
           if (relMatch) {
             const existingRel = relMatch[1];
-            const newRel = existingRel.includes('noopener') && existingRel.includes('noreferrer')
-              ? existingRel
-              : `${existingRel} noopener noreferrer`.trim();
+            const newRel =
+              existingRel.includes("noopener") &&
+              existingRel.includes("noreferrer")
+                ? existingRel
+                : `${existingRel} noopener noreferrer`.trim();
             attrs = attrs.replace(/rel=["'][^"']*["']/, `rel="${newRel}"`);
           } else {
             attrs += ' rel="noopener noreferrer"';
@@ -199,9 +214,10 @@ export default async function ArticlePage({
       publishedTime: publishedAt,
       modifiedTime: originalData?.updated_at,
       author: project.name,
-      url: locale !== "en" 
-        ? `https://unipost.uni-labs.org/${locale}/${prefix}/${slug}`
-        : `https://unipost.uni-labs.org/${prefix}/${slug}`,
+      url:
+        locale !== "en"
+          ? `https://unipost.uni-labs.org/${locale}/${prefix}/${slug}`
+          : `https://unipost.uni-labs.org/${prefix}/${slug}`,
       language: locale,
     };
 
@@ -215,24 +231,26 @@ export default async function ArticlePage({
             author: project.name,
             publishedDate: publishedAt,
             modifiedDate: originalData?.updated_at,
-            url: locale !== "en"
-              ? `https://unipost.uni-labs.org/${locale}/${prefix}/${slug}`
-              : `https://unipost.uni-labs.org/${prefix}/${slug}`,
+            url:
+              locale !== "en"
+                ? `https://unipost.uni-labs.org/${locale}/${prefix}/${slug}`
+                : `https://unipost.uni-labs.org/${prefix}/${slug}`,
             imageUrl: featureImage,
             siteName: "UniPost",
-            tags: post.data?.tags?.map((tag: { name: string }) => tag.name) || [],
+            tags:
+              post.data?.tags?.map((tag: { name: string }) => tag.name) || [],
           })}
         />
         <Container className="py-8 px-4">
           <div className="max-w-4xl mx-auto">
             <div className="mb-6">
-              <ClientBreadcrumb 
-                name={project.name} 
-                title={title} 
-                slug={slug} 
+              <ClientBreadcrumb
+                name={project.name}
+                title={title}
+                slug={slug}
                 locale={locale}
                 projectPrefix={project.prefix}
-                className="mb-4" 
+                className="mb-4"
               />
             </div>
 
@@ -257,7 +275,7 @@ export default async function ArticlePage({
                     {title}
                   </h1>
 
-                  {excerpt && (
+                  {excerpt && prefix !== "iopay" && prefix !== "mimo" && (
                     <p className="text-xl text-gray-700 leading-relaxed">
                       {excerpt}
                     </p>
@@ -274,9 +292,9 @@ export default async function ArticlePage({
               </header>
 
               <div className="space-y-8">
-                <div
-                  className="article-content max-w-none text-lg text-gray-700 leading-relaxed mb-12"
-                  dangerouslySetInnerHTML={{ __html: displayContent }}
+                <MarkdownRenderer
+                  content={displayContent}
+                  className="max-w-none"
                 />
 
                 <div className="border-t border-gray-300/50 pt-8">
@@ -287,7 +305,8 @@ export default async function ArticlePage({
                           Stay Updated
                         </h3>
                         <p className="text-gray-600 text-sm max-w-md mx-auto">
-                          Subscribe to get the latest posts from {project.name} delivered to your inbox.
+                          Subscribe to get the latest posts from {project.name}{" "}
+                          delivered to your inbox.
                         </p>
                       </div>
                       <div className="flex justify-center">

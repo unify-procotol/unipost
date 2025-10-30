@@ -82,14 +82,25 @@ export default function IopayHeader({
         }`}
       >
         {/* Top Navigation */}
-        <header className={`px-4 sm:px-6 lg:px-8 py-4 ${isPostDetail ? 'bg-[#FF1A75]' : 'bg-transparent'}`}>
+        <header
+          className={`px-4 sm:px-6 lg:px-8 py-4 ${
+            isPostDetail ? "bg-[#FF1A75]" : "bg-transparent"
+          }`}
+        >
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between h-12 md:h-16">
               {/* Left: Logo and Navigation */}
               <div className="flex items-center space-x-4 md:space-x-8">
                 {/* Logo and Brand - Only show in post detail with iopay logo */}
                 {isPostDetail && (
-                  <Link href={project ? generateProjectUrl(project.prefix, locale) : "/iopay"} className="flex items-center space-x-2 text-[2rem] font-bold text-white">
+                  <Link
+                    href={
+                      project
+                        ? generateProjectUrl(project.prefix, locale)
+                        : "/iopay"
+                    }
+                    className="flex items-center space-x-2 text-[2rem] font-bold text-white"
+                  >
                     {/* <Image
                       src="/images/iopay_logo.png"
                       alt="ioPay Logo"
@@ -179,7 +190,7 @@ export default function IopayHeader({
 
               {/* Tagline */}
               <p className="text-white/90 text-lg md:text-xl lg:text-[24px] px-4">
-                Thoughts, stories and ideas.
+                Exploring the AI-Powered Web3 Frontier.
               </p>
             </div>
           </div>
