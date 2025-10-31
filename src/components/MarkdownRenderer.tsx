@@ -249,7 +249,7 @@ const ImageWithFallback: React.FC<{ src?: string | Blob; alt?: string }> = React
       <img
         src={imgSrc}
         alt={alt || ''}
-        className={`mx-auto max-w-full h-auto rounded-lg shadow-md transition-opacity duration-300 ${
+        className={`mx-auto max-w-full h-auto rounded-lg transition-opacity duration-300 ${
           loaded ? 'opacity-100' : 'opacity-0'
         }`}
         loading="lazy"

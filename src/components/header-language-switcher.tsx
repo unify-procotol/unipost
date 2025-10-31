@@ -37,8 +37,8 @@ const PROJECT_COLOR_THEMES: Record<string, ProjectColorTheme> = {
   },
   iopay: {
     iconClass: "",
-    iconStyle: { color: "#9d5dfb" },
-    buttonClass: "bg-gray-200/80 hover:bg-gray-300/80 border border-gray-300/50",
+    iconStyle: { color: "#fff" },
+    buttonClass: "bg-white hover:bg-white/80 border border-white/50",
     buttonStyle: { color: "#9d5dfb" },
     buttonTextClass: "",
     buttonTextStyle: { color: "#9d5dfb" },

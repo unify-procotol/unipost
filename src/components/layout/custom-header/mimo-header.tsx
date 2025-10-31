@@ -78,7 +78,7 @@ export default function MimoHeader({
 
       <div
         className={`relative z-10 flex flex-col h-full ${
-          isPostDetail ? "min-h-[64px]" : "min-h-[500px] md:min-h-[670px]"
+          isPostDetail ? "min-h-[64px]" : "min-h-[360px] md:min-h-[670px]"
         }`}
       >
         {/* Top Navigation */}

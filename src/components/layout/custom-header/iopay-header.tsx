@@ -78,13 +78,13 @@ export default function IopayHeader({
 
       <div
         className={`relative z-10 flex flex-col h-full ${
-          isPostDetail ? "min-h-[64px]" : "min-h-[500px] md:min-h-[570px]"
+          isPostDetail ? "min-h-[64px]" : "min-h-[360px] md:min-h-[570px]"
         }`}
       >
         {/* Top Navigation */}
         <header
           className={`px-4 sm:px-6 lg:px-8 py-4 ${
-            isPostDetail ? "bg-[#FF1A75]" : "bg-transparent"
+            isPostDetail ? "bg-[#20202b]" : "bg-transparent"
           }`}
         >
           <div className="max-w-7xl mx-auto">
@@ -200,7 +200,7 @@ export default function IopayHeader({
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="fixed top-[80px] left-0 right-0 z-50 md:hidden">
-          <div className="bg-green-500/95 backdrop-blur-sm border-t border-white/10">
+          <div className="bg-[#9d5dfb]/95 backdrop-blur-sm border-t border-white/10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="py-3 space-y-1">
                 {navigationItems}
@@ -223,7 +223,7 @@ export default function IopayHeader({
                       locale={locale}
                       variant="outline"
                       size="sm"
-                      className="w-full bg-white text-green-500 hover:bg-gray-100 border-white"
+                      className="w-full bg-white text-[#9d5dfb] hover:bg-gray-100 border-white"
                     />
                   </div>
                 )}
