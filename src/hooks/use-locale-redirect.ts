@@ -20,23 +20,27 @@ export function useLocaleRedirect({
       return;
     }
 
-    const savedLocale = localStorage.getItem(`locale_preference_${project.prefix}`);
-    console.log({
-      savedLocale,
-      currentLocale,
-    })
-    if (!savedLocale || savedLocale === currentLocale) {
+    let savedLocale = localStorage.getItem(`locale_preference_${project.prefix}`);
+    
+    // If savedLocale is not set, check browser language
+    if (!savedLocale) {
+      const browserLang = navigator.language.split("-")[0]; // Extract "zh" from "zh-CN"
+      
+      // Check if browser language is in supported locales
+      if (project.locales.includes(browserLang)) {
+        savedLocale = browserLang;
+      } else {
+        savedLocale = "en"; // Default to English
+      }
+    }
+    
+    if (savedLocale === currentLocale) {
       return;
     }
 
     if (!project.locales.includes(savedLocale)) {
       return;
     }
-    console.log({
-      project,
-      savedLocale,
-      currentLocale,
-    })
 
     const pathSegments = pathname.split("/").filter(Boolean);
     const firstSegment = pathSegments[0];
@@ -122,12 +126,6 @@ export function useLocaleRedirect({
     if (currentQuery) {
       redirectUrl += `?${currentQuery}`;
     }
-
-    console.log({
-      pageType,
-      slug,
-      redirectUrl
-    })
 
     hasRedirected.current = true;
     router.replace(redirectUrl);
