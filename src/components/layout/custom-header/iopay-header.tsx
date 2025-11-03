@@ -6,6 +6,7 @@ import { PublicProjectEntity } from "@/entities/public-project";
 import HeaderLanguageSwitcher from "../../header-language-switcher";
 import SubscribeButton from "../../subscribe-button";
 import { generateProjectUrl } from "@/lib/url-utils";
+import { useLocaleRedirect } from "@/hooks/use-locale-redirect";
 
 interface IopayHeaderProps {
   project?: PublicProjectEntity | null;
@@ -19,6 +20,8 @@ export default function IopayHeader({
   isPostDetail = false,
 }: IopayHeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  useLocaleRedirect({ project, currentLocale: locale });
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);

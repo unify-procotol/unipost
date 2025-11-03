@@ -140,6 +140,12 @@ function LanguageSwitcherContent({
     };
   }, []);
 
+  const saveLocalePreference = (locale: string) => {
+    if (typeof window !== "undefined" && project) {
+      localStorage.setItem(`locale_preference_${project.prefix}`, locale);
+    }
+  };
+
   const generateLanguageUrl = (locale: string) => {
     if (!project) return "#";
     
@@ -311,7 +317,10 @@ function LanguageSwitcherContent({
                 <Link
                   key={locale}
                   href={generateLanguageUrl(locale)}
-                  onClick={() => setIsDropdownOpen(false)}
+                  onClick={() => {
+                    saveLocalePreference(locale);
+                    setIsDropdownOpen(false);
+                  }}
                   className={`cursor-pointer w-full text-left px-3 py-2 text-xs font-medium transition-colors duration-150 block ${
                     locale === currentLocale
                       ? theme.selectedItemClass

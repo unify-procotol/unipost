@@ -9,6 +9,7 @@ import MimoHeader from "./custom-header/mimo-header";
 import IopayHeader from "./custom-header/iopay-header";
 import Image from "next/image";
 import { generateProjectUrl } from "@/lib/url-utils";
+import { useLocaleRedirect } from "@/hooks/use-locale-redirect";
 
 interface HeaderProps {
   project?: PublicProjectEntity | null;
@@ -18,6 +19,8 @@ interface HeaderProps {
 
 export default function Header({ project, locale = 'en', isPostDetail = false }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  useLocaleRedirect({ project, currentLocale: locale });
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
