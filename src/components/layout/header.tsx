@@ -10,6 +10,7 @@ import IopayHeader from "./custom-header/iopay-header";
 import Image from "next/image";
 import { generateProjectUrl } from "@/lib/url-utils";
 import { useLocaleRedirect } from "@/hooks/use-locale-redirect";
+import { useTranslation } from "@/hooks/use-translation";
 
 interface HeaderProps {
   project?: PublicProjectEntity | null;
@@ -19,6 +20,7 @@ interface HeaderProps {
 
 export default function Header({ project, locale = 'en', isPostDetail = false }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useTranslation();
   
   useLocaleRedirect({ project, currentLocale: locale });
 
@@ -45,7 +47,7 @@ export default function Header({ project, locale = 'en', isPostDetail = false }:
           className="block px-3 py-3 text-base font-medium transition-colors text-gray-600 hover:text-gray-900 hover:bg-gray-100/50 md:inline-block md:px-3 md:py-2 md:text-sm md:rounded-md"
           onClick={() => setIsMobileMenuOpen(false)}
         >
-          Projects
+          {t('header.projects')}
         </Link>
       )}
       
@@ -179,7 +181,7 @@ export default function Header({ project, locale = 'en', isPostDetail = false }:
                 
                 {/* Mobile Language Switcher */}
                 <div className="px-3 py-3 border-t border-gray-200/50 mt-3">
-                  <div className="text-gray-600 text-sm font-medium mb-2">Language</div>
+                  <div className="text-gray-600 text-sm font-medium mb-2">{t('header.language')}</div>
                   <HeaderLanguageSwitcher project={project} />
                 </div>
                 

@@ -1,4 +1,10 @@
+"use client";
+
+import { useTranslation } from "@/hooks/use-translation";
+
 export default function Footer() {
+  const { t } = useTranslation();
+  
   return (
     <footer className="bg-white/95 backdrop-blur-sm border-t border-gray-200/50 mt-auto shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -9,7 +15,7 @@ export default function Footer() {
               <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center">
                 <span className="text-white font-bold text-xs">UP</span>
               </div>
-              <span className="font-semibold text-gray-900">UnifyPost</span>
+              <span className="font-semibold text-gray-900">{t('footer.brand')}</span>
             </div>
           </div>
 
@@ -20,7 +26,7 @@ export default function Footer() {
 
         <div className="mt-8 pt-8 border-t border-gray-200/50">
           <p className="text-center text-sm text-gray-600">
-            © {new Date().getFullYear()} UnifyPost. All rights reserved.
+            © {new Date().getFullYear()} {t('footer.brand')}. {t('footer.allRightsReserved')}.
           </p>
         </div>
       </div>

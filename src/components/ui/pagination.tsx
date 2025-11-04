@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import CustomSelect from "./custom-select";
+import { useTranslation } from "@/hooks/use-translation";
 
 interface PaginationProps {
   currentPage: number;
@@ -28,6 +29,7 @@ export default function Pagination({
   className = "",
 }: PaginationProps) {
   const [isChangingPageSize, setIsChangingPageSize] = useState(false);
+  const { t } = useTranslation();
 
   // Calculate visible page numbers
   const getVisiblePages = () => {
@@ -96,14 +98,14 @@ export default function Pagination({
       <div className="text-sm text-gray-600">
         {totalItems > 0 ? (
           <>
-            Showing{" "}
-            <span className="font-medium text-gray-900">{startItem}</span> to{" "}
-            <span className="font-medium text-gray-900">{endItem}</span> of{" "}
+            {t('pagination.showing')}{" "}
+            <span className="font-medium text-gray-900">{startItem}</span> {t('pagination.to')}{" "}
+            <span className="font-medium text-gray-900">{endItem}</span> {t('pagination.of')}{" "}
             <span className="font-medium text-gray-900">{totalItems}</span>{" "}
-            posts
+            {t('pagination.posts')}
           </>
         ) : (
-          "No posts found"
+          t('pagination.noPostsFound')
         )}
       </div>
 
@@ -112,7 +114,7 @@ export default function Pagination({
         {showPageSizeSelector && onPageSizeChange && (
           <div className="flex items-center gap-2">
             <label className="text-sm text-gray-600">
-              Show:
+              {t('pagination.show')}
             </label>
             <CustomSelect
               value={pageSize}
@@ -132,19 +134,19 @@ export default function Pagination({
             {/* Previous button */}
             {currentPage <= 1 ? (
               <span className="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg opacity-50 cursor-not-allowed">
-                Previous
+                {t('pagination.previous')}
               </span>
             ) : generatePaginationLink ? (
               <Link
                 href={generatePaginationLink(currentPage - 1)}
                 className="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-900 active:bg-gray-200 active:scale-95 transition-all duration-150 cursor-pointer"
-                aria-label="Go to previous page"
+                aria-label={t('pagination.goToPreviousPage')}
               >
-                Previous
+                {t('pagination.previous')}
               </Link>
             ) : (
               <span className="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg opacity-50 cursor-not-allowed">
-                Previous
+                {t('pagination.previous')}
               </span>
             )}
 
@@ -157,7 +159,7 @@ export default function Pagination({
                   ) : currentPage === page ? (
                     <span
                       className="px-3 py-2 text-sm font-medium rounded-lg bg-blue-600 text-white border border-blue-600 shadow-md"
-                      aria-label={`Current page ${page}`}
+                      aria-label={`${t('pagination.currentPage')} ${page}`}
                       aria-current="page"
                     >
                       {page}
@@ -166,7 +168,7 @@ export default function Pagination({
                     <Link
                       href={generatePaginationLink(page as number)}
                       className="px-3 py-2 text-sm font-medium rounded-lg transition-all duration-150 cursor-pointer text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-900 hover:shadow-sm active:bg-gray-200 active:scale-95"
-                      aria-label={`Go to page ${page}`}
+                      aria-label={`${t('pagination.goToPage')} ${page}`}
                     >
                       {page}
                     </Link>
@@ -187,19 +189,19 @@ export default function Pagination({
             {/* Next button */}
             {currentPage >= totalPages ? (
               <span className="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg opacity-50 cursor-not-allowed">
-                Next
+                {t('pagination.next')}
               </span>
             ) : generatePaginationLink ? (
               <Link
                 href={generatePaginationLink(currentPage + 1)}
                 className="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-900 active:bg-gray-200 active:scale-95 transition-all duration-150 cursor-pointer"
-                aria-label="Go to next page"
+                aria-label={t('pagination.goToNextPage')}
               >
-                Next
+                {t('pagination.next')}
               </Link>
             ) : (
               <span className="px-3 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg opacity-50 cursor-not-allowed">
-                Next
+                {t('pagination.next')}
               </span>
             )}
           </nav>

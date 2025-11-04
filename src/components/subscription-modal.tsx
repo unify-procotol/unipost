@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { PublicProjectEntity } from '@/entities/public-project';
 import { useSubscription } from '@/hooks/use-subscription';
+import { useTranslation } from '@/hooks/use-translation';
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export default function SubscriptionModal({
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const { loading, error, success, subscribe, reset } = useSubscription();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,65 +67,6 @@ export default function SubscriptionModal({
 
   if (!isOpen) return null;
 
-  // Translations for different locales
-  const translations: Record<string, {
-    title: string;
-    subtitle: string;
-    emailLabel: string;
-    emailPlaceholder: string;
-    nameLabel: string;
-    namePlaceholder: string;
-    subscribeButton: string;
-    subscribingButton: string;
-    closeButton: string;
-    successTitle: string;
-    successMessage: string;
-  }> = {
-    en: {
-      title: 'Subscribe to Newsletter',
-      subtitle: `Get the latest updates from ${project.name}`,
-      emailLabel: 'Email Address',
-      emailPlaceholder: 'Enter your email',
-      nameLabel: 'Name (Optional)',
-      namePlaceholder: 'Enter your name',
-      subscribeButton: 'Subscribe',
-      subscribingButton: 'Subscribing...',
-      closeButton: 'Close',
-      successTitle: 'Successfully Subscribed!',
-      successMessage: 'Thank you for subscribing. You will receive updates in your inbox.',
-    },
-    zh: {
-      title: 'Subscribe to Newsletter',
-      subtitle: `Get the latest updates from ${project.name}`,
-      emailLabel: 'Email Address',
-      emailPlaceholder: 'Enter your email',
-      nameLabel: 'Name (Optional)',
-      namePlaceholder: 'Enter your name',
-      subscribeButton: 'Subscribe',
-      subscribingButton: 'Subscribing...',
-      closeButton: 'Close',
-      successTitle: 'Successfully Subscribed!',
-      successMessage: 'Thank you for subscribing. You will receive updates in your inbox.',
-    },
-    es: {
-      title: 'Subscribe to Newsletter',
-      subtitle: `Get the latest updates from ${project.name}`,
-      emailLabel: 'Email Address',
-      emailPlaceholder: 'Enter your email',
-      nameLabel: 'Name (Optional)',
-      namePlaceholder: 'Enter your name',
-      subscribeButton: 'Subscribe',
-      subscribingButton: 'Subscribing...',
-      closeButton: 'Close',
-      successTitle: 'Successfully Subscribed!',
-      successMessage: 'Thank you for subscribing. You will receive updates in your inbox.',
-    },
-  };
-
-  const t = translations[locale] || translations.en;
-
-  if (!isOpen) return null;
-
   const modalContent = (
     <div className="modal-container">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={handleClose}></div>
@@ -133,8 +76,8 @@ export default function SubscriptionModal({
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">{t.title}</h2>
-              <p className="text-gray-600 text-sm mt-1">{t.subtitle}</p>
+              <h2 className="text-xl font-bold text-gray-900">{t('subscription.title')}</h2>
+              <p className="text-gray-600 text-sm mt-1">{t('subscription.subtitle')} {project.name}</p>
             </div>
             <button
               onClick={handleClose}
@@ -156,13 +99,13 @@ export default function SubscriptionModal({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t.successTitle}</h3>
-              <p className="text-gray-600 mb-6">{t.successMessage}</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('subscription.successTitle')}</h3>
+              <p className="text-gray-600 mb-6">{t('subscription.successMessage')}</p>
               <button
                 onClick={handleClose}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
               >
-                {t.closeButton}
+                {t('subscription.closeButton')}
               </button>
             </div>
           ) : (
@@ -170,14 +113,14 @@ export default function SubscriptionModal({
               {/* Email Input */}
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  {t.emailLabel}
+                  {t('subscription.emailLabel')}
                 </label>
                 <input
                   type="email"
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={t.emailPlaceholder}
+                  placeholder={t('subscription.emailPlaceholder')}
                   className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
@@ -186,14 +129,14 @@ export default function SubscriptionModal({
               {/* Name Input */}
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                  {t.nameLabel}
+                  {t('subscription.nameLabel')}
                 </label>
                 <input
                   type="text"
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder={t.namePlaceholder}
+                  placeholder={t('subscription.namePlaceholder')}
                   className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -217,10 +160,10 @@ export default function SubscriptionModal({
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    {t.subscribingButton}
+                    {t('subscription.subscribingButton')}
                   </>
                 ) : (
-                  t.subscribeButton
+                  t('subscription.subscribeButton')
                 )}
               </button>
             </form>

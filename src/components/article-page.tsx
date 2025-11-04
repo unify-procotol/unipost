@@ -21,6 +21,7 @@ import {
 import { generateFaviconIcons } from "@/lib/favicon-utils";
 import { getGhostPost } from "@/lib/ghost";
 import { PostEntity } from "@/entities/post";
+import { getTranslation } from "@/lib/i18n/server";
 
 // Markdown rendering
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
@@ -142,6 +143,8 @@ export default async function ArticlePage({
   slug,
   locale = "en",
 }: ArticlePageProps) {
+  const { t } = getTranslation(locale);
+  
   try {
     const project = await getProject(prefix);
     if (!project) {
@@ -302,11 +305,10 @@ export default async function ArticlePage({
                     <div className="text-center space-y-4">
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                          Stay Updated
+                          {t('subscription.subscribe')}
                         </h3>
                         <p className="text-gray-600 text-sm max-w-md mx-auto">
-                          Subscribe to get the latest posts from {project.name}{" "}
-                          delivered to your inbox.
+                          {t('subscription.subscribeToGetLatest')} {project.name} {t('subscription.deliveredToInbox')}.
                         </p>
                       </div>
                       <div className="flex justify-center">

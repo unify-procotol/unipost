@@ -3,6 +3,7 @@
 import { generatePostDetailBreadcrumbs } from "@/lib/breadcrumb-utils";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { translations } from "@/lib/i18n/locales";
 
 interface BreadcrumbItem {
   label: string;
@@ -20,7 +21,7 @@ export const ClientBreadcrumb = ({
   name,
   title,
   slug,
-  locale,
+  locale = 'en',
   projectPrefix,
 }: {
   name: string;
@@ -31,6 +32,12 @@ export const ClientBreadcrumb = ({
   className?: string;
 }) => {
   const [referer, setReferer] = useState('');
+  
+  // Get translation directly from locale prop instead of context
+  const getHomeLabel = () => {
+    const translation = translations[locale] || translations['en'];
+    return translation.common.home;
+  };
   
   useEffect(() => {
     // Update referer when component mounts or when URL changes
@@ -61,7 +68,7 @@ export const ClientBreadcrumb = ({
   
   return (
     <Breadcrumb
-      items={generatePostDetailBreadcrumbs(name, title, slug, referer, locale, projectPrefix)}
+      items={generatePostDetailBreadcrumbs(name, title, slug, referer, locale, projectPrefix, getHomeLabel())}
       className={className}
     />
   );

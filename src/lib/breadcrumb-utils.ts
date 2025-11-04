@@ -6,14 +6,14 @@ interface BreadcrumbItem {
   current?: boolean;
 }
 
-export function generateProjectPostsBreadcrumbs(projectName: string): BreadcrumbItem[] {
+export function generateProjectPostsBreadcrumbs(projectName: string, homeLabel: string = 'Home'): BreadcrumbItem[] {
   return [
-    { label: 'Home', href: '/' },
+    { label: homeLabel, href: '/' },
     { label: projectName,  current: true },
   ];
 }
 
-export function generatePostDetailBreadcrumbs(projectName: string, postTitle: string, slug: string, referer: string, locale?: string, projectPrefix?: string): BreadcrumbItem[] {
+export function generatePostDetailBreadcrumbs(projectName: string, postTitle: string, slug: string, referer: string, locale?: string, projectPrefix?: string, homeLabel: string = 'Home'): BreadcrumbItem[] {
   // Extract the path without the slug from referer
   let projectHref = '/';
   
@@ -52,7 +52,7 @@ export function generatePostDetailBreadcrumbs(projectName: string, postTitle: st
   }
   
   return [
-    { label: 'Home', href: '/' },
+    { label: homeLabel, href: '/' },
     { label: projectName, href: projectHref },
     { label: postTitle, current: true },
   ];

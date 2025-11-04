@@ -23,6 +23,7 @@ import { PaginationQuerySchema } from "@/types/pagination";
 import type { Metadata } from "next";
 import { generateFaviconIcons } from "@/lib/favicon-utils";
 import { generateCanonicalURL, generateProjectDescription, generateAlternatesLanguagesURL } from "@/lib/seo-utils";
+import { getTranslation } from "@/lib/i18n/server";
 
 export const revalidate = 15;
 export const config = { amp: 'hybrid' };
@@ -114,6 +115,8 @@ export default async function IopayProjectPage({
       finalPageSize
     );
 
+    const { t } = getTranslation(locale);
+
     return (
       <MainLayout project={project} locale={locale}>
         <div className="min-h-screen">
@@ -121,7 +124,7 @@ export default async function IopayProjectPage({
             {/* Breadcrumb Navigation */}
             <div className="mb-8">
               <Breadcrumb
-                items={generateProjectPostsBreadcrumbs(project.name)}
+                items={generateProjectPostsBreadcrumbs(project.name, t('common.home'))}
                 className="text-gray-600 hover:text-gray-900 transition-colors"
               />
             </div>
