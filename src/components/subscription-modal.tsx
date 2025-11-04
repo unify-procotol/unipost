@@ -22,7 +22,7 @@ export default function SubscriptionModal({
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const { loading, error, success, subscribe, reset } = useSubscription();
-  const { t } = useTranslation();
+  const { t } = useTranslation(locale);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -15,8 +15,17 @@ type NestedKeyOf<T> = T extends object
 
 type TranslationPath = NestedKeyOf<TranslationKeys>;
 
-export function useTranslation() {
-  const { locale } = useI18n();
+export function useTranslation(overrideLocale?: string) {
+  // Try to get locale from context, but don't throw if not available
+  let contextLocale: string | undefined;
+  try {
+    const context = useI18n();
+    contextLocale = context.locale;
+  } catch {
+    // Context not available, will use overrideLocale or default to 'en'
+  }
+
+  const locale = overrideLocale || contextLocale || 'en';
 
   const t = (path: TranslationPath, replacements?: Record<string, string>): string => {
     const keys = path.split('.');
