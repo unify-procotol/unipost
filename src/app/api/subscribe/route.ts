@@ -11,7 +11,25 @@ const SubscribeSchema = z.object({
   labels: z.array(z.string()).optional(),
 });
 
+// Handle OPTIONS request for CORS preflight
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
+}
+
 export async function POST(request: NextRequest) {
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  };
+
   try {
     const body = await request.json()
     
@@ -24,7 +42,7 @@ export async function POST(request: NextRequest) {
     if (!project) {
       return NextResponse.json(
         { success: false, message: 'Project not found' },
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
@@ -32,7 +50,7 @@ export async function POST(request: NextRequest) {
     if (!project.ghost_admin_key) {
       return NextResponse.json(
         { success: false, message: 'Subscription not available for this project' },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -53,11 +71,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: result.message,
-      });
+      }, { headers: corsHeaders });
     } else {
       return NextResponse.json(
         { success: false, message: result.message },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
   } catch (error) {
@@ -70,19 +88,25 @@ export async function POST(request: NextRequest) {
           message: 'Invalid request data',
           errors: error.errors 
         },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }
 
 // Optional: Handle unsubscribe requests
 export async function DELETE(request: NextRequest) {
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  };
+
   try {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email');
@@ -91,7 +115,7 @@ export async function DELETE(request: NextRequest) {
     if (!email || !prefix) {
       return NextResponse.json(
         { success: false, message: 'Email and project prefix are required' },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -101,7 +125,7 @@ export async function DELETE(request: NextRequest) {
     if (!project || !project.ghost_admin_key) {
       return NextResponse.json(
         { success: false, message: 'Project not found or subscription not available' },
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
@@ -118,18 +142,18 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: result.message,
-      });
+      }, { headers: corsHeaders });
     } else {
       return NextResponse.json(
         { success: false, message: result.message },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
   } catch (error) {
     console.error('Unsubscribe API error:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }
