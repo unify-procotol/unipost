@@ -35,7 +35,7 @@ export function useSubscription(): UseSubscriptionReturn {
     setSuccess(false);
 
     try {
-      const response = await fetch('https://unipost.uni-labs.org/api/subscribe', {
+      const response = await fetch('https://unipost.uni-labs.org/api/subscribe/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ export function useSubscription(): UseSubscriptionReturn {
     setError(null);
 
     try {
-      const response = await fetch(`https://unipost.uni-labs.org/api/subscribe?email=${encodeURIComponent(email)}&prefix=${encodeURIComponent(prefix)}`, {
+      const response = await fetch(`https://unipost.uni-labs.org/api/subscribe/?email=${encodeURIComponent(email)}&prefix=${encodeURIComponent(prefix)}`, {
         method: 'DELETE',
       });
 
