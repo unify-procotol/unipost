@@ -3,7 +3,7 @@ import { getProject } from "@/lib/data";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
-export const revalidate = 86400;
+export const revalidate = 3600;
 export const config = { amp: 'hybrid' };
 
 export async function generateMetadata({

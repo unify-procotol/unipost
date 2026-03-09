@@ -108,7 +108,7 @@ export class PostAdapter extends PostgresAdapter<PostEntity> {
     try {
       const query = `
         SELECT * FROM ${this.tableName}
-        WHERE slug = $1
+        WHERE slug = $1 OR data->>'slug' = $1
         LIMIT 1
       `;
       const result = await this.sql.unsafe(query, [slug]);
