@@ -7,7 +7,7 @@ import { useTranslation } from '@/hooks/use-translation';
 interface SubscribeButtonProps {
   project: PublicProjectEntity;
   locale: string;
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline' | 'dark';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -34,6 +34,7 @@ export default function SubscribeButton({
     primary: 'bg-blue-600 hover:bg-blue-700 text-white border-transparent',
     secondary: 'bg-gray-600 hover:bg-gray-700 text-white border-transparent',
     outline: 'bg-transparent hover:bg-blue-600/10 text-blue-600 border-blue-500/50 hover:border-blue-500',
+    dark: 'bg-[rgb(21,23,26)] hover:bg-[rgb(50,53,58)] text-white border-transparent',
   };
 
   // Size variants

@@ -179,11 +179,22 @@ export default async function ArticlePage({
     const excerpt = localizedContent?.desc || originalData?.excerpt || "";
     const html = localizedContent?.content || originalData?.html || "";
 
+    const dataAny = originalData as Record<string, unknown> | undefined;
+    const primaryAuthor = dataAny?.primary_author as { name?: string; profile_image?: string } | undefined;
+    const authors = dataAny?.authors as { name?: string; profile_image?: string }[] | undefined;
+    const authorName = primaryAuthor?.name
+      || authors?.[0]?.name
+      || project.name;
+    const authorImage = primaryAuthor?.profile_image
+      || authors?.[0]?.profile_image;
+    const readingTime = (dataAny?.reading_time as number)
+      || Math.ceil((html.replace(/<[^>]*>/g, '').split(/\s+/).length) / 275);
+
     const formattedDate = publishedAt
       ? new Date(publishedAt).toLocaleDateString(locale, {
           year: "numeric",
-          month: "long",
-          day: "numeric",
+          month: "short",
+          day: "2-digit",
         })
       : "";
 
@@ -216,7 +227,7 @@ export default async function ArticlePage({
       image: featureImage,
       publishedTime: publishedAt,
       modifiedTime: originalData?.updated_at,
-      author: project.name,
+      author: authorName,
       url:
         locale !== "en"
           ? `https://unipost.uni-labs.org/${locale}/${prefix}/${slug}`
@@ -231,7 +242,7 @@ export default async function ArticlePage({
           data={generateArticleJsonLd({
             title,
             description: excerpt,
-            author: project.name,
+            author: authorName,
             publishedDate: publishedAt,
             modifiedDate: originalData?.updated_at,
             url:
@@ -262,13 +273,26 @@ export default async function ArticlePage({
                 {title}
               </h1>
 
-              {formattedDate && (
-                <div className="flex items-center gap-3 text-sm" style={{ color: 'rgb(128, 128, 128)' }}>
-                  <span>{project.name}</span>
-                  <span>—</span>
-                  <time dateTime={publishedAt}>{formattedDate}</time>
+              <div className="flex items-center gap-4 mt-6">
+                {authorImage && (
+                  <img
+                    src={authorImage}
+                    alt={authorName}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                )}
+                <div>
+                  <div className="font-medium" style={{ color: 'rgb(21, 23, 26)', fontSize: '0.95rem' }}>
+                    {authorName}
+                  </div>
+                  {formattedDate && (
+                    <div className="text-sm" style={{ color: 'rgb(128, 128, 128)' }}>
+                      <time dateTime={publishedAt}>{formattedDate}</time>
+                      {readingTime > 0 && <span> — {readingTime} min read</span>}
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </header>
 
             {featureImage && (
@@ -291,26 +315,20 @@ export default async function ArticlePage({
                 dangerouslySetInnerHTML={{ __html: displayContent }}
               />
 
-              <div className="border-t pt-8 mt-12" style={{ borderColor: 'rgb(228, 228, 228)' }}>
-                <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-6 border border-blue-300/30">
-                  <div className="text-center space-y-4">
-                    <div>
-                      <h3 className="text-lg font-semibold mb-2" style={{ color: 'rgb(21, 23, 26)' }}>
-                        {t('subscription.subscribe')}
-                      </h3>
-                      <p className="text-sm max-w-md mx-auto" style={{ color: 'rgb(128, 128, 128)' }}>
-                        {t('subscription.subscribeToGetLatest')} {project.name} {t('subscription.deliveredToInbox')}.
-                      </p>
-                    </div>
-                    <div className="flex justify-center">
-                      <SubscribeButton
-                        project={project}
-                        locale={locale}
-                        variant="primary"
-                        size="lg"
-                      />
-                    </div>
-                  </div>
+              <div className="border-t pt-16 mt-16 text-center" style={{ borderColor: 'rgb(228, 228, 228)' }}>
+                <h2 className="text-2xl md:text-3xl font-bold mb-3" style={{ color: 'rgb(21, 23, 26)' }}>
+                  {project.name}
+                </h2>
+                <p className="text-base mb-8" style={{ color: 'rgb(128, 128, 128)' }}>
+                  {t('subscription.subscribeToGetLatest')} {project.name} {t('subscription.deliveredToInbox')}.
+                </p>
+                <div className="flex justify-center">
+                  <SubscribeButton
+                    project={project}
+                    locale={locale}
+                    variant="dark"
+                    size="lg"
+                  />
                 </div>
               </div>
             </div>

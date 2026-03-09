@@ -11,7 +11,7 @@ export async function getPosts(ghost_api_key: string, ghost_domain: string) {
 
   return api.posts.browse({
     limit: "all",
-    include: "tags",
+    include: ["tags", "authors"],
     order: "published_at DESC",
   });
 }
@@ -27,7 +27,7 @@ export async function getGhostPost(projectId: string, slug: string) {
     key: project.ghost_api_key,
     version: "v4.0",
   });
-  return api.posts.read({slug: slug});
+  return api.posts.read({slug}, {include: ["authors", "tags"]});
 }
 export async function updateSinglePostContent(ghost_api_key: string = '1fbd2275d9b6135311cb3fc859', ghost_domain: string = 'https://iotex.io/blog', postId: string = '68fbbe7941f5ab0001b5578e') {
   const db = await postgres(process.env.DATABASE_URL || '');

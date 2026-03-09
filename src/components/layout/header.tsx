@@ -123,10 +123,10 @@ export default function Header({ project, locale = 'en', isPostDetail = false }:
               {/* Desktop Subscribe Button */}
               <div className="hidden sm:block">
                 {project?.has_subscription && (
-                  <SubscribeButton 
-                    project={project} 
-                    locale={locale} 
-                    variant="outline"
+                  <SubscribeButton
+                    project={project}
+                    locale={locale}
+                    variant="dark"
                     size="sm"
                   />
                 )}
