@@ -245,7 +245,7 @@ export default async function ArticlePage({
           })}
         />
         <Container className="py-8 px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-3xl mx-auto">
             <div className="mb-6">
               <ClientBreadcrumb
                 name={project.name}
@@ -257,7 +257,7 @@ export default async function ArticlePage({
               />
             </div>
 
-            <article className="prose prose-lg max-w-none">
+            <article className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-img:rounded-lg prose-figure:my-8">
               <header className="mb-12">
                 {featureImage && (
                   <div className="mb-8 rounded-2xl overflow-hidden bg-gray-100">
@@ -278,11 +278,7 @@ export default async function ArticlePage({
                     {title}
                   </h1>
 
-                  {excerpt && prefix !== "iopay" && prefix !== "mimo" && (
-                    <p className="text-xl text-gray-700 leading-relaxed">
-                      {excerpt}
-                    </p>
-                  )}
+                  {/* Excerpt hidden - duplicates the opening paragraph from Ghost HTML content */}
 
                   {formattedDate && (
                     <div className="flex items-center gap-4 text-gray-600 text-sm">
@@ -295,9 +291,9 @@ export default async function ArticlePage({
               </header>
 
               <div className="space-y-8">
-                <MarkdownRenderer
-                  content={displayContent}
-                  className="max-w-none"
+                <div
+                  className="ghost-content max-w-none"
+                  dangerouslySetInnerHTML={{ __html: displayContent }}
                 />
 
                 <div className="border-t border-gray-300/50 pt-8">

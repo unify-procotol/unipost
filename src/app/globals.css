@@ -121,6 +121,113 @@ body {
   @apply text-gray-700;
 }
 
+/* Ghost CMS content styling */
+.ghost-content {
+  @apply text-gray-700 leading-relaxed;
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+
+.ghost-content p {
+  @apply mb-6;
+}
+
+.ghost-content h1 {
+  @apply text-3xl font-bold text-gray-900 mt-12 mb-6;
+}
+
+.ghost-content h2 {
+  @apply text-2xl font-bold text-gray-900 mt-10 mb-4;
+}
+
+.ghost-content h3 {
+  @apply text-xl font-semibold text-gray-900 mt-8 mb-3;
+}
+
+.ghost-content a {
+  @apply text-blue-600 hover:text-blue-800 underline;
+  text-decoration-color: rgb(37 99 235 / 0.5);
+}
+
+.ghost-content a:hover {
+  text-decoration-color: rgb(30 64 175);
+}
+
+.ghost-content strong {
+  @apply text-gray-900 font-bold;
+}
+
+.ghost-content em {
+  @apply italic;
+}
+
+.ghost-content ul,
+.ghost-content ol {
+  @apply mb-6 pl-6 space-y-2;
+}
+
+.ghost-content ul {
+  list-style-type: disc;
+}
+
+.ghost-content ol {
+  list-style-type: decimal;
+}
+
+.ghost-content li {
+  @apply leading-relaxed;
+}
+
+.ghost-content blockquote {
+  @apply border-l-4 border-gray-300 pl-6 italic text-gray-600 my-6;
+}
+
+.ghost-content hr {
+  @apply border-gray-200 my-10;
+}
+
+.ghost-content figure {
+  @apply my-8;
+}
+
+.ghost-content figure img,
+.ghost-content .kg-image {
+  @apply max-w-full h-auto rounded-lg mx-auto;
+}
+
+.ghost-content figcaption {
+  @apply text-center text-sm text-gray-500 mt-3;
+}
+
+.ghost-content img {
+  @apply max-w-full h-auto rounded-lg my-6;
+}
+
+.ghost-content code {
+  @apply bg-gray-100 text-pink-600 px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+.ghost-content pre {
+  @apply bg-gray-100 p-4 rounded-lg overflow-x-auto my-6;
+}
+
+.ghost-content pre code {
+  @apply bg-transparent p-0 text-gray-800;
+}
+
+.ghost-content table {
+  @apply w-full border-collapse my-6;
+}
+
+.ghost-content th,
+.ghost-content td {
+  @apply border border-gray-200 px-4 py-2;
+}
+
+.ghost-content th {
+  @apply bg-gray-50 text-gray-900 font-semibold;
+}
+
 /* Modal styles */
 .modal-overlay {
   position: fixed;

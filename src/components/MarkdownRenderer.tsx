@@ -6,12 +6,31 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
-import rehypeSanitize from 'rehype-sanitize';
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import mermaid from 'mermaid';
 import ReactECharts from 'echarts-for-react';
 import 'katex/dist/katex.min.css';
+
+// Allow Ghost CMS HTML elements through sanitize
+const ghostSanitizeSchema = {
+  ...defaultSchema,
+  tagNames: [
+    ...(defaultSchema.tagNames || []),
+    'figure', 'figcaption', 'iframe', 'source', 'video', 'audio',
+  ],
+  attributes: {
+    ...defaultSchema.attributes,
+    '*': [...(defaultSchema.attributes?.['*'] || []), 'className', 'class', 'id', 'style'],
+    img: ['src', 'srcSet', 'srcset', 'sizes', 'alt', 'loading', 'width', 'height', 'class', 'className'],
+    figure: ['class', 'className'],
+    figcaption: ['class', 'className'],
+    a: ['href', 'target', 'rel', 'class', 'className'],
+    div: ['class', 'className', 'id', 'style'],
+    span: ['class', 'className', 'style'],
+  },
+};
 
 interface MarkdownRendererProps {
   content: string;
@@ -267,7 +286,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = React.memo(({ c
     <div className={className}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkMath]}
-        rehypePlugins={[rehypeRaw, rehypeSanitize, rehypeKatex]}
+        rehypePlugins={[rehypeRaw, [rehypeSanitize, ghostSanitizeSchema], rehypeKatex]}
         components={{
           h1: ({ children }) => (
             <h1 className="text-3xl font-bold mt-8 mb-4 text-gray-900 border-b border-gray-200 pb-2">
