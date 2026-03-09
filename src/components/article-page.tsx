@@ -245,82 +245,76 @@ export default async function ArticlePage({
           })}
         />
         <Container className="py-8 px-4">
-          <div className="max-w-3xl mx-auto">
-            <div className="mb-6">
-              <ClientBreadcrumb
-                name={project.name}
-                title={title}
-                slug={slug}
-                locale={locale}
-                projectPrefix={project.prefix}
-                className="mb-4"
-              />
-            </div>
+          <div className="max-w-[720px] mx-auto mb-6">
+            <ClientBreadcrumb
+              name={project.name}
+              title={title}
+              slug={slug}
+              locale={locale}
+              projectPrefix={project.prefix}
+              className="mb-4"
+            />
+          </div>
 
-            <article className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-img:rounded-lg prose-figure:my-8">
-              <header className="mb-12">
-                {featureImage && (
-                  <div className="mb-8 rounded-xl overflow-hidden bg-gray-100">
-                    <OptimizedImage
-                      src={featureImage}
-                      alt={`Featured image for article "${title}" from ${project.name}`}
-                      width={1200}
-                      height={630}
-                      className="w-full h-auto"
-                      priority
-                      sizes="(max-width: 768px) 100vw, 768px"
-                    />
-                  </div>
-                )}
+          <article>
+            <header className="max-w-[720px] mx-auto mb-8">
+              <h1 className="text-[2.8rem] md:text-[3.2rem] font-bold leading-[1.15] tracking-tight mb-4" style={{ color: 'rgb(21, 23, 26)' }}>
+                {title}
+              </h1>
 
-                <div className="space-y-4">
-                  <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
-                    {title}
-                  </h1>
-
-                  {/* Excerpt hidden - duplicates the opening paragraph from Ghost HTML content */}
-
-                  {formattedDate && (
-                    <div className="flex items-center gap-4 text-gray-600 text-sm">
-                      <time dateTime={publishedAt}>{formattedDate}</time>
-                      <span>•</span>
-                      <span>{project.name}</span>
-                    </div>
-                  )}
+              {formattedDate && (
+                <div className="flex items-center gap-3 text-sm" style={{ color: 'rgb(128, 128, 128)' }}>
+                  <span>{project.name}</span>
+                  <span>—</span>
+                  <time dateTime={publishedAt}>{formattedDate}</time>
                 </div>
-              </header>
+              )}
+            </header>
 
-              <div className="space-y-8">
-                <div
-                  className="ghost-content max-w-none"
-                  dangerouslySetInnerHTML={{ __html: displayContent }}
+            {featureImage && (
+              <div className="max-w-[720px] mx-auto mb-10">
+                <OptimizedImage
+                  src={featureImage}
+                  alt={`Featured image for article "${title}" from ${project.name}`}
+                  width={1200}
+                  height={630}
+                  className="w-full h-auto"
+                  priority
+                  sizes="(max-width: 1120px) 100vw, 1120px"
                 />
+              </div>
+            )}
 
-                <div className="border-t border-gray-300/50 pt-8">
-                  <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-6 border border-blue-300/30">
-                    <div className="text-center space-y-4">
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                          {t('subscription.subscribe')}
-                        </h3>
-                        <p className="text-gray-600 text-sm max-w-md mx-auto">
-                          {t('subscription.subscribeToGetLatest')} {project.name} {t('subscription.deliveredToInbox')}.
-                        </p>
-                      </div>
-                      <div className="flex justify-center">
-                        <SubscribeButton
-                          project={project}
-                          locale={locale}
-                          variant="primary"
-                          size="lg"
-                        />
-                      </div>
+            <div className="max-w-[720px] mx-auto">
+              <div
+                className="ghost-content"
+                dangerouslySetInnerHTML={{ __html: displayContent }}
+              />
+
+              <div className="border-t pt-8 mt-12" style={{ borderColor: 'rgb(228, 228, 228)' }}>
+                <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 rounded-xl p-6 border border-blue-300/30">
+                  <div className="text-center space-y-4">
+                    <div>
+                      <h3 className="text-lg font-semibold mb-2" style={{ color: 'rgb(21, 23, 26)' }}>
+                        {t('subscription.subscribe')}
+                      </h3>
+                      <p className="text-sm max-w-md mx-auto" style={{ color: 'rgb(128, 128, 128)' }}>
+                        {t('subscription.subscribeToGetLatest')} {project.name} {t('subscription.deliveredToInbox')}.
+                      </p>
+                    </div>
+                    <div className="flex justify-center">
+                      <SubscribeButton
+                        project={project}
+                        locale={locale}
+                        variant="primary"
+                        size="lg"
+                      />
                     </div>
                   </div>
                 </div>
               </div>
-            </article>
-          </div>
+            </div>
+          </article>
         </Container>
       </MainLayout>
     );
