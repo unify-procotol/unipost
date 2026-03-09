@@ -260,15 +260,15 @@ export default async function ArticlePage({
             <article className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-img:rounded-lg prose-figure:my-8">
               <header className="mb-12">
                 {featureImage && (
-                  <div className="mb-8 rounded-2xl overflow-hidden bg-gray-100">
+                  <div className="mb-8 rounded-xl overflow-hidden bg-gray-100">
                     <OptimizedImage
                       src={featureImage}
                       alt={`Featured image for article "${title}" from ${project.name}`}
                       width={1200}
                       height={630}
-                      className="w-full h-auto max-h-96 object-contain"
+                      className="w-full h-auto"
                       priority
-                      sizes="(max-width: 768px) 100vw, 1200px"
+                      sizes="(max-width: 768px) 100vw, 768px"
                     />
                   </div>
                 )}
